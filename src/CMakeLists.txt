@@ -17,6 +17,7 @@ find_package(wxWidgets REQUIRED)
 set(SRCS main.cpp)
 
 include(${wxWidgets_USE_FILE})
+include_directories(../thirdparty/asio)
 
 if(APPLE)
     # create bundle on apple compiles
