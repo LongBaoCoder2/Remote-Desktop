@@ -27,6 +27,7 @@ set(HEADER_FILES windows/Application.h windows/LoginWindow/LoginFrame.h)
 
 
 include(${wxWidgets_USE_FILE})
+include_directories(../thirdparty/asio)
 
 if(APPLE)
     # create bundle on apple compiles
