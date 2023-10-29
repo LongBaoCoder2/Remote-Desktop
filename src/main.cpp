@@ -1,9 +1,14 @@
 // wxWidgets "Hello world" Program
 // For compilers that support precompilation, includes "wx/wx.h".
 #include <wx/wxprec.h>
+#include <wx/ffile.h>
+#include "utils/Logger/WindowLogger.hpp"
+#include <wx/log.h>
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
+#define DEV
+
 class MyApp : public wxApp
 {
 public:
@@ -39,6 +44,7 @@ bool MyApp::OnInit()
 MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     : wxFrame(NULL, wxID_ANY, title, pos, size)
 {
+
     wxMenu *menuFile = new wxMenu;
     menuFile->Append(ID_Hello, "&Hello...\tCtrl-H",
                      "Help string shown in status bar for this menu item");
