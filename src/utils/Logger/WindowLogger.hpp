@@ -27,7 +27,6 @@ private:
 public:
     ~Logger()
     {
-
         delete logger;
     }
 
@@ -36,9 +35,9 @@ public:
         wxLog::SetLogLevel(wxLOG_Max);
         wxLog::SetVerbose();
         // create logfile
-        wxFFile *test = new wxFFile("application.log", "a");
-        wxLog *temp = new wxLogStderr(test->fp());
-        wxLog::SetActiveTarget(temp);
+        // wxFFile *test = new wxFFile("application.log", "a");
+        // wxLog *temp = new wxLogStderr(test->fp());
+        // wxLog::SetActiveTarget(temp);
         // create loggui and chain it
         wxLog::SetActiveTarget(new wxLogChain(new wxLogGuiMod()));
         // create logwindow
