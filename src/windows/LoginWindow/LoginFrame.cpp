@@ -32,6 +32,12 @@ void LoginFrame::setupLoginForm()
     MainSizer->Add(LeftPanel, 1, wxEXPAND, 0);
     MainSizer->Add(RightPanel, 1, wxEXPAND, 0);
 
+    // Title text
+    TitleText = new wxStaticText(FormPanel, wxID_ANY, "LOGIN");
+    TitleText->SetFont(wxFont(24, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
+
+    // Collapse Form
+
     // FormSizer consist of TextControl
     FormSizer = new wxBoxSizer(wxVERTICAL);
     FormPanel = new wxPanel(LeftPanel, wxID_ANY);
@@ -40,29 +46,28 @@ void LoginFrame::setupLoginForm()
     IDSizer = new wxBoxSizer(wxVERTICAL);
     IDPanel = new wxPanel(FormPanel, wxID_ANY);
     IDText = new wxStaticText(IDPanel, wxID_ANY, wxT("Enter your ID: "));
-    this->styleText(IDText);
     IDInput = new wxTextCtrl(IDPanel, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(370, 40));
+
     IDSizer->Add(IDText, 0);
     IDSizer->Add(IDInput, 0, wxTOP | wxEXPAND, FromDIP(10));
     IDPanel->SetSizer(IDSizer);
+    this->styleText(IDText);
 
     // ID TextInput
     PwSizer = new wxBoxSizer(wxVERTICAL);
     PwPanel = new wxPanel(FormPanel, wxID_ANY);
     PwText = new wxStaticText(PwPanel, wxID_ANY, wxT("Enter your password: "));
-    this->styleText(PwText);
     PwInput = new wxTextCtrl(PwPanel, wxID_ANY, wxT(""), wxDefaultPosition, wxSize(370, 40));
+
     PwSizer->Add(PwText, 0);
     PwSizer->Add(PwInput, 0, wxTOP | wxEXPAND, FromDIP(10));
     PwPanel->SetSizer(PwSizer);
+    this->styleText(PwText);
 
     SubmitBtn = new wxButton(FormPanel, wxID_ANY, "LOGIN", wxDefaultPosition, wxSize(220, 50));
     SubmitBtn->SetFont(wxFont(12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
     SubmitBtn->SetBackgroundColour(wxColour(0, 0, 0));
     SubmitBtn->SetForegroundColour(wxColour(255, 255, 255));
-
-    TitleText = new wxStaticText(FormPanel, wxID_ANY, "LOGIN");
-    TitleText->SetFont(wxFont(24, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
 
     FormSizer->Add(TitleText, 1, wxALIGN_CENTER | wxALL, FromDIP(10));
     FormSizer->Add(IDPanel, 1, wxTOP | wxEXPAND, FromDIP(7));
