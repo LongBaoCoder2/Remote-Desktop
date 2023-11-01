@@ -4,7 +4,8 @@ LoginFrame::LoginFrame(const wxString &title, const wxPoint &pos, const wxSize &
     : wxFrame(nullptr, wxID_ANY, title, pos, size)
 {
     this->setupLoginForm();
-    this->setupImageForm();
+
+    // this->setupImageForm();
 
     this->SetSizerAndFit(MainSizer);
     this->Center();
@@ -32,15 +33,15 @@ void LoginFrame::setupLoginForm()
     MainSizer->Add(LeftPanel, 1, wxEXPAND, 0);
     MainSizer->Add(RightPanel, 1, wxEXPAND, 0);
 
+    // FormSizer consist of TextControl
+    FormSizer = new wxBoxSizer(wxVERTICAL);
+    FormPanel = new wxPanel(LeftPanel, wxID_ANY);
+
     // Title text
     TitleText = new wxStaticText(FormPanel, wxID_ANY, "LOGIN");
     TitleText->SetFont(wxFont(24, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
 
     // Collapse Form
-
-    // FormSizer consist of TextControl
-    FormSizer = new wxBoxSizer(wxVERTICAL);
-    FormPanel = new wxPanel(LeftPanel, wxID_ANY);
 
     // ID TextInput
     IDSizer = new wxBoxSizer(wxVERTICAL);
@@ -77,20 +78,20 @@ void LoginFrame::setupLoginForm()
     FormPanel->Center();
 }
 
-void LoginFrame::setupImageForm()
-{
+// void LoginFrame::setupImageForm()
+// {
 
-    wxPNGHandler *handler = new wxPNGHandler;
-    wxImage::AddHandler(handler);
-    // image = new wxStaticBitmap(this, wxID_ANY, , wxPoint(50, 100), wxSize(100, 500));
-    wxImage logoImage("asserts/RD.png", wxBITMAP_TYPE_PNG);
+//     wxPNGHandler *handler = new wxPNGHandler;
+//     wxImage::AddHandler(handler);
+//     // image = new wxStaticBitmap(this, wxID_ANY, , wxPoint(50, 100), wxSize(100, 500));
+//     wxImage logoImage("asserts/RD.png", wxBITMAP_TYPE_PNG);
 
-    if (logoImage.IsOk())
-    {
-        wxBitmap logoBitmap(logoImage.Rescale(700, 700));
-        staticBitmap = new wxStaticBitmap(RightPanel, wxID_ANY, logoBitmap, wxDefaultPosition, wxDefaultSize);
-    }
-}
+//     if (logoImage.IsOk())
+//     {
+//         wxBitmap logoBitmap(logoImage.Rescale(700, 700));
+//         staticBitmap = new wxStaticBitmap(RightPanel, wxID_ANY, logoBitmap, wxDefaultPosition, wxDefaultSize);
+//     }
+// }
 
 void LoginFrame::styleText(wxStaticText *text)
 {
