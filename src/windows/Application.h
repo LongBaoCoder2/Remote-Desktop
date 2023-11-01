@@ -5,8 +5,6 @@
 
 class Application : public wxApp
 {
-    // private:
-    //     LoginFrame *LoginWindow;
 
 public:
     virtual bool OnInit();
