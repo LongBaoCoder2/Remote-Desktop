@@ -48,6 +48,10 @@ namespace net
     };
 
     template <typename T>
+    class session;
+
+    // Owned Message
+    template <typename T>
 	struct owned_message
 	{
 	    std::shared_ptr<session<T>> remote;
