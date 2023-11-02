@@ -22,7 +22,7 @@ set(SOURCE_DIR "")
 #     "${SOURCE_DIR}/*.cpp"
 #     "${SOURCE_DIR}/*.h"
 # )
-set(SOURCE_FILES main.cpp windows/Application.cpp windows/LoginWindow/LoginFrame.cpp)
+set(SOURCE_FILES main.cpp windows/Application.cpp windows/LoginWindow/LoginFrame.cpp networks/net_session.cpp)
 set(HEADER_FILES windows/Application.h windows/LoginWindow/LoginFrame.h)
 
 

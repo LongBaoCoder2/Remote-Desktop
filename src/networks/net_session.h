@@ -11,14 +11,18 @@ namespace net
     template <typename T>
     class session : public std::enable_shared_from_this<session<T>>
     {
-        template <typename T>
-        enum session<T>::owner {
+        // enum session<T>::owner
+        // {
+        //     server,
+        //     client
+        // };
+
+    public:
+        enum class owner : uint16_t
+        {
             server,
             client
         };
-
-    public:
-        enum class owner;
 
     public:
         session(owner parent, asio::io_context &asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>> &qIn);

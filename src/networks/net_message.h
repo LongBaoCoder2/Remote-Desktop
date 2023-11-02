@@ -47,6 +47,9 @@ namespace net
         friend message<T> &operator>>(message<T> &msg, DataType &data);
     };
 
+    template <typename T>
+    class session;
+
     // Owned Message
     template <typename T>
     struct owned_message

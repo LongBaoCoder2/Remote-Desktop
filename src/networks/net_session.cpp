@@ -2,23 +2,27 @@
 
 namespace net
 {
-    session::session(owner parent, asio::io_context &asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>> &qIn)
+    template <typename T>
+    session<T>::session(owner parent, asio::io_context &asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>> &qIn)
         : m_asioContext(asioContext), m_socket(std::move(socket)), m_qMessagesIn(qIn)
     {
         m_nOwnerType = parent;
     }
 
-    virtual session::~session()
+    template <typename T>
+    virtual session<T>::~session()
     {
     }
 
     // Get session ID
-    uint32_t session::GetID() const
+    template <typename T>
+    uint32_t session<T>::GetID() const
     {
         return id;
     }
 
-    void session::ConnectToClient(uint32_t uid = 0)
+    template <typename T>
+    void session<T>::ConnectToClient(uint32_t uid)
     {
         if (m_nOwnerType == owner::server && m_socket.is_open())
         {
@@ -27,7 +31,8 @@ namespace net
         }
     }
 
-    void session::ConnectToServer(const asio::ip::tcp::resolver::results_type &endpoints)
+    template <typename T>
+    void session<T>::ConnectToServer(const asio::ip::tcp::resolver::results_type &endpoints)
     {
         if (m_nOwnerType == owner::client)
         {
@@ -40,14 +45,16 @@ namespace net
         }
     }
 
-    void session::Disconnect()
+    template <typename T>
+    void session<T>::Disconnect()
     {
         if (this->IsConnected())
             asio::post(m_asioContext, [this]()
                        { m_socket.close(); })
     }
 
-    bool session::IsConnected() const
+    template <typename T>
+    bool session<T>::IsConnected() const
     {
         return m_socket.is_open();
     }
