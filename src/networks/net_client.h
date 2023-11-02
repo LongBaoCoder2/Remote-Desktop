@@ -6,31 +6,28 @@
 #include <memory>
 #include <asio.hpp>
 
-namespace olc
+namespace net
 {
-    namespace net
+    template <typename T>
+    class client_interface
     {
-        template <typename T>
-        class client_interface
-        {
-        public:
-            client_interface();
-            virtual ~client_interface();
+    public:
+        client_interface();
+        virtual ~client_interface();
 
-            bool Connect(const std::string &host, const uint16_t port);
-            void Disconnect();
-            bool IsConnected();
+        bool Connect(const std::string &host, const uint16_t port);
+        void Disconnect();
+        bool IsConnected();
 
-            void Send(const message<T> &msg);
-            tsqueue<owned_message<T>> &Incoming();
+        void Send(const message<T> &msg);
+        tsqueue<owned_message<T>> &Incoming();
 
-        protected:
-            asio::io_context m_context;
-            std::thread thrContext;
-            std::unique_ptr<connection<T>> m_connection;
+    protected:
+        asio::io_context m_context;
+        std::thread thrContext;
+        std::unique_ptr<connection<T>> m_connection;
 
-        private:
-            tsqueue<owned_message<T>> m_qMessagesIn;
-        };
-    }
+    private:
+        tsqueue<owned_message<T>> m_qMessagesIn;
+    };
 }
