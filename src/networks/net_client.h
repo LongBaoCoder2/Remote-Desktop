@@ -25,7 +25,7 @@ namespace net
     protected:
         asio::io_context m_context;
         std::thread thrContext;
-        std::unique_ptr<connection<T>> m_connection;
+        std::unique_ptr<session<T>> m_connection;
 
     private:
         tsqueue<owned_message<T>> m_qMessagesIn;

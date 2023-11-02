@@ -9,10 +9,10 @@ namespace net
 {
 
     template <typename T>
-    class connection : public std::enable_shared_from_this<connection<T>>
+    class session : public std::enable_shared_from_this<session<T>>
     {
         template <typename T>
-        enum onnection<T>::owner {
+        enum session<T>::owner {
             server,
             client
         };
@@ -21,8 +21,8 @@ namespace net
         enum class owner;
 
     public:
-        connection(owner parent, asio::io_context &asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>> &qIn);
-        virtual ~connection();
+        session(owner parent, asio::io_context &asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>> &qIn);
+        virtual ~session();
 
         uint32_t GetID() const;
 

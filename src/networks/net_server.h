@@ -18,18 +18,18 @@ namespace net
         void Stop();
         void WaitForClientConnection();
 
-        void MessageClient(std::shared_ptr<connection<T>> client, const message<T> &msg);
-        void MessageAllClients(const message<T> &msg, std::shared_ptr<connection<T>> pIgnoreClient = nullptr);
+        void MessageClient(std::shared_ptr<session<T>> client, const message<T> &msg);
+        void MessageAllClients(const message<T> &msg, std::shared_ptr<session<T>> pIgnoreClient = nullptr);
         void Update(size_t nMaxMessages = -1, bool bWait = false);
 
     protected:
-        virtual bool OnClientConnect(std::shared_ptr<connection<T>> client);
-        virtual void OnClientDisconnect(std::shared_ptr<connection<T>> client);
-        virtual void OnMessage(std::shared_ptr<connection<T>> client, message<T> &msg);
+        virtual bool OnClientConnect(std::shared_ptr<session<T>> client);
+        virtual void OnClientDisconnect(std::shared_ptr<session<T>> client);
+        virtual void OnMessage(std::shared_ptr<session<T>> client, message<T> &msg);
 
     protected:
         tsqueue<owned_message<T>> m_qMessagesIn;
-        std::deque<std::shared_ptr<connection<T>>> m_deqConnections;
+        std::deque<std::shared_ptr<session<T>>> m_deqConnections;
 
         asio::io_context m_asioContext;
         std::thread m_threadContext;
