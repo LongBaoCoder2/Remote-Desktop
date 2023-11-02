@@ -11,14 +11,14 @@ namespace net
     template <typename T>
     class session : public std::enable_shared_from_this<session<T>>
     {
-        template <typename T>
-        enum session<T>::owner {
+
+    public:
+        // A connection is "owned" by either a server or a client, and its
+		// behaviour is slightly different bewteen the two.
+        enum class owner {
             server,
             client
         };
-
-    public:
-        enum class owner;
 
     public:
         session(owner parent, asio::io_context &asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>> &qIn);
