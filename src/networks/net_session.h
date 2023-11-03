@@ -34,33 +34,90 @@ namespace net
         void Disconnect();
         bool IsConnected() const;
         void StartListening();
-        void Send(const message<T> &msg);
+        void Send(const message<T> &msg)
+        {
+            asio::post(m_asioContext,
+                       [this, msg]
+                       {
+                           bool inProgress = !m_qMessagesOut.empty();
+                           m_qMessagesOut.push_back(msg);
+                           if (!inProgress)
+                           {
+                               WriteHeader(); // already have a loop chain inside this function
+                           }
+                       };)
+        }
 
     private:
-        void WriteHeader();
-        void WriteBody();
+        void WriteHeader()
+        {
+            asio::async_write(m_socket, asio::buffer(&m_qMessagesOut.front().header, sizeof(message_header<T>)),
+                              [this](std::error_code ec, std::size_t length) // length = sizeof(message_header<T>)
+                              {
+                                  if (!ec)
+                                  {
+                                      if (m_qMessagesOut.front().size() > 0)
+                                      {
+                                          WriteBody();
+                                      }
+                                      else
+                                      {
+                                          m_qMessagesOut.pop_front();
+                                          if (!m_qMessagesOut.empty())
+                                          {
+                                              WriteHeader();
+                                          }
+                                      }
+                                  }
+                                  else
+                                  {
+                                      std::cout << "[" << id << "] Write Header Fail.\n";
+                                      m_socket.close();
+                                  }
+                              });
+        }
+        void WriteBody()
+        {
+            asio::async_write(m_socket, asio::buffer(m_qMessagesOut.front().body.data(), m_qMessagesOut.front().body.size()),
+                              [this](std::error_code ec, std::size_t length)
+                              {
+                                  if (!ec)
+                                  {
+                                      m_qMessagesOut.pop_front();
+
+                                      if (!m_qMessagesOut.empty())
+                                      {
+                                          WriteHeader();
+                                      }
+                                  }
+                                  else
+                                  {
+                                      std::cout << "[" << id << "] Write Body Fail.\n";
+                                      m_socket.close();
+                                  }
+                              });
+        }
         void ReadHeader()
         {
-            asio::async_read(
-                m_socket, asio::buffer(&m_msgTemporaryIn.header, sizeof(message_header<T>)),
-                [this](std::error_code ec, std::size_t length) // length = sizeof(message_header<T>)
-                {
-                    if (!ec)
-                    {
-                        if (m_msgTemporaryIn.header.size > 0)
-                        {
-                            m_msgTemporaryIn.body.resize(m_msgTemporaryIn.header.size());
-                            ReadBody();
-                        }
-                        else // is bodyless msg
-                            AddToIncomingMessageQueue();
-                    }
-                    else
-                    {
-                        std::cout << "[" << id << "] Read Header Fail.\n";
-                        m_socket.close();
-                    }
-                });
+            asio::async_read(m_socket, asio::buffer(&m_msgTemporaryIn.header, sizeof(message_header<T>)),
+                             [this](std::error_code ec, std::size_t length) // length = sizeof(message_header<T>)
+                             {
+                                 if (!ec)
+                                 {
+                                     if (m_msgTemporaryIn.header.size > 0)
+                                     {
+                                         m_msgTemporaryIn.body.resize(m_msgTemporaryIn.header.size());
+                                         ReadBody();
+                                     }
+                                     else // is bodyless msg
+                                         AddToIncomingMessageQueue();
+                                 }
+                                 else
+                                 {
+                                     std::cout << "[" << id << "] Read Header Fail.\n";
+                                     m_socket.close();
+                                 }
+                             });
         }
         void ReadBody()
         {
