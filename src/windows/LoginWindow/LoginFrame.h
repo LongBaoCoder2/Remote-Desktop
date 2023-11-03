@@ -5,35 +5,35 @@
 class LoginFrame : public wxFrame
 {
 private:
-    wxBoxSizer *MainSizer;
-    wxBoxSizer *FormSizer;
-    wxBoxSizer *IDSizer;
-    wxBoxSizer *PwSizer;
+    bool isAdminLogin = false;
 
-    wxPanel *LeftPanel;
-    wxPanel *RightPanel;
+    wxBoxSizer *MainSizer, *FormSizer, *IDSizer, *PwSizer;
+
+    wxPanel *LeftPanel, *RightPanel;
 
     wxStaticText *TitleText;
     wxPanel *FormPanel;
 
-    wxPanel *IDPanel;
-    wxStaticText *IDText;
-    wxTextCtrl *IDInput;
-
-    wxPanel *PwPanel;
-    wxStaticText *PwText;
-    wxTextCtrl *PwInput;
+    wxPanel *IDPanel, *PwPanel;
+    wxStaticText *IDText, *PwText;
+    wxTextCtrl *IDInput, *PwInput;
 
     wxCheckBox *AdminCheck;
     wxButton *SubmitBtn;
+    wxStaticText *ErrorHint;
 
     wxStaticBitmap *staticBitmap;
+
+    wxString id, password;
 
     void styleText(wxStaticText *text);
 
     void setupLoginForm();
 
     void setupImageForm();
+
+    void OnCheckAdmin(wxCommandEvent &);
+    void OnSubmit(wxCommandEvent &);
 
 public:
     LoginFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
