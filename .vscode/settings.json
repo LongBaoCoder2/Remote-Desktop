@@ -6,6 +6,14 @@
   },
   "files.associations": {
     "memory": "cpp",
-    "*.ipp": "cpp"
+    "*.ipp": "cpp",
+    "__node_handle": "cpp",
+    "deque": "cpp",
+    "list": "cpp",
+    "string": "cpp",
+    "string_view": "cpp",
+    "unordered_map": "cpp",
+    "vector": "cpp",
+    "__mutex_base": "cpp"
   }
 }
