@@ -74,13 +74,14 @@ namespace net
             {
                 std::unique_lock<std::mutex> ul(muxBlocking);
                 /*
-                    Because the push_front also needs to lock the same mutex to add a message and send a signal,
+                    Because the push_front and push_back also need to lock the same mutex to add a message and send a signal,
                     it can't add a message to the queue between the wait's empty check and the condition_variable starting to wait.
                     If the queue is empty and the wait starts to wait, it will automatically release the mutex and
                     enter the waiting state. If the producer adds a message, it will lock the mutex, add the message, and
                     then send the signal. Since the mutex ensures exclusive access, the wait won't miss the signal.
                 */
-                cvBlocking.wait(ul);
+                cvBlocking.wait(ul, [this]
+                                { return !empty(); }); // lambda function is kinda the double check, to prevent spurious wake-up
             }
         }
 
