@@ -22,8 +22,8 @@ set(SOURCE_DIR "")
 #     "${SOURCE_DIR}/*.cpp"
 #     "${SOURCE_DIR}/*.h"
 # )
-set(SOURCE_FILES main.cpp windows/Application.cpp windows/LoginWindow/LoginFrame.cpp)
-set(HEADER_FILES windows/Application.h windows/LoginWindow/LoginFrame.h)
+set(SOURCE_FILES main.cpp windows/Application.cpp windows/LoginWindow/LoginFrame.cpp windows/MainWindow/MainFrame.cpp)
+set(HEADER_FILES windows/Application.h windows/LoginWindow/LoginFrame.hpp )
 
 
 include(${wxWidgets_USE_FILE})
