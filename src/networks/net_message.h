@@ -52,12 +52,12 @@ namespace net
 
     // Owned Message
     template <typename T>
-    struct owned_message
-    {
-        std::shared_ptr<session<T>> remote = nullptr;
-        message<T> msg;
+	struct owned_message
+	{
+	    std::shared_ptr<session<T>> remote;
+		message<T> msg;
 
-        friend std::ostream &operator<<(std::ostream &os, const owned_message<T> &msg);
+		// Again, a friendly string maker
+		friend std::ostream& operator<<(std::ostream& os, const owned_message<T>& msg);		
     };
-
 }
