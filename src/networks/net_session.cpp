@@ -79,13 +79,13 @@ namespace net
             // Boi vi neu trong queue van con message thi ham WriteHeader dang duoc goi o dau do
             // Ma chung ta lai goi no o day thi se dan den viec xung dot hoac thu tu goi tin gui qua ben kia
             // bi xao tron vi ta da goi ham WriteHeader khong dung theo thu tu cac message
-            bool bWritingMessage = m_qMessagesOut.empty();
+            bool inProgress = !m_qMessagesOut.empty();
             
             // Con dong nay thi chay binh thuong vi day chi don gian la bo msg vao trong queue
             m_qMessagesOut.push_back(msg);
 
             // Neu khong con msg trong queue dang duoc xu li thi goi WriteHeader de gui msg moi add vo queue
-            if (!bWritingMessage) {
+            if (!inProgress) {
 				WriteHeader();
 			}
         }));
@@ -168,4 +168,59 @@ namespace net
 				}
 			});
 	}
+
+    template<typename T>
+    void session<T>::AddToIncomingMessageQueue()
+    {
+        if (m_nOwnerType == owner::server)
+            m_qMessagesIn.push_back({this->shared_from_this(), m_msgTemporaryIn});
+        else
+            m_qMessagesIn.push_back({nullptr, m_msgTemporaryIn});
+        ReadHeader();
+    }
+
+    template<typename T>
+    void session<T>::ReadHeader()
+    {
+        asio::async_read(m_socket, asio::buffer(&m_msgTemporaryIn.header, sizeof(message_header<T>)),
+            [this](std::error_code ec, std::size_t length) // length = sizeof(message_header<T>)
+            {
+                if (!ec)
+                {
+                    if (m_msgTemporaryIn.header.size > 0)
+                    {
+                        m_msgTemporaryIn.body.resize(m_msgTemporaryIn.header.size());
+                        ReadBody();
+                    }
+                    else // is bodyless msg
+                    {
+                        AddToIncomingMessageQueue();
+                    }
+                        
+                }
+                else
+                {
+                    std::cout << "[" << id << "] Read Header Fail.\n";
+                    m_socket.close();
+                }
+            });
+        }
+
+    template<typename T>
+    void session<T>::ReadBody()
+    {
+        asio::async_read(m_socket, asio::buffer(&m_msgTemporaryIn.header, sizeof(message_header<T>)),
+            [this](std::error_code ec, std::size_t length)
+            {
+                if (!ec)
+                {
+                    AddToIncomingMessageQueue();
+                }
+                else
+                {
+                    std::cout << "[" << id << "] Read Header Fail.\n";
+                    m_socket.close();
+                }
+            });
+        }
 }
