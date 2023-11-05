@@ -4,6 +4,7 @@
 #include <wx/aui/auibook.h>
 #include <vector>
 #include "../../components/Button.hpp"
+#include "BtnNavigator.hpp"
 
 class NavigationBar : public wxPanel
 {
@@ -18,6 +19,7 @@ public:
         auto NavSizer = new wxBoxSizer(wxVERTICAL);
         // navPanel = new wxPanel(this, wxID_ANY);
         // navPanel->SetSize(this->GetSize());
+        wxMessageBox("Box 1");
 
         // Set title
         titleText = new wxStaticText(this, wxID_ANY, "Remote Desktop");
@@ -29,26 +31,25 @@ public:
         btnPanel = new wxPanel(this, wxID_ANY);
 
         // Button Navigation
-        auto HomeBtn = new wxButton(btnPanel, wxID_ANY, "HOME", wxDefaultPosition, wxSize(220, 45));
-        auto MenuBtn = new wxButton(btnPanel, wxID_ANY, "MENU", wxDefaultPosition, wxSize(220, 45));
-        auto ManagerBtn = new wxButton(btnPanel, wxID_ANY, "MANAGER", wxDefaultPosition, wxSize(220, 45));
-        auto SettingBtn = new wxButton(btnPanel, wxID_ANY, "SETTING", wxDefaultPosition, wxSize(220, 45));
-        // std::vector<wxButton *> listButton{
-        //     HomeBtn,
-        //     MenuBtn,
-        //     ManagerBtn,
-        //     SettingBtn};
-        // for (auto button : listButton)
-        // {
-        //     // button->SetFont(wxFont(10, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MEDIUM));
-        //     // button->SetBackgroundColour(wxColour(0, 0, 0));
-        //     // button->SetForegroundColour(wxColour(255, 255, 255));
-        //     ButtonSizer->Add(button, 1, wxTOP | wxALIGN_CENTER, FromDIP(5));
-        //     button->Bind(wxEVT_LEFT_DOWN, [this, button](wxMouseEvent &)
-        //                  { wxMessageBox("Hello world"); });
-        // }
-        ButtonSizer->Add(HomeBtn, 1, wxTOP | wxALIGN_CENTER, FromDIP(5));
-        HomeBtn->Bind(wxEVT_BUTTON, &NavigationBar::OnClick, this);
+        auto HomeBtn = new MyButton(btnPanel, wxID_ANY, "HOME", wxDefaultPosition, wxSize(220, 45));
+        auto MenuBtn = new MyButton(btnPanel, wxID_ANY, "MENU", wxDefaultPosition, wxSize(220, 45));
+        auto ManagerBtn = new MyButton(btnPanel, wxID_ANY, "MANAGER", wxDefaultPosition, wxSize(220, 45));
+        auto SettingBtn = new MyButton(btnPanel, wxID_ANY, "SETTING", wxDefaultPosition, wxSize(220, 45));
+        std::vector<MyButton *> listButton{
+            HomeBtn,
+            MenuBtn,
+            ManagerBtn,
+            SettingBtn};
+        for (auto button : listButton)
+        {
+            // button->SetFont(wxFont(10, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MEDIUM));
+            // button->SetBackgroundColour(wxColour(0, 0, 0));
+            // button->SetForegroundColour(wxColour(255, 255, 255));
+            button->Bind(wxEVT_LEFT_DOWN, &NavigationBar::OnClick, this, button->GetId());
+            ButtonSizer->Add(button, 1, wxTOP | wxALIGN_CENTER, FromDIP(5));
+        }
+        // ButtonSizer->Add(HomeBtn, 1, wxTOP | wxALIGN_CENTER, FromDIP(5));
+        // HomeBtn->Bind(wxEVT_BUTTON, &NavigationBar::OnClick, this);
 
         // User Icon
         userInfoPanel = new wxPanel(this, wxID_ANY);
@@ -81,9 +82,10 @@ public:
 
     virtual ~NavigationBar() {}
 
-    void OnClick(wxCommandEvent &e)
+    void OnClick(wxMouseEvent &e)
     {
         wxMessageBox("Button Click");
+        e.Skip();
     }
 
 private:
