@@ -14,6 +14,8 @@ set(wxWidgets_USE_STATIC 1)
 
 find_package(wxWidgets REQUIRED)
 
+set(asio_PACKAGE_DIR ../thirdparty/asio)
+
 set(SOURCE_DIR "")
 
 # set(SRCS main.cpp)
@@ -22,11 +24,19 @@ set(SOURCE_DIR "")
 #     "${SOURCE_DIR}/*.cpp"
 #     "${SOURCE_DIR}/*.h"
 # )
-set(SOURCE_FILES main.cpp windows/Application.cpp windows/LoginWindow/LoginFrame.cpp windows/MainWindow/MainFrame.cpp windows/MainWindow/Menu/MainWindow.cpp networks/net_session.cpp networks/net_server.cpp)
+set(SOURCE_FILES main.cpp 
+                 windows/Application.cpp 
+                 windows/LoginWindow/LoginFrame.cpp 
+                 windows/MainWindow/MainFrame.cpp 
+                 windows/MainWindow/Menu/MainWindow.cpp
+                 networks/net_server.cpp
+                 networks/net_session.cpp)
+# set(SOURCE_FILES networks/main.cpp)
 set(HEADER_FILES windows/Application.h windows/LoginWindow/LoginFrame.hpp)
 
 
 include(${wxWidgets_USE_FILE})
+include_directories(../thirdparty/asio)
 
 if(APPLE)
     # create bundle on apple compiles
@@ -39,6 +49,7 @@ else()
     # instead of the main function. This is ignored on other systems,
     # so it works on all platforms
     add_executable(main WIN32 ${SOURCE_FILES} main.exe.manifest)
+    # add_executable(main ${SOURCE_FILES} main.exe.manifest)
 endif()
 
 target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})
