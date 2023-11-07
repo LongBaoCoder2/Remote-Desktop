@@ -1,9 +1,9 @@
 #pragma once
 
-#include "net_common.h"
-#include "net_tsqueue.h"
-#include "net_message.h"
-#include "net_session.h"
+#include "../net_common.h"
+#include "../net_tsqueue.h"
+#include "../net_message.h"
+#include "../net_session.h"
 
 namespace net
 {

@@ -30,6 +30,7 @@ file(GLOB_RECURSE SOURCE_FILES
     networks/*.cpp
     windows/MainWindow/Menu/*.cpp
     windows/MainWindow/*.cpp
+    networks/*.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 
     windows/Application.h 
