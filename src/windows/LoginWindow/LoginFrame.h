@@ -2,43 +2,42 @@
 
 #include <wx/wx.h>
 
-class LoginFrame : public wxFrame
-{
-private:
-    wxBoxSizer *MainSizer;
-    wxBoxSizer *FormSizer;
-    wxBoxSizer *IDSizer;
-    wxBoxSizer *PwSizer;
+class LoginFrame : public wxFrame {
+ private:
+  bool isAdminLogin = false;
 
-    wxPanel *LeftPanel;
-    wxPanel *RightPanel;
+  wxBoxSizer *MainSizer, *FormSizer, *IDSizer, *PwSizer;
 
-    wxStaticText *TitleText;
-    wxPanel *FormPanel;
+  wxPanel *LeftPanel, *RightPanel;
 
-    wxPanel *IDPanel;
-    wxStaticText *IDText;
-    wxTextCtrl *IDInput;
+  wxStaticText *TitleText;
+  wxPanel *FormPanel;
 
-    wxPanel *PwPanel;
-    wxStaticText *PwText;
-    wxTextCtrl *PwInput;
+  wxPanel *IDPanel, *PwPanel;
+  wxStaticText *IDText, *PwText;
+  wxTextCtrl *IDInput, *PwInput;
 
-    wxCheckBox *AdminCheck;
-    wxButton *SubmitBtn;
+  wxCheckBox *AdminCheck;
+  wxButton *SubmitBtn;
+  wxStaticText *ErrorHint;
 
-    wxStaticBitmap *staticBitmap;
+  wxStaticBitmap *staticBitmap;
 
-    void styleText(wxStaticText *text);
+  wxString id, password;
 
-    void setupLoginForm();
+  void styleText(wxStaticText *text);
 
-    void setupImageForm();
+  void setupLoginForm();
 
-    void OnLogin(wxCommandEvent& event);
+  void setupImageForm();
 
-public:
-    LoginFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
+  void OnCheckAdmin(wxCommandEvent &);
+  void OnSubmit(wxCommandEvent &);
 
-    ~LoginFrame();
+  // void OnLogin(wxCommandEvent& event);
+
+ public:
+  LoginFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
+
+  ~LoginFrame();
 };

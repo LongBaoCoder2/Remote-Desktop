@@ -28,11 +28,15 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/LoginWindow/LoginFrame.cpp 
     windows/CaptureWindow/*.cpp
     networks/*.cpp
+    windows/MainWindow/Menu/*.cpp
+    windows/MainWindow/*.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 
     windows/Application.h 
     windows/LoginWindow/LoginFrame.h 
     windows/CaptureWindow/*.h
+    windows/MainWindow/*.hpp
+    windows/MainWindow/Menu/*.hpp
     networks/*.h
 )
 

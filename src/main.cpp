@@ -37,11 +37,11 @@
 //                     wxIMPLEMENT_APP(MyApp);
 // bool MyApp::OnInit()
 // {
-//     MyFrame *frame = new MyFrame("Hello World", wxPoint(50, 50), wxSize(450, 340));
-//     frame->Show(true);
-//     return true;
+//     MyFrame *frame = new MyFrame("Hello World", wxPoint(50, 50), wxSize(450,
+//     340)); frame->Show(true); return true;
 // }
-// MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
+// MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize
+// &size)
 //     : wxFrame(NULL, wxID_ANY, title, pos, size)
 // {
 
@@ -76,3 +76,8 @@
 #include "windows/Application.h"
 
 wxIMPLEMENT_APP(Application);
+// #ifdef _DEBUG
+// wxIMPLEMENT_APP_CONSOLE(Application);
+// #else
+// wxIMPLEMENT_APP(Application);
+// #endif
