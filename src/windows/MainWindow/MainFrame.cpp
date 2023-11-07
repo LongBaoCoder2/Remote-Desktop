@@ -34,6 +34,9 @@ void MainFrame::SetupNavbar()
     btnPanel = new wxPanel(navbarPanel, wxID_ANY);
 
     // Button Navigation
+    auto separateLine = new wxPanel(btnPanel, wxID_ANY, wxDefaultPosition, wxSize(240, 5));
+    buttonSizer->Add(separateLine, 0, wxEXPAND | wxBOTTOM, FromDIP(8));
+
     auto HomeBtn = new MyButton(btnPanel, wxID_ANY, "HOME", wxDefaultPosition, wxSize(220, 45));
     auto MenuBtn = new MyButton(btnPanel, wxID_ANY, "MENU", wxDefaultPosition, wxSize(220, 45));
     auto ManagerBtn = new MyButton(btnPanel, wxID_ANY, "MANAGER", wxDefaultPosition, wxSize(220, 45));
@@ -48,10 +51,7 @@ void MainFrame::SetupNavbar()
         // button->SetFont(wxFont(10, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MEDIUM));
         // button->SetBackgroundColour(wxColour(0, 0, 0));
         // button->SetForegroundColour(wxColour(255, 255, 255));
-        button->Bind(wxEVT_LEFT_DOWN, [](wxMouseEvent &event)
-                     {
-            wxMessageBox("Button Clicked");
-            event.Skip(); });
+        button->Bind(wxEVT_LEFT_DOWN, &MainFrame::OnClickSelected, this);
         buttonSizer->Add(button, 0, wxTOP | wxALIGN_CENTER, FromDIP(5));
     }
     btnPanel->SetSizerAndFit(buttonSizer);
@@ -69,7 +69,7 @@ void MainFrame::SetupNavbar()
 
     if (iconImage.IsOk())
     {
-        wxBitmap iconBitmap(iconImage.Rescale(80, 80));
+        wxBitmap iconBitmap(iconImage.Rescale(64, 64));
         auto userBitmap = new wxStaticBitmap(userInfoPanel, wxID_ANY, iconBitmap);
         userSizer->Add(userBitmap, 0, wxALL, FromDIP(5));
     }
@@ -87,6 +87,13 @@ void MainFrame::SetupNavbar()
     navbarPanel->SetSizer(NavSizer);
 }
 
+void MainFrame::OnClickSelected(wxMouseEvent &event)
+{
+    wxMessageBox("Button Clicked");
+
+    event.Skip();
+}
+
 void MainFrame::SetupMainMenu()
 {
     MainPanel = new wxPanel(this, wxID_ANY);
@@ -95,6 +102,10 @@ void MainFrame::SetupMainMenu()
     navbarPanel = new wxPanel(MainPanel, wxID_ANY, wxDefaultPosition, wxSize(256, 890));
     this->SetupNavbar();
     MainSizer->Add(navbarPanel, 0, wxEXPAND);
+
+    auto mainWindow = new MainWindow(MainPanel, wxDefaultPosition, wxDefaultSize);
+    mainWindow->Center();
+    MainSizer->Add(mainWindow, 0, wxEXPAND);
 
     MainPanel->SetSizer(MainSizer);
     this->SetBackgroundColour(wxColour(244, 243, 243));

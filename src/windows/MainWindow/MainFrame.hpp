@@ -2,15 +2,28 @@
 
 #include <wx/wx.h>
 #include "Navbar/Navbar.hpp"
+#include "Menu/MainWindow.hpp"
 
 class MainFrame : public wxFrame
 {
 public:
+    enum class Windows : unsigned int
+    {
+        HOME = 0,
+        MENU,
+        MANAGER,
+        SETTINGS
+    };
+
     MainFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
 
     ~MainFrame();
 
 private:
+    //
+    void OnClickSelected(wxMouseEvent &);
+    //
+
     wxPanel *MainPanel = nullptr;
 
     // Navigation
@@ -22,4 +35,7 @@ private:
     void SetupMainMenu();
 
     // NavigationBar *Navbar = nullptr;
+
+    Windows curWindows = Windows::HOME;
+    wxWindow *currentWindows = nullptr;
 };

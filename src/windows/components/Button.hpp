@@ -32,7 +32,7 @@ public:
 
         if (gc)
         {
-            if (this->isHovered)
+            if (this->isHovered || this->isSelected)
             {
                 this->DrawOnContext(*gc, this->hoveredColor);
             }
@@ -89,6 +89,10 @@ public:
                     (buttonRect.GetHeight() - textHeight) / 2.0);
     }
 
+    void SetSelected()
+    {
+        this->isSelected = !this->isSelected;
+    }
     // void Save(std::string filePath)
     // {
     //     double scale = GetDPIScaleFactor(); // matching the screen DPI
@@ -113,6 +117,7 @@ public:
 
 private:
     bool isHovered = false;
+    bool isSelected = false;
     wxColour backgroundColor = wxColour(17, 25, 38);
     wxColour hoveredColor = wxColour(52, 58, 70);
 };
