@@ -35,6 +35,8 @@ private:
 
     void setupImageForm();
 
+    void OnLogin(wxCommandEvent& event);
+
 public:
     LoginFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
 
