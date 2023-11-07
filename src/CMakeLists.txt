@@ -27,6 +27,7 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/Application.cpp 
     windows/LoginWindow/LoginFrame.cpp 
     networks/*.cpp
+    networks/net_server.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 
     windows/Application.h 
