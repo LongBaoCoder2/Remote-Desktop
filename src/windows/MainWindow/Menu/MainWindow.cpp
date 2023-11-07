@@ -27,6 +27,12 @@ MainWindow::MainWindow(wxWindow *parent, const wxPoint &pos, const wxSize &size)
     // MainWindowPanel->SetSizer(ButtonSizer);
 }
 
+void MainWindow::OnServerButtonClick(wxMouseEvent &event)
+{
+
+    event.Skip();
+}
+
 MainWindow::~MainWindow()
 {
 }

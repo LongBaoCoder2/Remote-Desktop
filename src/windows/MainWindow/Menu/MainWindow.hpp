@@ -9,4 +9,7 @@ public:
     MainWindow(wxWindow *parent, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
 
     ~MainWindow();
+
+private:
+    void OnServerButtonClick(wxMouseEvent &);
 };
