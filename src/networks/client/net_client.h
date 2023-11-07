@@ -1,6 +1,6 @@
 #pragma once
 
-#include "net_common.h"
+#include "../net_common.h"
 #include <string>
 #include <thread>
 #include <memory>
