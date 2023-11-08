@@ -31,6 +31,8 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/MainWindow/Menu/*.cpp
     windows/MainWindow/*.cpp
     networks/*.cpp
+    utils/FileNameGenerator/*.cpp
+    windows/BasicTextWindow/*.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 
     windows/Application.h 
@@ -39,6 +41,8 @@ file(GLOB_RECURSE HEADER_FILES
     windows/MainWindow/*.hpp
     windows/MainWindow/Menu/*.hpp
     networks/*.h
+    utils/FileNameGenerator/*.hpp
+    windows/BasicTextWindow/*.hpp
 )
 
 add_definitions(-D_WIN32_WINNT=0x0601)
