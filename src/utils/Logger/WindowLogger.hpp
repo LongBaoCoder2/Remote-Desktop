@@ -47,6 +47,8 @@ public:
 };
 
 /*
+
+#define DEV
 example:
 #ifdef DEV
     std::unique_ptr<Logger> logger;

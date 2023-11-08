@@ -7,6 +7,8 @@
 #ifndef WX_PRECOMP
 #include <wx/wx.h>
 #endif
+#include <memory>
+
 #define DEV
 
 class MyApp : public wxApp
@@ -67,6 +69,8 @@ void MyFrame::OnExit(wxCommandEvent &event)
 }
 void MyFrame::OnAbout(wxCommandEvent &event)
 {
+    wxLogMessage("[SERVER]: 404");
+
     wxMessageBox("This is a wxWidgets' Hello world sample",
                  "About Hello World", wxOK | wxICON_INFORMATION);
 }
