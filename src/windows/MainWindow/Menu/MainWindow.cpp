@@ -1,5 +1,5 @@
 #include "MainWindow.hpp"
-#include "ServerTextWindow.hpp"
+#include "../ServerWindow/ServerTextWindow.hpp"
 
 MainWindow::MainWindow(wxWindow *parent, const wxPoint &pos, const wxSize &size)
     : wxWindow()
