@@ -1,34 +1,28 @@
 #pragma once
 
 #include "../net_common.h"
-#include "../net.h"
-#include <string>
-#include <thread>
-#include <memory>
-#include <asio.hpp>
+#include "../net_message.h"
+#include "../net_tsqueue.h"
+namespace net {
+template <typename T>
+class IClient {
+ public:
+  IClient();
+  virtual ~IClient();
 
-namespace net
-{
-    template <typename T>
-    class IClient
-    {
-    public:
-        IClient();
-        virtual ~IClient();
+  bool ConnectToServer(const std::string &host, const uint16_t port);
+  void Disconnect();
+  bool IsConnected();
 
-        bool ConnectToServer(const std::string &host, const uint16_t port);
-        void Disconnect();
-        bool IsConnected();
+  void Send(const message<T> &msg);
+  tsqueue<owned_message<T>> &Incoming();
 
-        void Send(const message<T> &msg);
-        tsqueue<owned_message<T>> &Incoming();
+ protected:
+  asio::io_context m_context;
+  std::thread thrContext;
+  std::unique_ptr<session<T>> m_connection;
 
-    protected:
-        asio::io_context m_context;
-        std::thread thrContext;
-        std::unique_ptr<session<T>> m_connection;
-
-    private:
-        tsqueue<owned_message<T>> m_qMessagesIn;
-    };
-}
+ private:
+  tsqueue<owned_message<T>> m_qMessagesIn;
+};
+}  // namespace net

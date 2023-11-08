@@ -19,7 +19,6 @@ public:
         auto NavSizer = new wxBoxSizer(wxVERTICAL);
         // navPanel = new wxPanel(this, wxID_ANY);
         // navPanel->SetSize(this->GetSize());
-        wxMessageBox("Box 1");
 
         // Set title
         titleText = new wxStaticText(this, wxID_ANY, "Remote Desktop");
