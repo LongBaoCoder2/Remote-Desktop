@@ -100,23 +100,23 @@ void ServerWindow::OnClientDisconnect(std::shared_ptr<net::session<RemoteMessage
     }
 }
 
-// void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage> &msg) override
-// {
-//     // if (!garbageIDs.empty())
-//     // {
-//     //     for (auto pid : garbageIDs)
-//     //     {
-//     //         net::message<GameMsg> m;
-//     //         m.header.id = RemoteMessage:REMOTE_CLIENT;
-//     //         m << pid;
-//     //         std::cout << "Removing " << pid << "\n";
-//     //         MessageAllClients(m);
-//     //     }
-//     //     garbageIDs.clear();
-//     // }
+void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage> &msg)
+{
+    // if (!garbageIDs.empty())
+    // {
+    //     for (auto pid : garbageIDs)
+    //     {
+    //         net::message<GameMsg> m;
+    //         m.header.id = RemoteMessage:REMOTE_CLIENT;
+    //         m << pid;
+    //         std::cout << "Removing " << pid << "\n";
+    //         MessageAllClients(m);
+    //     }
+    //     garbageIDs.clear();
+    // }
 
-//     switch (msg.header.id)
-//     {
+    // switch (msg.header.id)
+    // {
 
-//     }
-// }
+    // }
+}

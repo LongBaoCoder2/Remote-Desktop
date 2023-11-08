@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 
 project(wx_cmake_template_core LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+# Set C++17 as the standard for the entire project
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # hack for buggy CMake's FindwxWidgets script
@@ -22,19 +23,38 @@ set(SOURCE_DIR "")
 #     "${SOURCE_DIR}/*.cpp"
 #     "${SOURCE_DIR}/*.h"
 # )
-set(SOURCE_FILES main.cpp 
-                 windows/Application.cpp 
-                 windows/LoginWindow/LoginFrame.cpp 
-                 windows/MainWindow/MainFrame.cpp 
-                 windows/MainWindow/Menu/MainWindow.cpp 
-                 networks/client/net_client.cpp
-                 networks/server/net_server.cpp
-                 networks/net_session.cpp
-                 windows/MainWindow/ClientWindow/ClientWindow.cpp
-                 windows/MainWindow/ServerWindow/ServerWindow.cpp                  )
+file(GLOB_RECURSE SOURCE_FILES 
+    main.cpp 
+    windows/Application.cpp 
+    windows/LoginWindow/LoginFrame.cpp 
+    windows/CaptureWindow/*.cpp
+    networks/*.cpp
+    networks/client/*.cpp
+    networks/server/*.cpp
+    windows/MainWindow/Menu/*.cpp
+    windows/MainWindow/*.cpp
+    networks/*.cpp
+    utils/FileNameGenerator/*.cpp
+    windows/BasicTextWindow/*.cpp
+    windows/MainWindow/ClientWindow/ClientWindow.cpp
+    windows/MainWindow/ServerWindow/ServerWindow.cpp
+)
+file(GLOB_RECURSE HEADER_FILES 
+    windows/Application.h 
+    windows/LoginWindow/LoginFrame.h 
+    windows/CaptureWindow/*.h
+    windows/MainWindow/*.hpp
+    windows/MainWindow/Menu/*.hpp
+    networks/*.h
+    utils/FileNameGenerator/*.hpp
+    windows/BasicTextWindow/*.hpp
+    windows/MainWindow/ClientWindow/*.hpp
+    windows/MainWindow/ServerWindow/*.hpp
+    networks/client/*.h
+    networks/server/*.h
+)
 
-                 
-set(HEADER_FILES windows/Application.h windows/LoginWindow/LoginFrame.hpp)
+add_definitions(-D_WIN32_WINNT=0x0601)
 
 
 include(${wxWidgets_USE_FILE})

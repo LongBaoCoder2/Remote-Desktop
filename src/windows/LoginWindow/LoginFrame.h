@@ -2,41 +2,42 @@
 
 #include <wx/wx.h>
 
-class LoginFrame : public wxFrame
-{
-private:
-    bool isAdminLogin = false;
+class LoginFrame : public wxFrame {
+ private:
+  bool isAdminLogin = false;
 
-    wxBoxSizer *MainSizer, *FormSizer, *IDSizer, *PwSizer;
+  wxBoxSizer *MainSizer, *FormSizer, *IDSizer, *PwSizer;
 
-    wxPanel *LeftPanel, *RightPanel;
+  wxPanel *LeftPanel, *RightPanel;
 
-    wxStaticText *TitleText;
-    wxPanel *FormPanel;
+  wxStaticText *TitleText;
+  wxPanel *FormPanel;
 
-    wxPanel *IDPanel, *PwPanel;
-    wxStaticText *IDText, *PwText;
-    wxTextCtrl *IDInput, *PwInput;
+  wxPanel *IDPanel, *PwPanel;
+  wxStaticText *IDText, *PwText;
+  wxTextCtrl *IDInput, *PwInput;
 
-    wxCheckBox *AdminCheck;
-    wxButton *SubmitBtn;
-    wxStaticText *ErrorHint;
+  wxCheckBox *AdminCheck;
+  wxButton *SubmitBtn;
+  wxStaticText *ErrorHint;
 
-    wxStaticBitmap *staticBitmap;
+  wxStaticBitmap *staticBitmap;
 
-    wxString id, password;
+  wxString id, password;
 
-    void styleText(wxStaticText *text);
+  void styleText(wxStaticText *text);
 
-    void setupLoginForm();
+  void setupLoginForm();
 
-    void setupImageForm();
+  void setupImageForm();
 
-    void OnCheckAdmin(wxCommandEvent &);
-    void OnSubmit(wxCommandEvent &);
+  void OnCheckAdmin(wxCommandEvent &);
+  void OnSubmit(wxCommandEvent &);
 
-public:
-    LoginFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
+  // void OnLogin(wxCommandEvent& event);
 
-    ~LoginFrame();
+ public:
+  LoginFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
+
+  ~LoginFrame();
 };

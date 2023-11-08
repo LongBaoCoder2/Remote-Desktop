@@ -1,4 +1,5 @@
 #include "LoginFrame.h"
+#include "../CaptureWindow/CaptureFrame.h"
 #include "Validation/IDValidation.hpp"
 #include "Validation/PasswordValidation.hpp"
 #include <iostream>
@@ -112,6 +113,31 @@ void LoginFrame::styleText(wxStaticText *text)
 {
     text->SetFont(wxFont(12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
 }
+
+// void LoginFrame::OnLogin(wxCommandEvent& event)
+// {
+//     wxString enteredID = IDInput->GetValue();
+//     wxString enteredPassword = PwInput->GetValue();
+//     wxString noti = "Notification";
+//     wxString message;
+
+//     // Thực hiện xác thực ID và mật khẩu tại đây (ví dụ: so sánh với giá trị mẫu)
+//     if (enteredID == "admin" && enteredPassword == "password") {
+//         // Xử lý khi đăng nhập thành công
+//         message = wxT("Login success!");
+//         wxMessageBox(message, noti, wxOK | wxICON_INFORMATION);
+//         // Tạo và hiển thị CaptureFrame
+//         CaptureFrame* captureFrame = new CaptureFrame("Capture Window", wxDefaultPosition, wxDefaultSize);
+//         captureFrame->Show();
+
+//         // Đóng cửa sổ LoginFrame
+//         this->Close();
+//     } else {
+//         // Xử lý khi đăng nhập thất bại
+//         message = wxT("Login failed!");
+//         wxMessageBox(message, noti, wxOK | wxICON_ERROR);
+//     }
+// }
 
 LoginFrame::~LoginFrame()
 {
