@@ -22,11 +22,19 @@ set(SOURCE_DIR "")
 #     "${SOURCE_DIR}/*.cpp"
 #     "${SOURCE_DIR}/*.h"
 # )
-set(SOURCE_FILES main.cpp windows/Application.cpp windows/LoginWindow/LoginFrame.cpp windows/MainWindow/MainFrame.cpp windows/MainWindow/Menu/MainWindow.cpp)
+set(SOURCE_FILES main.cpp 
+                 windows/Application.cpp 
+                 windows/LoginWindow/LoginFrame.cpp 
+                 windows/MainWindow/MainFrame.cpp 
+                 windows/MainWindow/Menu/MainWindow.cpp 
+                 networks/client/net_client.cpp
+                 networks/server/net_server.cpp
+                 networks/net_session.cpp)
 set(HEADER_FILES windows/Application.h windows/LoginWindow/LoginFrame.hpp)
 
 
 include(${wxWidgets_USE_FILE})
+include_directories(../thirdparty/asio)
 
 if(APPLE)
     # create bundle on apple compiles

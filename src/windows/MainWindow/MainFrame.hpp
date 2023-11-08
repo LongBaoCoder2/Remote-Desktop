@@ -20,9 +20,7 @@ public:
     ~MainFrame();
 
 private:
-    //
     void OnClickSelected(wxMouseEvent &);
-    //
 
     wxPanel *MainPanel = nullptr;
 
