@@ -22,6 +22,7 @@ public:
 private:
     //
     void OnClickSelected(wxMouseEvent &);
+    void OnSettingSelected(wxMouseEvent &);
     //
 
     wxPanel *MainPanel = nullptr;

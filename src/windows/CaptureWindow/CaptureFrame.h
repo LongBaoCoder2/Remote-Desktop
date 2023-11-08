@@ -9,7 +9,7 @@ public:
     CaptureFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
 
 private:
-    const int DELAY_MS = 6;
+    const int DELAY_MS = 7;
     bool CAPTURING = false;
 
     wxPanel *CapturePanel = nullptr;
@@ -17,10 +17,11 @@ private:
 
     wxButton *startCaptureBtn = nullptr;
     wxButton *stopCaptureBtn = nullptr;
+    wxButton *saveCaptureBtn = nullptr;
 
     wxTimer *timer;
     wxScreenDC screenDC;
-    // wxBitmap* screenshot;
+    wxBitmap screenshot;
 
     // void OnPaint(wxPaintEvent& event);
 
@@ -28,4 +29,6 @@ private:
 
     void OnStartPress(wxCommandEvent &);
     void OnStopPress(wxCommandEvent &);
+    void onSavePress(wxCommandEvent &);
+    void takeScreenshot(int imgWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X), int imgHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y));
 };
