@@ -58,6 +58,34 @@ namespace net
 
             return msg;
         }
+
+        // template <typename DataType>
+        // friend message<T> &operator<<(message<T> &msg, const vector<DataType> &data)
+        // {
+        //     size_t i = 0;
+
+        //     msg.body.resize(i + data.size());
+
+        //     std::memcpy(msg.body.data(), data.data(), data.size());
+
+        //     msg.header.size = msg.size();
+
+        //     return msg;
+        // }
+
+        // template <typename DataType>
+        // friend message<T> &operator>>(message<T> &msg, vector<DataType> &data)
+        // {
+        //     size_t sizeOfMsg = msg.body.size();
+
+        //     std::memcpy(data.data(), msg.body.data(), sizeOfMsg);
+
+        //     msg.body.resize(0);
+
+        //     msg.header.size = msg.size();
+
+        //     return msg;
+        // }
     };
 
     template <typename T>

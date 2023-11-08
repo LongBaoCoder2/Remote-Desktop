@@ -15,7 +15,7 @@ namespace net
         client_interface();
         virtual ~client_interface();
 
-        bool Connect(const std::string &host, const uint16_t port);
+        bool ConnectToServer(const std::string &host, const uint16_t port);
         void Disconnect();
         bool IsConnected();
 

@@ -3,6 +3,8 @@
 #include <wx/wx.h>
 #include "Navbar/Navbar.hpp"
 #include "Menu/MainWindow.hpp"
+#include "ClientWindow/ClientWindow.hpp"
+#include "ServerWindow/ServerWindow.hpp"
 
 class MainFrame : public wxFrame
 {

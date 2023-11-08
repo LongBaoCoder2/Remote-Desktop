@@ -15,31 +15,36 @@ namespace net
     public:
         const T &front()
         {
-            std::scoped_lock lock(muxQueue); // it's a mutex lock which automatically unlock when out of scope
+            // std::scoped_lock lock(muxQueue); // it's a mutex lock which automatically unlock when out of scope
+            std::lock_guard<std::mutex> lock(muxQueue);
             return deqQueue.front();
         }
         const T &back()
         {
-            std::scoped_lock lock(muxQueue);
+            // std::scoped_lock lock(muxQueue);
+            std::lock_guard<std::mutex> lock(muxQueue);
             return deqQueue.back();
         }
         T pop_front()
         {
-            std::scoped_lock lock(muxQueue);
+            // std::scoped_lock lock(muxQueue);
+            std::lock_guard<std::mutex> lock(muxQueue);
             auto t = deqQueue.front();
             deqQueue.pop_front();
             return t;
         }
         T pop_back()
         {
-            std::scoped_lock lock(muxQueue);
+            // std::scoped_lock lock(muxQueue);
+            std::lock_guard<std::mutex> lock(muxQueue);
             auto t = deqQueue.back();
             deqQueue.pop_back();
             return t;
         }
         void push_back(const T &item)
         {
-            std::scoped_lock lock(muxQueue);
+            // std::scoped_lock lock(muxQueue);
+            std::lock_guard<std::mutex> lock(muxQueue);
             deqQueue.emplace_back(item);
 
             std::unique_lock<std::mutex> ul(muxBlocking);
@@ -47,7 +52,8 @@ namespace net
         }
         void push_front(const T &item)
         {
-            std::scoped_lock lock(muxQueue);
+            // std::scoped_lock lock(muxQueue);
+            std::lock_guard<std::mutex> lock(muxQueue);
             deqQueue.emplace_front(std::move(item));
 
             std::unique_lock<std::mutex> ul(muxBlocking);
@@ -55,17 +61,20 @@ namespace net
         }
         bool empty()
         {
-            std::scoped_lock lock(muxQueue);
+            // std::scoped_lock lock(muxQueue);
+            std::lock_guard<std::mutex> lock(muxQueue);
             return deqQueue.empty();
         }
         size_t count()
         {
-            std::scoped_lock lock(muxQueue);
+            // std::scoped_lock lock(muxQueue);
+            std::lock_guard<std::mutex> lock(muxQueue);
             return deqQueue.size();
         }
         void clear()
         {
-            std::scoped_lock lock(muxQueue);
+            // std::scoped_lock lock(muxQueue);
+            std::lock_guard<std::mutex> lock(muxQueue);
             deqQueue.clear();
         }
         void wait()
