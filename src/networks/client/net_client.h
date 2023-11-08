@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../net_common.h"
+#include "../net.h"
 #include <string>
 #include <thread>
 #include <memory>
@@ -9,11 +10,11 @@
 namespace net
 {
     template <typename T>
-    class client_interface
+    class IClient
     {
     public:
-        client_interface();
-        virtual ~client_interface();
+        IClient();
+        virtual ~IClient();
 
         bool ConnectToServer(const std::string &host, const uint16_t port);
         void Disconnect();

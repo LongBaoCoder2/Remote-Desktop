@@ -8,7 +8,7 @@
 namespace net
 {
     template <typename T>
-    class server_interface
+    class IServer
     {
     public:
         server_interface(uint16_t port);

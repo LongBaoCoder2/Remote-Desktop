@@ -140,7 +140,7 @@ namespace net
 
     // Send message to all clients
     template <typename T>
-    void server_interface<T>::MessageAllClients(const message<T> &msg, std::shared_ptr<session<T>> pIgnoreClient = nullptr)
+    void server_interface<T>::MessageAllClients(const message<T> &msg, std::shared_ptr<session<T>> pIgnoreClient)
     {
         bool bInvalidClientExists = false;
 
@@ -175,7 +175,7 @@ namespace net
 
     // Force server to respond to incoming messages
     template <typename T>
-    void server_interface<T>::Update(size_t nMaxMessages = -1, bool bWait = false)
+    void server_interface<T>::Update(size_t nMaxMessages, bool bWait)
     {
         if (bWait)
             m_qMessagesIn.wait();

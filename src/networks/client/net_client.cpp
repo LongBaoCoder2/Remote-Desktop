@@ -5,7 +5,7 @@ template <typename T>
 IClient<T>::IClient() {}
 
 template <typename T>
-virtual IClient<T>::~IClient() {
+IClient<T>::~IClient() {
   // If the client is destroyed, always try and disconnect from server
   Disconnect();
 }
