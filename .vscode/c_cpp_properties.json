@@ -23,7 +23,8 @@
             "includePath": [
                 "${workspaceFolder}/src/**",
                 "${workspaceFolder}/build/stage/include/**",
-                "${workspaceFolder}/thirdparty/asio"
+                "${workspaceFolder}/thirdparty/asio",
+                "${workspaceFolder}/src/utils/FileNameGenerator"
             ],
             "defines": [
                 "__WXMSW__",

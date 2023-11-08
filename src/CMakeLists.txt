@@ -2,7 +2,8 @@ cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 
 project(wx_cmake_template_core LANGUAGES CXX)
 
-set(CMAKE_CXX_STANDARD 11)
+# Set C++17 as the standard for the entire project
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # hack for buggy CMake's FindwxWidgets script
@@ -28,6 +29,8 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/LoginWindow/LoginFrame.cpp 
     windows/CaptureWindow/*.cpp
     networks/*.cpp
+    networks/client/*.cpp
+    networks/server/*.cpp
     windows/MainWindow/Menu/*.cpp
     windows/MainWindow/*.cpp
     networks/*.cpp
@@ -47,6 +50,8 @@ file(GLOB_RECURSE HEADER_FILES
     windows/BasicTextWindow/*.hpp
     windows/MainWindow/ClientWindow/*.hpp
     windows/MainWindow/ServerWindow/*.hpp
+    networks/client/*.h
+    networks/server/*.h
 )
 
 add_definitions(-D_WIN32_WINNT=0x0601)

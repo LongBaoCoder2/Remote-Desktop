@@ -23,6 +23,8 @@ cmake -S. -Bbuild
 cmake --build build
 ```
 
+Build ngu nho xoa o day: build\CMakeCache.txt
+
 This will create a directory named `build` and create all build artifacts there. The main executable can be found in the `build/subprojects/Build/wx_cmake_template_core` folder.
 
 ## Using as a Template (Linux/Mac)
