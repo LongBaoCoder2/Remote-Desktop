@@ -16,7 +16,7 @@ namespace net
 
     // Connect to server with hostname/ip-address and port
     template <typename T>
-    bool IClient<T>::Connect(const std::string &host, const uint16_t port)
+    bool IClient<T>::ConnectToServer(const std::string &host, const uint16_t port)
     {
         try
         {

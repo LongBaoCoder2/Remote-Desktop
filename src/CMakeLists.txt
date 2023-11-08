@@ -29,7 +29,11 @@ set(SOURCE_FILES main.cpp
                  windows/MainWindow/Menu/MainWindow.cpp 
                  networks/client/net_client.cpp
                  networks/server/net_server.cpp
-                 networks/net_session.cpp)
+                 networks/net_session.cpp
+                 windows/MainWindow/ClientWindow/ClientWindow.cpp
+                 windows/MainWindow/ServerWindow/ServerWindow.cpp                  )
+
+                 
 set(HEADER_FILES windows/Application.h windows/LoginWindow/LoginFrame.hpp)
 
 

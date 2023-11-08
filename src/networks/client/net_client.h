@@ -12,7 +12,7 @@ namespace net
         IClient();
         virtual ~IClient();
 
-        bool Connect(const std::string &host, const uint16_t port);
+        bool ConnectToServer(const std::string &host, const uint16_t port);
         void Disconnect();
         bool IsConnected();
 
