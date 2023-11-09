@@ -2,5 +2,5 @@
 
 class ServerTextWindow : public BasicTextFrame {
 public:
-    ServerTextWindow(const wxString& title = "Server Logger", const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxSize(1920 / 4, 1080 / 2));
+    ServerTextWindow(const wxString& title = "Server Logger", const wxPoint &pos = wxDefaultPosition, const wxSize &size = CONFIG_UI::VERY_SMALL_WINDOW);
 };

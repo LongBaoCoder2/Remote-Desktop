@@ -1,5 +1,6 @@
 #include "MainFrame.hpp"
 #include "../CaptureWindow/CaptureFrame.h"
+#include "SettingsWindow/SettingsFrame.hpp"
 
 MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size)
@@ -98,9 +99,11 @@ void MainFrame::OnClickSelected(wxMouseEvent &event)
 }
 
 void MainFrame::OnSettingSelected(wxMouseEvent &) {
-    wxMessageBox("Capture Frame activated");
-    CaptureFrame* captureFrame = new CaptureFrame("Capture Window", wxDefaultPosition, wxDefaultSize);
-    captureFrame->Show();
+    wxMessageBox("Settings Window");
+    // CaptureFrame* captureFrame = new CaptureFrame("Capture Window", wxDefaultPosition, wxDefaultSize);
+    // captureFrame->Show();
+    SettingsFrame* settingsFrame = new SettingsFrame();
+    settingsFrame->Show();
 }
 
 void MainFrame::SetupMainMenu()
