@@ -4,6 +4,7 @@ ClientWindow::ClientWindow(const std::string &host, uint16_t port)
     : wxFrame(nullptr, wxID_ANY, "Client Window")
 {
 
+    wxLogMessage("Message"); // produces messagebox and  logs to file/window
     if (!ConnectToServer(host, port))
     {
         // LOG
