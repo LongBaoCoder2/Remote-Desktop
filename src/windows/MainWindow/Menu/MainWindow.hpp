@@ -1,7 +1,7 @@
 #pragma once
 
 #include <wx/wx.h>
-#include "../../components/Button.hpp"
+#include "../../components/wButton.hpp"
 
 class MainWindow : public wxWindow
 {
