@@ -1,7 +1,9 @@
 #pragma once
 #include "ClientNetwork.hpp"
 #include <wx/wx.h>
+#include <wx/mstream.h>
 #include "../../../utils/Logger/WindowLogger.hpp"
+
 #define DEV
 
 class ClientWindow : public net::IClient<RemoteMessage>, public wxFrame

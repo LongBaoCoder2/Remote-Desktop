@@ -4,11 +4,12 @@ ClientWindow::ClientWindow(const std::string &host, uint16_t port)
     : wxFrame(nullptr, wxID_ANY, "Client Window")
 {
 
-    wxLogMessage("Message"); // produces messagebox and  logs to file/window
     if (!ConnectToServer(host, port))
     {
         // LOG
+        wxMessageBox(wxT("Failed to connect to Server."), wxT("Error"), wxICON_ERROR | wxOK);
     }
+    // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
 
     CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366, 768));
     CapturePanel->SetBackgroundColour(wxColor(38, 37, 54));
@@ -31,17 +32,36 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent &event)
         while (!Incoming().empty())
         {
             auto msg = Incoming().pop_front().msg;
-
             switch (msg.header.id)
             {
             case RemoteMessage::SERVER_ACCEPT:
                 isWaitingForConnection = false;
+                wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
                 break;
             case RemoteMessage::SERVER_DENY:
                 // Disconnect();
+                wxMessageBox(wxT("Disconnected from the server."), wxT("Disconnected"), wxICON_INFORMATION | wxOK);
                 break;
+
             case RemoteMessage::SERVER_UPDATE:
-                // GET IMAGE FROM RAW IMAGE
+                isWaitingForConnection = false;
+                // Tạo một memory stream từ dữ liệu nhận được
+                wxMemoryInputStream memStream(msg.body.data(), msg.body.size());
+
+                // Tải hình ảnh từ memory stream
+                wxImage image;
+                image.LoadFile(memStream, wxBITMAP_TYPE_PNG);
+
+                // Chuyển đổi wxImage thành wxBitmap để hiển thị
+                if (image.IsOk())
+                {
+                    screenshot = wxBitmap(image);
+                }
+                else
+                {
+                    wxMessageBox(wxT("Failed to load the image."), wxT("Error"), wxICON_ERROR | wxOK);
+                }
+
                 break;
             }
         }
