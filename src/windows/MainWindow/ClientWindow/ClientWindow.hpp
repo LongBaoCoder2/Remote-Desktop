@@ -1,7 +1,7 @@
 #pragma once
 #include "ClientNetwork.hpp"
 #include <wx/wx.h>
-#include "../../utils/Logger/WindowLogger.hpp"
+#include "../../../utils/Logger/WindowLogger.hpp"
 #define DEV
 
 class ClientWindow : public net::IClient<RemoteMessage>, public wxFrame
@@ -26,11 +26,5 @@ private:
     void ClearPanel();
     void OnUpdateWindow(wxTimerEvent &);
 
-#ifdef DEV
-    std::unique_ptr<Logger> logger;
-#endif
-
-#ifdef DEV
-    logger = std::make_unique<Logger>(this);
-#endif
+    std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };

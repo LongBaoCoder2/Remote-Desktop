@@ -15,6 +15,8 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     // this->SetBackgroundColour(wxColour(244, 243, 243));
     // this->Center();
     this->SetupMainMenu();
+
+    logger = std::make_unique<Logger>(this);
 }
 
 void MainFrame::SetupNavbar()
@@ -46,8 +48,7 @@ void MainFrame::SetupNavbar()
         HomeBtn,
         MenuBtn,
         ManagerBtn,
-        SettingBtn
-    };
+        SettingBtn};
     for (auto button : listButton)
     {
         // button->SetFont(wxFont(10, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MEDIUM));
@@ -97,9 +98,10 @@ void MainFrame::OnClickSelected(wxMouseEvent &event)
     event.Skip();
 }
 
-void MainFrame::OnSettingSelected(wxMouseEvent &) {
+void MainFrame::OnSettingSelected(wxMouseEvent &)
+{
     wxMessageBox("Capture Frame activated");
-    CaptureFrame* captureFrame = new CaptureFrame("Capture Window", wxDefaultPosition, wxDefaultSize);
+    CaptureFrame *captureFrame = new CaptureFrame("Capture Window", wxDefaultPosition, wxDefaultSize);
     captureFrame->Show();
 }
 

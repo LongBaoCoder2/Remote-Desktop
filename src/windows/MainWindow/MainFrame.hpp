@@ -7,15 +7,24 @@
 #include "Navbar/Navbar.hpp"
 #include "ServerWindow/ServerWindow.hpp"
 
-class MainFrame : public wxFrame {
- public:
-  enum class Windows : unsigned int { HOME = 0, MENU, MANAGER, SETTINGS };
+#include "../../utils/Logger/WindowLogger.hpp"
+
+class MainFrame : public wxFrame
+{
+public:
+  enum class Windows : unsigned int
+  {
+    HOME = 0,
+    MENU,
+    MANAGER,
+    SETTINGS
+  };
 
   MainFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
 
   ~MainFrame();
 
- private:
+private:
   //
   void OnClickSelected(wxMouseEvent &);
   void OnSettingSelected(wxMouseEvent &);
@@ -32,6 +41,7 @@ class MainFrame : public wxFrame {
   void SetupMainMenu();
 
   // NavigationBar *Navbar = nullptr;
+  std::unique_ptr<Logger> logger;
 
   Windows curWindows = Windows::HOME;
   wxWindow *currentWindows = nullptr;
