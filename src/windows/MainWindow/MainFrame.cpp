@@ -1,4 +1,5 @@
 #include "MainFrame.hpp"
+#include "../CaptureWindow/CaptureFrame.h"
 
 MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size)
@@ -45,7 +46,8 @@ void MainFrame::SetupNavbar()
         HomeBtn,
         MenuBtn,
         ManagerBtn,
-        SettingBtn};
+        SettingBtn
+    };
     for (auto button : listButton)
     {
         // button->SetFont(wxFont(10, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_MEDIUM));
@@ -54,6 +56,7 @@ void MainFrame::SetupNavbar()
         button->Bind(wxEVT_LEFT_DOWN, &MainFrame::OnClickSelected, this);
         buttonSizer->Add(button, 0, wxTOP | wxALIGN_CENTER, FromDIP(5));
     }
+    SettingBtn->Bind(wxEVT_LEFT_DOWN, &MainFrame::OnSettingSelected, this);
     btnPanel->SetSizerAndFit(buttonSizer);
     // ButtonSizer->Add(HomeBtn, 1, wxTOP | wxALIGN_CENTER, FromDIP(5));
     // HomeBtn->Bind(wxEVT_BUTTON, &NavigationBar::OnClick, this);
@@ -92,6 +95,12 @@ void MainFrame::OnClickSelected(wxMouseEvent &event)
     wxMessageBox("Button Clicked");
 
     event.Skip();
+}
+
+void MainFrame::OnSettingSelected(wxMouseEvent &) {
+    wxMessageBox("Capture Frame activated");
+    CaptureFrame* captureFrame = new CaptureFrame("Capture Window", wxDefaultPosition, wxDefaultSize);
+    captureFrame->Show();
 }
 
 void MainFrame::SetupMainMenu()
