@@ -15,6 +15,12 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
 
     // this->SetBackgroundColour(wxColour(244, 243, 243));
     // this->Center();
+    // Tạo icon từ một tập tin hình ảnh
+    wxIcon AppIcon;
+    AppIcon.CopyFromBitmap(wxBitmap("assets\\app_icon1.png", wxBITMAP_TYPE_PNG));
+
+    // Đặt icon cho cửa sổ
+    this->SetIcon(AppIcon);
     this->SetupMainMenu();
 }
 
