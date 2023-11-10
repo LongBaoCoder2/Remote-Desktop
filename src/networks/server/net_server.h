@@ -61,8 +61,9 @@ namespace net
       m_threadContext = std::thread([this]
                                     { m_asioContext.run(); });
     }
-    catch (std::exception &e)
+    catch (const std::exception &e)
     {
+      std::cout << e.what() << std::endl;
       return false;
     }
 
@@ -103,7 +104,9 @@ namespace net
       }
       else
       {
-      }  WaitForClientConnection(); });
+      }  
+      WaitForClientConnection(); 
+    });
   }
 
   template <typename T>

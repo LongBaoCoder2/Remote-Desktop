@@ -14,9 +14,9 @@ MainWindow::MainWindow(wxWindow *parent, const wxPoint &pos, const wxSize &size)
                        [](wxMouseEvent &e)
                        {
                            wxMessageBox("Client");
-                           ClientWindow *clientwindow = new ClientWindow("127.0.0.1", 36424);
+                           ClientWindow *clientwindow = new ClientWindow("127.0.0.1", 60000);
                            clientwindow->Show();
-                           e.Skip();
+                        //    e.Skip();
                        });
     auto ServerButton = new MyButton(MainWindowPanel, wxID_ANY, "SERVER", wxDefaultPosition, wxSize(260, 45));
     ServerButton->Bind(wxEVT_LEFT_DOWN,
@@ -25,9 +25,9 @@ MainWindow::MainWindow(wxWindow *parent, const wxPoint &pos, const wxSize &size)
                            wxMessageBox("Server");
                            // ServerTextWindow* serverTextWindow = new ServerTextWindow();
                            // serverTextWindow->Show();
-                           ServerWindow *serverWindow = new ServerWindow(36424);
+                           ServerWindow *serverWindow = new ServerWindow(60000);
                            serverWindow->Show();
-                           e.Skip();
+                        //    e.Skip();
                        });
 
     ButtonSizer->Add(ClientButton, 1, wxALL, FromDIP(20));

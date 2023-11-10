@@ -28,6 +28,7 @@ private:
     wxBitmap screenshot;
     wxTimer *timer;
     wxScreenDC screenDC;
+    wxTextCtrl* textCtrl;
     // std::vector<uint32_t> garbageIDs;
 
     void OnClientValidated(std::shared_ptr<net::session<RemoteMessage>> client);

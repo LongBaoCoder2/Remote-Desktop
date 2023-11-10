@@ -14,11 +14,12 @@ public:
     virtual ~ClientWindow();
 
 private:
-    const int DELAY_MS = 6;
+    const int DELAY_MS = 3000;
     bool CAPTURING = false;
     bool isWaitingForConnection = true;
 
     wxPanel *CapturePanel = nullptr;
+    wxTextCtrl* textCtrl = nullptr;
 
     wxTimer *timer;
     wxScreenDC screenDC;
@@ -28,5 +29,5 @@ private:
     void ClearPanel();
     void OnUpdateWindow(wxTimerEvent &);
 
-    std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
+    // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };

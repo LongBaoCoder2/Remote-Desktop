@@ -16,7 +16,7 @@ MainFrame::MainFrame(const wxString &title, const wxPoint &pos, const wxSize &si
     // this->Center();
     this->SetupMainMenu();
 
-    logger = std::make_unique<Logger>(this);
+    // logger = std::make_unique<Logger>(this);
 }
 
 void MainFrame::SetupNavbar()
