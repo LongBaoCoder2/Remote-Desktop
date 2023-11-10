@@ -51,11 +51,13 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent &event)
                 // Tải hình ảnh từ memory stream
                 wxImage image;
                 image.LoadFile(memStream, wxBITMAP_TYPE_PNG);
+                wxMessageBox(wxT("Image convert successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
 
                 // Chuyển đổi wxImage thành wxBitmap để hiển thị
                 if (image.IsOk())
                 {
                     screenshot = wxBitmap(image);
+                    wxMessageBox(wxT("Image sent successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
                 }
                 else
                 {

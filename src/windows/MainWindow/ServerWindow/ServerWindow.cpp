@@ -4,11 +4,10 @@
 ServerWindow::ServerWindow(uint16_t port)
     : wxFrame(nullptr, wxID_ANY, "Server Window", wxDefaultPosition, wxSize(1366, 768)), net::IServer<RemoteMessage>(port)
 {
+    Start();
+
     LogPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366, 768));
     text = new wxStaticText(LogPanel, wxID_ANY, "Server is running");
-    wxLogMessage("Message"); // produces messagebox and  logs to file/window
-
-    Start();
 
     timer = new wxTimer(this, wxID_ANY);
     this->Bind(wxEVT_TIMER, &ServerWindow::OnCaptureWindow, this);
@@ -57,6 +56,7 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent &event)
     {
         takeScreenshot();
         wxImage image = screenshot.ConvertToImage();
+
         image = image.Scale(screenWidth, screenHeight, wxIMAGE_QUALITY_HIGH);
 
         // Nén hình ảnh thành PNG

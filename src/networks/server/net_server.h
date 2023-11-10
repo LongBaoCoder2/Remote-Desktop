@@ -103,8 +103,7 @@ namespace net
       }
       else
       {
-      } });
-    WaitForClientConnection();
+      }  WaitForClientConnection(); });
   }
 
   template <typename T>
@@ -155,9 +154,7 @@ namespace net
   }
 
   template <typename T>
-  void IServer<T>::MessageAllClients(
-      const message<T> &msg,
-      std::shared_ptr<session<T>> pIgnoreClient)
+  void IServer<T>::MessageAllClients(const message<T> &msg, std::shared_ptr<session<T>> pIgnoreClients)
   {
     bool hasInvalidClient = false;
 
@@ -165,7 +162,7 @@ namespace net
     {
       if (client && client->IsConnected())
       {
-        if (client != pIgnoreClient)
+        if (client != pIgnoreClients)
         {
           client->Send(msg);
         }
