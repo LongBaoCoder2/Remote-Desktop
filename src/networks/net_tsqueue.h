@@ -9,26 +9,26 @@ namespace net
     {
     public:
         tsqueue() = default;                  // using normal constructor. It means you can do this "tsqueue a;"
-        tsqueue(const tsqueue<T> &) = delete; // not allowing copy
+        tsqueue(const tsqueue<T>&) = delete; // not allowing copy
         virtual ~tsqueue() { clear(); }       // destructor, will call the clear() function, in order to clear the queue
 
     public:
-        const T &front()
+        const T& front()
         {
             // std::scoped_lock lock(muxQueue); // it's a mutex lock which automatically unlock when out of scope
-            std::lock_guard<std::mutex> lock(muxQueue);
+            std::scoped_lock lock(muxQueue);
             return deqQueue.front();
         }
-        const T &back()
+        const T& back()
         {
             // std::scoped_lock lock(muxQueue);
-            std::lock_guard<std::mutex> lock(muxQueue);
+            std::scoped_lock lock(muxQueue);
             return deqQueue.back();
         }
         T pop_front()
         {
             // std::scoped_lock lock(muxQueue);
-            std::lock_guard<std::mutex> lock(muxQueue);
+            std::scoped_lock lock(muxQueue);
             auto t = deqQueue.front();
             deqQueue.pop_front();
             return t;
@@ -36,24 +36,24 @@ namespace net
         T pop_back()
         {
             // std::scoped_lock lock(muxQueue);
-            std::lock_guard<std::mutex> lock(muxQueue);
+            std::scoped_lock lock(muxQueue);
             auto t = deqQueue.back();
             deqQueue.pop_back();
             return t;
         }
-        void push_back(const T &item)
+        void push_back(const T& item)
         {
             // std::scoped_lock lock(muxQueue);
-            std::lock_guard<std::mutex> lock(muxQueue);
+            std::scoped_lock lock(muxQueue);
             deqQueue.emplace_back(item);
 
             std::unique_lock<std::mutex> ul(muxBlocking);
             cvBlocking.notify_one();
         }
-        void push_front(const T &item)
+        void push_front(const T& item)
         {
             // std::scoped_lock lock(muxQueue);
-            std::lock_guard<std::mutex> lock(muxQueue);
+            std::scoped_lock  lock(muxQueue);
             deqQueue.emplace_front(std::move(item));
 
             std::unique_lock<std::mutex> ul(muxBlocking);
@@ -62,19 +62,19 @@ namespace net
         bool empty()
         {
             // std::scoped_lock lock(muxQueue);
-            std::lock_guard<std::mutex> lock(muxQueue);
+            std::scoped_lock  lock(muxQueue);
             return deqQueue.empty();
         }
         size_t count()
         {
             // std::scoped_lock lock(muxQueue);
-            std::lock_guard<std::mutex> lock(muxQueue);
+            std::scoped_lock  lock(muxQueue);
             return deqQueue.size();
         }
         void clear()
         {
             // std::scoped_lock lock(muxQueue);
-            std::lock_guard<std::mutex> lock(muxQueue);
+            std::scoped_lock lock(muxQueue);
             deqQueue.clear();
         }
         void wait()
@@ -90,7 +90,7 @@ namespace net
                     then send the signal. Since the mutex ensures exclusive access, the wait won't miss the signal.
                 */
                 cvBlocking.wait(ul, [this]
-                                { return !empty(); }); // lambda function is kinda the double check, to prevent spurious wake-up
+                    { return !empty(); }); // lambda function is kinda the double check, to prevent spurious wake-up
             }
         }
 

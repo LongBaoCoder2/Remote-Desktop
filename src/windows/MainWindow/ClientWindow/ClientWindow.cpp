@@ -1,6 +1,6 @@
 #include "ClientWindow.hpp"
 
-ClientWindow::ClientWindow(const std::string &host, uint16_t port)
+ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
 {
 
@@ -20,7 +20,7 @@ ClientWindow::ClientWindow(const std::string &host, uint16_t port)
 
 
     // Tạo một wxBoxSizer với hướng ngang
-    wxBoxSizer *MainSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* MainSizer = new wxBoxSizer(wxHORIZONTAL);
 
     // Thêm CapturePanel vào MainSizer với tỷ lệ 1
     MainSizer->Add(CapturePanel, 1, wxEXPAND, 0);
@@ -36,7 +36,7 @@ ClientWindow::ClientWindow(const std::string &host, uint16_t port)
     this->Center();
 }
 
-void ClientWindow::OnUpdateWindow(wxTimerEvent &event)
+void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 {
 
     if (IsConnected())
@@ -57,9 +57,12 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent &event)
 
             case RemoteMessage::SERVER_UPDATE:
                 isWaitingForConnection = false;
+
+                OnReceiveImage(msg);
+
                 // Tạo một memory stream từ dữ liệu nhận được
-                wxMemoryInputStream memStream(msg.body.data(), msg.body.size());
-                wxMessageBox(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()), wxT("Message"), wxICON_INFORMATION | wxOK);
+                // wxMemoryInputStream memStream(msg.body.data(), msg.body.size());
+                // wxMessageBox(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()), wxT("Message"), wxICON_INFORMATION | wxOK);
 
                 // // Tải hình ảnh từ memory stream
                 // wxImage image;
@@ -90,7 +93,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent &event)
         return;
     }
 
-    // UpdatePanel();
+    UpdatePanel();
 }
 
 void ClientWindow::UpdatePanel()
@@ -107,6 +110,15 @@ void ClientWindow::ClearPanel()
     wxClientDC clientDC(CapturePanel);
     clientDC.Clear();
 }
+
+void ClientWindow::OnReceiveImage(net::message<RemoteMessage>& msg)
+{
+    unsigned char* bitmapData = reinterpret_cast<unsigned char*>(msg.body.data());
+
+    wxImage image(1280, 960, bitmapData, true);
+    screenshot = wxBitmap(image);
+}
+
 
 ClientWindow::~ClientWindow()
 {

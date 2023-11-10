@@ -69,19 +69,20 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
 
         image = image.Rescale(1280, 960, wxIMAGE_QUALITY_HIGH);
 
+
         // Nén hình ảnh thành PNG
-        wxMemoryOutputStream memStream;
-        image.SaveFile(memStream, wxBITMAP_TYPE_PNG);
+        // wxMemoryOutputStream memStream;
+        // image.SaveFile(memStream, wxBITMAP_TYPE_PNG);
 
         // Lấy dữ liệu nén
         // wxStreamBuffer* memBuffer = memStream.GetOutputStreamBuffer();
         // size_t dataSize = memBuffer->GetDataLeft();
         // size_t dataSize = memStream.GetSize();
-        size_t dataSize = 20;
-        auto* dataBuffer = new uint8_t[dataSize + 10];
-        for (int i = 0; i < 20; ++i) {
-            dataBuffer[i] = 1;
-        }
+        // size_t dataSize = 20;
+        // auto* dataBuffer = new uint8_t[dataSize + 10];
+        // for (int i = 0; i < 20; ++i) {
+        //     dataBuffer[i] = 1;
+        // }
         // memStream.CopyTo(dataBuffer, dataSize);
 
         // wxMemoryInputStream mem1Stream(dataBuffer, dataSize);
@@ -89,11 +90,23 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         // image.SaveFile("abc.png", wxBITMAP_TYPE_PNG);
 
         // Đóng gói vào message
+        size_t dataSize = 1280 * 960 * 3;
         net::message<RemoteMessage> msg;
         msg.header.id = RemoteMessage::SERVER_UPDATE;
         msg.header.size = dataSize;
-        std::copy(dataBuffer, dataBuffer + dataSize, std::back_inserter(msg.body));
-        // msg.body.assign(dataBuffer, dataBuffer + dataSize);
+        // std::copy(dataBuffer, dataBuffer + dataSize, std::back_inserter(msg.body));
+        msg.body.assign(image.GetData(), image.GetData() + dataSize);
+
+        //
+// unsigned char* rawData = image.GetData();
+
+//
+
+// net::message<RemoteMessage> msg;
+// msg.header.id = RemoteMessage::SERVER_UPDATE;
+// msg.header.size = dataSize;
+// std::copy(dataBuffer, dataBuffer + dataSize, std::back_inserter(msg.body));
+// msg.body.assign(dataBuffer, dataBuffer + dataSize);
 
         textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu bytes.\n"), dataSize));
 
@@ -101,7 +114,7 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         MessageAllClients(msg);
 
         // Dọn dẹp bộ nhớ
-        delete[] dataBuffer;
+        // delete[] dataBuffer;
     }
 }
 

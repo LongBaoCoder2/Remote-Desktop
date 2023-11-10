@@ -23,18 +23,18 @@ namespace net
         };
 
     public:
-        session(owner parent, asio::io_context &asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>> &qIn);
+        session(owner parent, asio::io_context& asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>>& qIn);
         virtual ~session();
 
         uint32_t GetID() const;
 
     public:
         void ConnectToClient(uint32_t uid = 0);
-        void ConnectToServer(const asio::ip::tcp::resolver::results_type &endpoints);
+        void ConnectToServer(const asio::ip::tcp::resolver::results_type& endpoints);
         void Disconnect();
         bool IsConnected() const;
         void StartListening();
-        void Send(const message<T> &msg);
+        void Send(const message<T>& msg);
 
     private:
         void WriteHeader();
@@ -45,16 +45,16 @@ namespace net
 
     protected:
         asio::ip::tcp::socket m_socket;
-        asio::io_context &m_asioContext;
+        asio::io_context& m_asioContext;
         tsqueue<message<T>> m_qMessagesOut;
-        tsqueue<owned_message<T>> &m_qMessagesIn;
+        tsqueue<owned_message<T>>& m_qMessagesIn;
         message<T> m_msgTemporaryIn;
         owner m_nOwnerType = owner::server;
         uint32_t id = 0;
     };
 
     template <typename T>
-    session<T>::session(owner parent, asio::io_context &asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>> &qIn)
+    session<T>::session(owner parent, asio::io_context& asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>>& qIn)
         : m_asioContext(asioContext), m_socket(std::move(socket)), m_qMessagesIn(qIn)
     {
         m_nOwnerType = parent;
@@ -83,16 +83,16 @@ namespace net
     }
 
     template <typename T>
-    void session<T>::ConnectToServer(const asio::ip::tcp::resolver::results_type &endpoints)
+    void session<T>::ConnectToServer(const asio::ip::tcp::resolver::results_type& endpoints)
     {
         if (m_nOwnerType == owner::client)
         {
             asio::async_connect(m_socket, endpoints,
-                                [this](asio::error_code ec, asio::ip::tcp::endpoint endpoint)
-                                {
-                                    if (!ec)
-                                        this->ReadHeader();
-                                });
+                [this](asio::error_code ec, asio::ip::tcp::endpoint endpoint)
+                {
+                    if (!ec)
+                        this->ReadHeader();
+                });
         }
     }
 
@@ -101,7 +101,7 @@ namespace net
     {
         if (this->IsConnected())
             asio::post(m_asioContext, [this]()
-                       { m_socket.close(); });
+                { m_socket.close(); });
     }
 
     template <typename T>
@@ -114,31 +114,31 @@ namespace net
     // the target, for a client, the target is the server and vice versa
     // session::Send - send message from a host to another host.
     template <typename T>
-    void session<T>::Send(const message<T> &msg)
+    void session<T>::Send(const message<T>& msg)
     {
         asio::post(m_asioContext, [this, msg]()
-                   {
-                                          // If the queue has a message in it, then we must
-                                          // assume that it is in the process of asynchronously being written.
-                                          // Either way add the message to the queue to be output. If no messages
-                                          // were available to be written, then start the process of writing the
-                                          // message at the front of the queue.
+            {
+                // If the queue has a message in it, then we must
+                // assume that it is in the process of asynchronously being written.
+                // Either way add the message to the queue to be output. If no messages
+                // were available to be written, then start the process of writing the
+                // message at the front of the queue.
 
-                                          // Ve co ban thi bien bool nay giup chung ta biet duoc trong queue co dang giu message nao hay khong
-                                          // Tai sao dieu nay lai quan trong?
-                                          // Boi vi neu trong queue van con message thi ham WriteHeader dang duoc goi o dau do
-                                          // Ma chung ta lai goi no o day thi se dan den viec xung dot hoac thu tu goi tin gui qua ben kia
-                                          // bi xao tron vi ta da goi ham WriteHeader khong dung theo thu tu cac message
-                                          bool inProgress = !m_qMessagesOut.empty();
+                // Ve co ban thi bien bool nay giup chung ta biet duoc trong queue co dang giu message nao hay khong
+                // Tai sao dieu nay lai quan trong?
+                // Boi vi neu trong queue van con message thi ham WriteHeader dang duoc goi o dau do
+                // Ma chung ta lai goi no o day thi se dan den viec xung dot hoac thu tu goi tin gui qua ben kia
+                // bi xao tron vi ta da goi ham WriteHeader khong dung theo thu tu cac message
+                bool inProgress = !m_qMessagesOut.empty();
 
-                                          // Con dong nay thi chay binh thuong vi day chi don gian la bo msg vao trong queue
-                                          m_qMessagesOut.push_back(msg);
+                // Con dong nay thi chay binh thuong vi day chi don gian la bo msg vao trong queue
+                m_qMessagesOut.push_back(msg);
 
-                                          // Neu khong con msg trong queue dang duoc xu li thi goi WriteHeader de gui msg moi add vo queue
-                                          if (!inProgress)
-                                          {
-                                              WriteHeader();
-                                          } });
+                // Neu khong con msg trong queue dang duoc xu li thi goi WriteHeader de gui msg moi add vo queue
+                if (!inProgress)
+                {
+                    WriteHeader();
+                } });
     }
 
     // ASYNC - Prime context to write a message header
@@ -149,43 +149,43 @@ namespace net
         // at least one message to send. So allocate a transmission buffer to hold
         // the message, and issue the work - asio, send these bytes
         asio::async_write(m_socket, asio::buffer(&m_qMessagesOut.front().header, sizeof(message_header<T>)),
-                          [this](std::error_code ec, std::size_t length)
-                          {
-                              // asio has now sent the bytes - if there was a problem
-                              // an error would be available...
-                              if (!ec)
-                              {
-                                  // ... no error, so check if the message header just sent also
-                                  // has a message body...
-                                  if (m_qMessagesOut.front().body.size() > 0)
-                                  {
-                                      // ...it does, so issue the task to write the body bytes
-                                      WriteBody();
-                                  }
-                                  else
-                                  {
-                                      // ...it didnt, so we are done with this message. Remove it from
-                                      // the outgoing message queue
-                                      m_qMessagesOut.pop_front();
+            [this](std::error_code ec, std::size_t length)
+            {
+                // asio has now sent the bytes - if there was a problem
+                // an error would be available...
+                if (!ec)
+                {
+                    // ... no error, so check if the message header just sent also
+                    // has a message body...
+                    if (m_qMessagesOut.front().body.size() > 0)
+                    {
+                        // ...it does, so issue the task to write the body bytes
+                        WriteBody();
+                    }
+                    else
+                    {
+                        // ...it didnt, so we are done with this message. Remove it from
+                        // the outgoing message queue
+                        m_qMessagesOut.pop_front();
 
-                                      // If the queue is not empty, there are more messages to send, so
-                                      // make this happen by issuing the task to send the next header.
-                                      if (!m_qMessagesOut.empty())
-                                      {
-                                          WriteHeader();
-                                      }
-                                  }
-                              }
-                              else
-                              {
-                                  // ...asio failed to write the message, we could analyse why but
-                                  // for now simply assume the connection has died by closing the
-                                  // socket. When a future attempt to write to this client fails due
-                                  // to the closed socket, it will be tidied up.
-                                  std::cout << "[" << id << "] Write Header Fail.\n";
-                                  m_socket.close();
-                              }
-                          });
+                        // If the queue is not empty, there are more messages to send, so
+                        // make this happen by issuing the task to send the next header.
+                        if (!m_qMessagesOut.empty())
+                        {
+                            WriteHeader();
+                        }
+                    }
+                }
+                else
+                {
+                    // ...asio failed to write the message, we could analyse why but
+                    // for now simply assume the connection has died by closing the
+                    // socket. When a future attempt to write to this client fails due
+                    // to the closed socket, it will be tidied up.
+                    std::cout << "[" << id << "] Write Header Fail.\n";
+                    m_socket.close();
+                }
+            });
     }
 
     // ASYNC - Prime context to write a message body
@@ -196,37 +196,37 @@ namespace net
         // indicated a body existed for this message. Fill a transmission buffer
         // with the body data, and send it!
         asio::async_write(m_socket, asio::buffer(m_qMessagesOut.front().body.data(), m_qMessagesOut.front().body.size()),
-                          [this](std::error_code ec, std::size_t length)
-                          {
-                              if (!ec)
-                              {
-                                  // Sending was successful, so we are done with the message
-                                  // and remove it from the queue
-                                  m_qMessagesOut.pop_front();
+            [this](std::error_code ec, std::size_t length)
+            {
+                if (!ec)
+                {
+                    // Sending was successful, so we are done with the message
+                    // and remove it from the queue
+                    m_qMessagesOut.pop_front();
 
-                                  // If the queue still has messages in it, then issue the task to
-                                  // send the next messages' header.
-                                  if (!m_qMessagesOut.empty())
-                                  {
-                                      WriteHeader();
-                                  }
-                              }
-                              else
-                              {
-                                  // Sending failed, see WriteHeader() equivalent for description :P
-                                  std::cout << "[" << id << "] Write Body Fail.\n";
-                                  m_socket.close();
-                              }
-                          });
+                    // If the queue still has messages in it, then issue the task to
+                    // send the next messages' header.
+                    if (!m_qMessagesOut.empty())
+                    {
+                        WriteHeader();
+                    }
+                }
+                else
+                {
+                    // Sending failed, see WriteHeader() equivalent for description :P
+                    std::cout << "[" << id << "] Write Body Fail.\n";
+                    m_socket.close();
+                }
+            });
     }
 
     template <typename T>
     void session<T>::AddToIncomingMessageQueue()
     {
         if (m_nOwnerType == owner::server)
-            m_qMessagesIn.push_back({this->shared_from_this(), m_msgTemporaryIn});
+            m_qMessagesIn.push_back({ this->shared_from_this(), m_msgTemporaryIn });
         else
-            m_qMessagesIn.push_back({nullptr, m_msgTemporaryIn});
+            m_qMessagesIn.push_back({ nullptr, m_msgTemporaryIn });
         ReadHeader();
     }
 
@@ -234,43 +234,65 @@ namespace net
     void session<T>::ReadHeader()
     {
         asio::async_read(m_socket, asio::buffer(&m_msgTemporaryIn.header, sizeof(message_header<T>)),
-                         [this](std::error_code ec, std::size_t length) // length = sizeof(message_header<T>)
-                         {
-                             if (!ec)
-                             {
-                                 if (m_msgTemporaryIn.header.size > 0)
-                                 {
-                                     m_msgTemporaryIn.body.resize(m_msgTemporaryIn.header.size);
-                                     ReadBody();
-                                 }
-                                 else // is bodyless msg
-                                 {
-                                     AddToIncomingMessageQueue();
-                                 }
-                             }
-                             else
-                             {
-                                 std::cout << "[" << id << "] Read Header Fail.\n";
-                                 m_socket.close();
-                             }
-                         });
+            [this](std::error_code ec, std::size_t length) // length = sizeof(message_header<T>)
+            {
+                if (!ec)
+                {
+                    if (m_msgTemporaryIn.header.size > 0)
+                    {
+                        m_msgTemporaryIn.body.resize(m_msgTemporaryIn.header.size);
+                        ReadBody();
+                    }
+                    else // is bodyless msg
+                    {
+                        AddToIncomingMessageQueue();
+                    }
+                }
+                else
+                {
+                    std::cout << "[" << id << "] Read Header Fail.\n";
+                    m_socket.close();
+                }
+            });
     }
 
     template <typename T>
     void session<T>::ReadBody()
     {
-        asio::async_read(m_socket, asio::buffer(&m_msgTemporaryIn.header, sizeof(message_header<T>)),
-                         [this](std::error_code ec, std::size_t length)
-                         {
-                             if (!ec)
-                             {
-                                 AddToIncomingMessageQueue();
-                             }
-                             else
-                             {
-                                 std::cout << "[" << id << "] Read Header Fail.\n";
-                                 m_socket.close();
-                             }
-                         });
+        // If this function is called, a header has already been read, and that header
+        // request we read a body, The space for that body has already been allocated
+        // in the temporary message object, so just wait for the bytes to arrive...
+        asio::async_read(m_socket, asio::buffer(m_msgTemporaryIn.body.data(), m_msgTemporaryIn.body.size()),
+            [this](std::error_code ec, std::size_t length)
+            {
+                if (!ec)
+                {
+                    // ...and they have! The message is now complete, so add
+                    // the whole message to incoming queue
+                    AddToIncomingMessageQueue();
+                }
+                else
+                {
+                    // As above!
+                    std::cout << "[" << id << "] Read Body Fail.\n";
+                    m_socket.close();
+                }
+            });
     }
+    // void session<T>::ReadBody()
+    // {
+    //     asio::async_read(m_socket, asio::buffer(&m_msgTemporaryIn.header, sizeof(message_header<T>)),
+    //                      [this](std::error_code ec, std::size_t length)
+    //                      {
+    //                          if (!ec)
+    //                          {
+    //                              AddToIncomingMessageQueue();
+    //                          }
+    //                          else
+    //                          {
+    //                              std::cout << "[" << id << "] Read Header Fail.\n";
+    //                              m_socket.close();
+    //                          }
+    //                      });
+    // }
 }
