@@ -40,6 +40,7 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/BasicTextWindow/*.cpp
     windows/MainWindow/ClientWindow/ClientWindow.cpp
     windows/MainWindow/ServerWindow/ServerWindow.cpp
+    utils/*.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 
     windows/Application.h 
@@ -54,6 +55,7 @@ file(GLOB_RECURSE HEADER_FILES
     windows/MainWindow/ServerWindow/*.hpp
     networks/client/*.h
     networks/server/*.h
+    utils/*.hpp
 )
 
 add_definitions(-D_WIN32_WINNT=0x0601)

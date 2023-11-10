@@ -2,6 +2,8 @@
 
 #include <wx/wx.h>
 #include "../../components/Button.hpp"
+#include "../ServerWindow/ServerWindow.hpp"
+#include "../ClientWindow/ClientWindow.hpp"
 
 class MainWindow : public wxWindow
 {

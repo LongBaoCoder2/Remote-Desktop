@@ -9,7 +9,7 @@ namespace net
     struct message_header
     {
         T id{};
-        uint32_t size = 0;
+        size_t size = 0;
     };
 
     // Message Body
@@ -40,7 +40,7 @@ namespace net
 
             std::memcpy(msg.body.data() + i, &data, sizeof(DataType));
 
-            msg.header.size = msg.size();
+            msg.header.size = msg.body.size;
 
             return msg;
         }
@@ -54,7 +54,7 @@ namespace net
 
             msg.body.resize(i);
 
-            msg.header.size = msg.size();
+            msg.header.size = msg.body.size;
 
             return msg;
         }
