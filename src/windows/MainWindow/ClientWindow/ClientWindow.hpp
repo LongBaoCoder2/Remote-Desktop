@@ -1,6 +1,10 @@
 #pragma once
 #include "ClientNetwork.hpp"
 #include <wx/wx.h>
+#include <wx/mstream.h>
+#include "../../../utils/Logger/WindowLogger.hpp"
+
+#define DEV
 
 class ClientWindow : public net::IClient<RemoteMessage>, public wxFrame
 {
@@ -15,6 +19,7 @@ private:
     bool isWaitingForConnection = true;
 
     wxPanel *CapturePanel = nullptr;
+    wxTextCtrl* textCtrl = nullptr;
 
     wxTimer *timer;
     wxScreenDC screenDC;
@@ -23,4 +28,6 @@ private:
     void UpdatePanel();
     void ClearPanel();
     void OnUpdateWindow(wxTimerEvent &);
+
+    // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };

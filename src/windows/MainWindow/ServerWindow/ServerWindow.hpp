@@ -2,6 +2,7 @@
 
 #include "ServerNetwork.hpp"
 #include <wx/wx.h>
+#include <wx/mstream.h>
 
 class ServerWindow : public net::IServer<RemoteMessage>, public wxFrame
 {
@@ -15,18 +16,19 @@ protected:
     void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage> &msg) override;
 
 private:
-    const int DELAY_MS = 6;
+    const int DELAY_MS = 1000;
     bool CAPTURING = false;
     // bool hasUser = false;
     size_t nCountUser = 0;
-
+    int screenWidth;
+    int screenHeight;
     wxPanel *LogPanel;
 
     wxStaticText *text;
     wxBitmap screenshot;
     wxTimer *timer;
-
     wxScreenDC screenDC;
+    wxTextCtrl* textCtrl;
     // std::vector<uint32_t> garbageIDs;
 
     void OnClientValidated(std::shared_ptr<net::session<RemoteMessage>> client);

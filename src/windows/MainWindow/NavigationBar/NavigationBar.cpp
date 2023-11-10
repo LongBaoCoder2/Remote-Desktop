@@ -1,9 +1,9 @@
 #include "NavigationBar.hpp"
 
-NavigationBar::NavigationBar(wxWindow *parent,
-                             wxWindowID id,
-                             const wxPoint &pos,
-                             const wxSize &size)
+NavigationBar::NavigationBar(wxWindow* parent,
+    wxWindowID id,
+    const wxPoint& pos,
+    const wxSize& size)
     : wxPanel(parent, id, pos, size)
 {
     NavSizer = new wxBoxSizer(wxVERTICAL);
@@ -24,15 +24,15 @@ NavigationBar::NavigationBar(wxWindow *parent,
     separateLine->SetBackgroundColour(*wxWHITE);
     ButtonSizer->Add(separateLine, 0, wxBOTTOM | wxALIGN_CENTER_HORIZONTAL, FromDIP(8));
 
-    auto HomeBtn = new wButton(BtnPanel, wxID_ANY, "HOME", wxDefaultPosition, wxSize(220, 38));
-    auto MenuBtn = new wButton(BtnPanel, wxID_ANY, "MENU", wxDefaultPosition, wxSize(220, 38));
-    auto ManagerBtn = new wButton(BtnPanel, wxID_ANY, "MANAGER", wxDefaultPosition, wxSize(220, 38));
-    auto SettingBtn = new wButton(BtnPanel, wxID_ANY, "SETTING", wxDefaultPosition, wxSize(220, 38));
-    std::vector<wButton *> listButton{
+    auto HomeBtn = new Button(BtnPanel, wxID_ANY, "HOME", wxDefaultPosition, wxSize(220, 38));
+    auto MenuBtn = new Button(BtnPanel, wxID_ANY, "MENU", wxDefaultPosition, wxSize(220, 38));
+    auto ManagerBtn = new Button(BtnPanel, wxID_ANY, "MANAGER", wxDefaultPosition, wxSize(220, 38));
+    auto SettingBtn = new Button(BtnPanel, wxID_ANY, "SETTING", wxDefaultPosition, wxSize(220, 38));
+    std::vector<Button*> listButton{
         HomeBtn,
         MenuBtn,
         ManagerBtn,
-        SettingBtn};
+        SettingBtn };
     for (auto button : listButton)
     {
         button->Bind(wxEVT_LEFT_DOWN, &NavigationBar::OnClick, this);

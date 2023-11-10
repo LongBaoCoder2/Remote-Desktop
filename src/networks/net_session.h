@@ -116,8 +116,8 @@ namespace net
     template <typename T>
     void session<T>::Send(const message<T> &msg)
     {
-        asio::post(m_asioContext, [ this, msg ]()
-                                      {
+        asio::post(m_asioContext, [this, msg]()
+                   {
                                           // If the queue has a message in it, then we must
                                           // assume that it is in the process of asynchronously being written.
                                           // Either way add the message to the queue to be output. If no messages
@@ -138,8 +138,7 @@ namespace net
                                           if (!inProgress)
                                           {
                                               WriteHeader();
-                                          }
-                                      });
+                                          } });
     }
 
     // ASYNC - Prime context to write a message header

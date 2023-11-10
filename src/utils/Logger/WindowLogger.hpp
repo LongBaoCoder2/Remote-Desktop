@@ -2,49 +2,22 @@
 #include <wx/log.h>
 #include <wx/ffile.h>
 
-class wxLogGuiMod : public wxLogGui
+class wxLogGuiModHandler : public wxLogGui
 {
 protected:
     virtual void DoLogRecord(wxLogLevel level,
                              const wxString &msg,
                              const wxLogRecordInfo &info);
 };
-void wxLogGuiMod::DoLogRecord(wxLogLevel level,
-                              const wxString &msg,
-                              const wxLogRecordInfo &info)
-{
-    if (level == wxLOG_Info)
-        return;
-    else
-        wxLogGui::DoLogRecord(level, msg, info);
-}
-
 class Logger
 {
 private:
     wxLog *logger;
 
 public:
-    ~Logger()
-    {
+    ~Logger();
 
-        delete logger;
-    }
-
-    Logger(wxWindow *parents)
-    {
-        wxLog::SetLogLevel(wxLOG_Max);
-        wxLog::SetVerbose();
-        // create logfile
-        wxFFile *test = new wxFFile("application.log", "a");
-        wxLog *temp = new wxLogStderr(test->fp());
-        wxLog::SetActiveTarget(temp);
-        // create loggui and chain it
-        wxLog::SetActiveTarget(new wxLogChain(new wxLogGuiMod()));
-        // create logwindow
-        logger = new wxLogWindow(parents, wxS("Log messages"), true, false); // true to make visible at start
-                                                                             // no need to setactivetarget or wxlogchain on wxLogWindow
-    }
+    Logger(wxWindow *parents);
 };
 
 /*

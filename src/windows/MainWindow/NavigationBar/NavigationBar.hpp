@@ -3,7 +3,7 @@
 #include <wx/wx.h>
 #include <wx/aui/auibook.h>
 #include <vector>
-#include "../../components/wButton.hpp"
+#include "../../components/Button.hpp"
 
 class NavigationBar : public wxPanel
 {

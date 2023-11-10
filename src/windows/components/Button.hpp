@@ -4,10 +4,10 @@
 #include <wx/graphics.h>
 #include <wx/bitmap.h>
 
-class wButton : public wxWindow
+class Button : public wxWindow
 {
 public:
-    wButton(wxWindow *parent, wxWindowID id, std::string m_text, const wxPoint &pos, const wxSize &size, long style = 0, const wxString &name = wxPanelNameStr)
+    Button(wxWindow* parent, wxWindowID id, std::string m_text, const wxPoint& pos, const wxSize& size, long style = 0, const wxString& name = wxPanelNameStr)
         : wxWindow(), text(m_text)
     {
         SetBackgroundStyle(wxBG_STYLE_TRANSPARENT);
@@ -18,17 +18,17 @@ public:
         SetWindowLong(GetHWND(), GWL_EXSTYLE, extendedStyle | WS_EX_TRANSPARENT);
 #endif
 
-        this->Bind(wxEVT_PAINT, &wButton::OnPaint, this);
+        this->Bind(wxEVT_PAINT, &Button::OnPaint, this);
 
-        this->Bind(wxEVT_ENTER_WINDOW, &wButton::OnMouseEnter, this);
-        this->Bind(wxEVT_LEAVE_WINDOW, &wButton::OnMouseLeave, this);
+        this->Bind(wxEVT_ENTER_WINDOW, &Button::OnMouseEnter, this);
+        this->Bind(wxEVT_LEAVE_WINDOW, &Button::OnMouseLeave, this);
     }
 
-    void OnPaint(wxPaintEvent &event)
+    void OnPaint(wxPaintEvent& event)
     {
         wxPaintDC dc(this);
-        wxColor color{"#202124"};
-        std::unique_ptr<wxGraphicsContext> gc{wxGraphicsContext::Create(dc)};
+        wxColor color{ "#202124" };
+        std::unique_ptr<wxGraphicsContext> gc{ wxGraphicsContext::Create(dc) };
 
         if (gc)
         {
@@ -45,21 +45,21 @@ public:
         event.Skip();
     }
 
-    void OnMouseEnter(wxMouseEvent &event)
+    void OnMouseEnter(wxMouseEvent& event)
     {
         isHovered = true;
         Refresh();
         event.Skip();
     }
 
-    void OnMouseLeave(wxMouseEvent &event)
+    void OnMouseLeave(wxMouseEvent& event)
     {
         isHovered = false;
         Refresh();
         event.Skip();
     }
 
-    void DrawOnContext(wxGraphicsContext &gc, const wxColour &color)
+    void DrawOnContext(wxGraphicsContext& gc, const wxColour& color)
     {
 
         gc.SetBrush(wxBrush(color));
@@ -67,12 +67,12 @@ public:
         auto buttonRect = this->GetClientRect();
 
         gc.DrawRoundedRectangle(buttonRect.GetLeft(),
-                                buttonRect.GetTop(),
-                                buttonRect.GetWidth(),
-                                buttonRect.GetHeight(),
-                                buttonRect.GetHeight() / 8);
+            buttonRect.GetTop(),
+            buttonRect.GetWidth(),
+            buttonRect.GetHeight(),
+            buttonRect.GetHeight() / 8);
 
-        wxFont font(wxFontInfo({0, int(1.0 * buttonRect.GetHeight() / 2.8)}).FaceName("Georgia").Bold());
+        wxFont font(wxFontInfo({ 0, int(1.0 * buttonRect.GetHeight() / 2.8) }).FaceName("Georgia").Bold());
 
         gc.SetFont(font, *wxWHITE);
 
@@ -80,13 +80,13 @@ public:
         gc.GetTextExtent(this->text, &textWidth, &textHeight);
 
         gc.Clip(buttonRect.GetLeft(),
-                buttonRect.GetTop(),
-                buttonRect.GetWidth(),
-                buttonRect.GetHeight());
+            buttonRect.GetTop(),
+            buttonRect.GetWidth(),
+            buttonRect.GetHeight());
 
         gc.DrawText(this->text,
-                    (buttonRect.GetWidth() - textWidth) / 2.0,
-                    (buttonRect.GetHeight() - textHeight) / 2.0);
+            (buttonRect.GetWidth() - textWidth) / 2.0,
+            (buttonRect.GetHeight() - textHeight) / 2.0);
     }
 
     void SetSelected()

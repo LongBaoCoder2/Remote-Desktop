@@ -23,50 +23,38 @@ set(SOURCE_DIR "")
 #     "${SOURCE_DIR}/*.cpp"
 #     "${SOURCE_DIR}/*.h"
 # )
-# file(GLOB_RECURSE SOURCE_FILES 
-#     main.cpp 
-#     windows/Application.cpp 
-#     windows/LoginWindow/LoginFrame.cpp 
-#     windows/CaptureWindow/*.cpp
-#     networks/*.cpp
-#     networks/client/*.cpp
-#     networks/server/*.cpp
-#     windows/MainWindow/Menu/*.cpp
-#     windows/MainWindow/*.cpp
-#     networks/*.cpp
-#     utils/FileNameGenerator/*.cpp
-#     windows/BasicTextWindow/*.cpp
-#     windows/MainWindow/ClientWindow/ClientWindow.cpp
-#     windows/MainWindow/ServerWindow/ServerWindow.cpp
-# )
-
-# file(GLOB_RECURSE HEADER_FILES 
-#     windows/Application.h 
-#     windows/LoginWindow/LoginFrame.h 
-#     windows/CaptureWindow/*.h
-#     windows/MainWindow/*.hpp
-#     windows/MainWindow/Menu/*.hpp
-#     networks/*.h
-#     utils/FileNameGenerator/*.hpp
-#     windows/BasicTextWindow/*.hpp
-#     windows/MainWindow/ClientWindow/*.hpp
-#     windows/MainWindow/ServerWindow/*.hpp
-#     networks/client/*.h
-#     networks/server/*.h
-# )
-
-set(SOURCE_FILES    main.cpp 
-                    windows/Application.cpp 
-                    windows/LoginWindow/LoginFrame.cpp 
-                    windows/CaptureWindow/CaptureFrame.cpp
-                    windows/MainWindow/MenuWindow/MainWindow.cpp
-                    windows/MainWindow/NavigationBar/NavigationBar.cpp
-                    windows/MainWindow/MainFrame.cpp
-                    utils/FileNameGenerator/FileNameGenerator.cpp
-                    windows/BasicTextWindow/BasicTextFrame.cpp
-                    windows/MainWindow/ClientWindow/ClientWindow.cpp
-                    windows/MainWindow/ServerWindow/ServerTextWindow.cpp
-                    windows/MainWindow/ServerWindow/ServerWindow.cpp)
+file(GLOB_RECURSE SOURCE_FILES 
+    main.cpp 
+    windows/Application.cpp 
+    windows/LoginWindow/LoginFrame.cpp 
+    windows/CaptureWindow/*.cpp
+    networks/*.cpp
+    networks/client/*.cpp
+    networks/server/*.cpp
+    windows/MainWindow/Menu/*.cpp
+    windows/MainWindow/*.cpp
+    networks/*.cpp
+    utils/FileNameGenerator/*.cpp
+    windows/BasicTextWindow/*.cpp
+    windows/MainWindow/ClientWindow/ClientWindow.cpp
+    windows/MainWindow/ServerWindow/ServerWindow.cpp
+    utils/*.cpp
+)
+file(GLOB_RECURSE HEADER_FILES 
+    windows/Application.h 
+    windows/LoginWindow/LoginFrame.h 
+    windows/CaptureWindow/*.h
+    windows/MainWindow/*.hpp
+    windows/MainWindow/Menu/*.hpp
+    networks/*.h
+    utils/FileNameGenerator/*.hpp
+    windows/BasicTextWindow/*.hpp
+    windows/MainWindow/ClientWindow/*.hpp
+    windows/MainWindow/ServerWindow/*.hpp
+    networks/client/*.h
+    networks/server/*.h
+    utils/*.hpp
+)
 
 add_definitions(-D_WIN32_WINNT=0x0601)
 
