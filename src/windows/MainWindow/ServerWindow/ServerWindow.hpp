@@ -16,7 +16,7 @@ protected:
     void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage> &msg) override;
 
 private:
-    const int DELAY_MS = 1000;
+    const int DELAY_MS = 1;
     bool CAPTURING = false;
     // bool hasUser = false;
     size_t nCountUser = 0;
@@ -25,7 +25,7 @@ private:
     wxPanel *LogPanel;
 
     wxStaticText *text;
-    wxBitmap screenshot;
+    wxBitmap screenshot, oldscreenshot;
     wxTimer *timer;
     wxScreenDC screenDC;
     wxTextCtrl* textCtrl;

@@ -58,27 +58,27 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
             case RemoteMessage::SERVER_UPDATE:
                 isWaitingForConnection = false;
 
-                OnReceiveImage(msg);
+                // OnReceiveImage(msg);
 
                 // Tạo một memory stream từ dữ liệu nhận được
-                // wxMemoryInputStream memStream(msg.body.data(), msg.body.size());
+                wxMemoryInputStream memStream(msg.body.data(), msg.body.size());
                 // wxMessageBox(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()), wxT("Message"), wxICON_INFORMATION | wxOK);
 
                 // // Tải hình ảnh từ memory stream
-                // wxImage image;
-                // image.LoadFile(memStream, wxBITMAP_TYPE_PNG);
+                wxImage image;
+                image.LoadFile(memStream, wxBITMAP_TYPE_JPEG);
                 // wxMessageBox(wxT("Image convert successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
 
                 // // Chuyển đổi wxImage thành wxBitmap để hiển thị
-                // if (image.IsOk())
-                // {
-                //     screenshot = wxBitmap(image);
-                //     wxMessageBox(wxT("Image sent successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
-                // }
-                // else
-                // {
-                //     wxMessageBox(wxT("Failed to load the image."), wxT("Error"), wxICON_ERROR | wxOK);
-                // }
+                if (image.IsOk())
+                {
+                    screenshot = wxBitmap(image);
+                    // wxMessageBox(wxT("Image sent successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
+                }
+                else
+                {
+                    wxMessageBox(wxT("Failed to load the image."), wxT("Error"), wxICON_ERROR | wxOK);
+                }
 
                 break;
             }
@@ -99,10 +99,10 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 void ClientWindow::UpdatePanel()
 {
     // clientDC.Clear();
-    if (screenshot.IsOk()) {
+    // if (screenshot.IsOk()) {
         wxClientDC clientDC(CapturePanel);
         clientDC.DrawBitmap(screenshot, 0, 0, false);
-    }
+    // }
 }
 
 void ClientWindow::ClearPanel()

@@ -4,9 +4,11 @@
 #include <iterator>
 
 ServerWindow::ServerWindow(uint16_t port)
-    : wxFrame(nullptr, wxID_ANY, "Server Window", wxDefaultPosition, wxSize(1366, 768)), net::IServer<RemoteMessage>(port)
+    : wxFrame(nullptr, wxID_ANY, "Server Window", wxDefaultPosition, wxSize(1366, 768)), net::IServer<RemoteMessage>(port), oldscreenshot()
 {
     Start();
+    oldscreenshot.Create(1366, 768);
+
 
     LogPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366, 768));
     textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
@@ -66,57 +68,40 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
     {
         takeScreenshot();
         wxImage image = screenshot.ConvertToImage();
+        wxImage image2 = oldscreenshot.ConvertToImage();
 
-        image = image.Rescale(1280, 960, wxIMAGE_QUALITY_HIGH);
-
-
-        // Nén hình ảnh thành PNG
-        // wxMemoryOutputStream memStream;
-        // image.SaveFile(memStream, wxBITMAP_TYPE_PNG);
+        if (image.GetSize() == image2.GetSize()) {
+            size_t dataSize = image.GetWidth() * image.GetHeight() * 3;
+            if (memcmp(image.GetData(), image2.GetData(), dataSize) == 0)
+                return;
+        }
+        wxMemoryOutputStream memStream;
+        image.SaveFile(memStream, wxBITMAP_TYPE_JPEG);
 
         // Lấy dữ liệu nén
-        // wxStreamBuffer* memBuffer = memStream.GetOutputStreamBuffer();
-        // size_t dataSize = memBuffer->GetDataLeft();
-        // size_t dataSize = memStream.GetSize();
-        // size_t dataSize = 20;
-        // auto* dataBuffer = new uint8_t[dataSize + 10];
-        // for (int i = 0; i < 20; ++i) {
-        //     dataBuffer[i] = 1;
-        // }
-        // memStream.CopyTo(dataBuffer, dataSize);
+        size_t dataSize = memStream.GetSize();
+        auto dataBuffer = std::make_shared<std::vector<uint8_t>>(dataSize);
 
-        // wxMemoryInputStream mem1Stream(dataBuffer, dataSize);
-        // image.LoadFile(mem1Stream, wxBITMAP_TYPE_PNG);
-        // image.SaveFile("abc.png", wxBITMAP_TYPE_PNG);
+        memStream.CopyTo(&(*dataBuffer)[0], dataSize);
 
         // Đóng gói vào message
-        size_t dataSize = 1280 * 960 * 3;
-        net::message<RemoteMessage> msg;
-        msg.header.id = RemoteMessage::SERVER_UPDATE;
-        msg.header.size = dataSize;
-        // std::copy(dataBuffer, dataBuffer + dataSize, std::back_inserter(msg.body));
-        msg.body.assign(image.GetData(), image.GetData() + dataSize);
-
-        //
-// unsigned char* rawData = image.GetData();
-
-//
-
-// net::message<RemoteMessage> msg;
-// msg.header.id = RemoteMessage::SERVER_UPDATE;
-// msg.header.size = dataSize;
-// std::copy(dataBuffer, dataBuffer + dataSize, std::back_inserter(msg.body));
-// msg.body.assign(dataBuffer, dataBuffer + dataSize);
+        auto msg = std::make_shared<net::message<RemoteMessage>>();
+        msg->header.id = RemoteMessage::SERVER_UPDATE;
+        msg->header.size = dataSize;
+        msg->body.assign(dataBuffer->begin(), dataBuffer->end());
 
         textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu bytes.\n"), dataSize));
 
         // Gửi message đến tất cả clients
-        MessageAllClients(msg);
+        std::thread sendThread([this, msg]() {
+            MessageAllClients(*msg);
+        });
+        sendThread.detach(); 
 
-        // Dọn dẹp bộ nhớ
-        // delete[] dataBuffer;
+        oldscreenshot = screenshot;
     }
 }
+
 
 ServerWindow::~ServerWindow()
 {
