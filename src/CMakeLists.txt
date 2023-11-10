@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 
-project(wx_cmake_template_core LANGUAGES CXX)
+project(RemoteDesktop LANGUAGES CXX)
 
 # Set C++17 as the standard for the entire project
 set(CMAKE_CXX_STANDARD 17)
@@ -23,36 +23,50 @@ set(SOURCE_DIR "")
 #     "${SOURCE_DIR}/*.cpp"
 #     "${SOURCE_DIR}/*.h"
 # )
-file(GLOB_RECURSE SOURCE_FILES 
-    main.cpp 
-    windows/Application.cpp 
-    windows/LoginWindow/LoginFrame.cpp 
-    windows/CaptureWindow/*.cpp
-    networks/*.cpp
-    networks/client/*.cpp
-    networks/server/*.cpp
-    windows/MainWindow/Menu/*.cpp
-    windows/MainWindow/*.cpp
-    networks/*.cpp
-    utils/FileNameGenerator/*.cpp
-    windows/BasicTextWindow/*.cpp
-    windows/MainWindow/ClientWindow/ClientWindow.cpp
-    windows/MainWindow/ServerWindow/ServerWindow.cpp
-)
-file(GLOB_RECURSE HEADER_FILES 
-    windows/Application.h 
-    windows/LoginWindow/LoginFrame.h 
-    windows/CaptureWindow/*.h
-    windows/MainWindow/*.hpp
-    windows/MainWindow/Menu/*.hpp
-    networks/*.h
-    utils/FileNameGenerator/*.hpp
-    windows/BasicTextWindow/*.hpp
-    windows/MainWindow/ClientWindow/*.hpp
-    windows/MainWindow/ServerWindow/*.hpp
-    networks/client/*.h
-    networks/server/*.h
-)
+# file(GLOB_RECURSE SOURCE_FILES 
+#     main.cpp 
+#     windows/Application.cpp 
+#     windows/LoginWindow/LoginFrame.cpp 
+#     windows/CaptureWindow/*.cpp
+#     networks/*.cpp
+#     networks/client/*.cpp
+#     networks/server/*.cpp
+#     windows/MainWindow/Menu/*.cpp
+#     windows/MainWindow/*.cpp
+#     networks/*.cpp
+#     utils/FileNameGenerator/*.cpp
+#     windows/BasicTextWindow/*.cpp
+#     windows/MainWindow/ClientWindow/ClientWindow.cpp
+#     windows/MainWindow/ServerWindow/ServerWindow.cpp
+# )
+
+# file(GLOB_RECURSE HEADER_FILES 
+#     windows/Application.h 
+#     windows/LoginWindow/LoginFrame.h 
+#     windows/CaptureWindow/*.h
+#     windows/MainWindow/*.hpp
+#     windows/MainWindow/Menu/*.hpp
+#     networks/*.h
+#     utils/FileNameGenerator/*.hpp
+#     windows/BasicTextWindow/*.hpp
+#     windows/MainWindow/ClientWindow/*.hpp
+#     windows/MainWindow/ServerWindow/*.hpp
+#     networks/client/*.h
+#     networks/server/*.h
+# )
+
+set(SOURCE_FILES    main.cpp 
+                    windows/Application.cpp 
+                    windows/LoginWindow/LoginFrame.cpp 
+                    windows/CaptureWindow/CaptureFrame.cpp
+                    windows/MainWindow/MenuWindow/MainWindow.cpp
+                    windows/MainWindow/NavigationBar/NavigationBar.cpp
+                    windows/MainWindow/MainFrame.cpp
+                    utils/FileNameGenerator/FileNameGenerator.cpp
+                    windows/BasicTextWindow/BasicTextFrame.cpp
+                    windows/MainWindow/ClientWindow/ClientWindow.cpp
+                    windows/MainWindow/ServerWindow/ServerTextWindow.cpp
+                    windows/MainWindow/ServerWindow/ServerWindow.cpp)
 
 add_definitions(-D_WIN32_WINNT=0x0601)
 
@@ -62,7 +76,7 @@ include_directories(../thirdparty/asio)
 
 if(APPLE)
     # create bundle on apple compiles
-    add_executable(main MACOSX_BUNDLE ${SOURCE_FILES} ${HEADER_FILES})
+    add_executable(main MACOSX_BUNDLE ${SOURCE_FILES})
 
     # Set a custom plist file for the app bundle - needed for Mac OS Retina display
     set_target_properties(main PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)

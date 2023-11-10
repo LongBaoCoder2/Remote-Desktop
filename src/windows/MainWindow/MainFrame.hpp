@@ -3,7 +3,7 @@
 #include <wx/wx.h>
 
 #include "ClientWindow/ClientWindow.hpp"
-#include "Menu/MainWindow.hpp"
+#include "MenuWindow/MainWindow.hpp"
 #include "NavigationBar/NavigationBar.hpp"
 #include "ServerWindow/ServerWindow.hpp"
 
