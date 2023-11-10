@@ -16,7 +16,7 @@ protected:
     void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage> &msg) override;
 
 private:
-    const int DELAY_MS = 10000;
+    const int DELAY_MS = 1000;
     bool CAPTURING = false;
     // bool hasUser = false;
     size_t nCountUser = 0;

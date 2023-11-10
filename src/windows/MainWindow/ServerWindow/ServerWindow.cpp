@@ -77,8 +77,8 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent &event)
         // wxStreamBuffer* memBuffer = memStream.GetOutputStreamBuffer();
         // size_t dataSize = memBuffer->GetDataLeft();
         // size_t dataSize = memStream.GetSize();
-        uint32_t dataSize = 20;
-        auto *dataBuffer = new uint8_t[dataSize];
+        size_t dataSize = 20;
+        auto *dataBuffer = new uint8_t[dataSize + 10];
         for (int i = 0; i < 20; ++i) {
             dataBuffer[i] = 1;
         }
@@ -92,10 +92,10 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent &event)
         net::message<RemoteMessage> msg;
         msg.header.id = RemoteMessage::SERVER_UPDATE;
         msg.header.size = dataSize;
-        // std::copy(dataBuffer, dataBuffer + dataSize, std::back_inserter(msg.body));
-        msg.body.assign(dataBuffer, dataBuffer + dataSize);
+        std::copy(dataBuffer, dataBuffer + dataSize, std::back_inserter(msg.body));
+        // msg.body.assign(dataBuffer, dataBuffer + dataSize);
 
-        textCtrl->AppendText(wxString::Format(wxT("Data sent: %u bytes.\n"), dataSize));
+        textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu bytes.\n"), dataSize));
 
         // Gửi message đến tất cả clients
         MessageAllClients(msg);

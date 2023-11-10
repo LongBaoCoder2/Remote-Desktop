@@ -58,7 +58,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent &event)
                 isWaitingForConnection = false;
                 // Tạo một memory stream từ dữ liệu nhận được
                 wxMemoryInputStream memStream(msg.body.data(), msg.body.size());
-                wxMessageBox(wxString::Format(wxT("Data received: %u bytes.\n"), msg.body.size()), wxT("Message"), wxICON_INFORMATION | wxOK);
+                wxMessageBox(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()), wxT("Message"), wxICON_INFORMATION | wxOK);
 
                 // // Tải hình ảnh từ memory stream
                 // wxImage image;
