@@ -9,7 +9,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 
 void MainFrame::CreateNavBar()
 {
-    Navbar = new NavigationBar(this, wxID_ANY);
+    Navbar = new NavigationBar(MainPanel, wxID_ANY, wxDefaultPosition, wxSize(256, 890));
     MainSizer->Add(Navbar, 0, wxEXPAND);
 }
 
@@ -25,7 +25,7 @@ void MainFrame::SetupMainFrame()
     // MainSizer->Add(mainWindow, 0, wxEXPAND);
 
     MainPanel->SetSizer(MainSizer);
-    // this->SetBackgroundColour(wxColour(244, 243, 243));
+    this->SetBackgroundColour(wxColour(249, 250, 251));
     this->Center();
 }
 
@@ -37,8 +37,8 @@ MainFrame::~MainFrame()
 
 void MainFrame::CreateMainWindow()
 {
-    // auto mainWindow = new MainWindow(MainPanel, wxDefaultPosition, wxDefaultSize);
-    // mainWindow->Center();
-    // MainSizer->Add(mainWindow, 0, wxEXPAND);
+    auto mainWindow = new MainWindow(MainPanel, wxDefaultPosition, wxDefaultSize);
+    mainWindow->Center();
+    MainSizer->Add(mainWindow, 0, wxEXPAND);
 }
 

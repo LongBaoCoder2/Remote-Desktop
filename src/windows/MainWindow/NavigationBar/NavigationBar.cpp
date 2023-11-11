@@ -7,12 +7,12 @@ NavigationBar::NavigationBar(wxWindow* parent,
     : wxPanel(parent, id, pos, size)
 {
     NavSizer = new wxBoxSizer(wxVERTICAL);
-    // NavbarPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition);
 
     // Set title
     auto TitleText = new wxStaticText(this, wxID_ANY, "Remote Desktop");
     TitleText->SetFont(wxFont(15, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
     TitleText->SetForegroundColour(*wxWHITE);
+
 
     // Button Sizer
     ButtonSizer = new wxBoxSizer(wxVERTICAL);
@@ -60,6 +60,7 @@ NavigationBar::NavigationBar(wxWindow* parent,
     NavSizer->Add(TitleText, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, FromDIP(25));
     NavSizer->Add(BtnPanel, 0, wxEXPAND | wxTOP | wxBOTTOM, FromDIP(40));
     NavSizer->Add(UserInfoPanel, 0, wxALIGN_CENTER | wxTOP, FromDIP(60));
+
 
     this->SetBackgroundColour(wxColour(17, 25, 38));
     this->SetSizer(NavSizer);
