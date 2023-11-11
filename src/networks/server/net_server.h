@@ -58,10 +58,12 @@ namespace net
     {
       WaitForClientConnection();
 
-      m_asioThread = std::thread([this] { m_asioContext.start(); });
+      m_threadContext = std::thread([this]
+        { m_asioContext.run(); });
     }
-    except(std::exception & e) {
-      // LOG: [SERVER]: Error server. e.what()
+    catch (const std::exception& e)
+    {
+      std::cout << e.what() << std::endl;
       return false;
     }
 
@@ -69,55 +71,62 @@ namespace net
   }
 
   template <typename T>
-  void IServer<T>::WaitForClientConnection() {
-    m_asioAcceptor.async_accept([this](asio::error_code& ec,
-      tcp::socket socket)) {
-      // If not raise error
-      if (!ec) {
-        // Make session
-        std::share_ptr<session<T>> newConnection =
-          std::make_shared<session<T>>(session<T>::owner::server, m_asioContext,
-            std::move(socket), m_qMessagesIn);
+  void IServer<T>::WaitForClientConnection()
+  {
+    m_asioAcceptor.async_accept([this](std::error_code ec,
+      asio::ip::tcp::socket socket)
+      {
+        // If not raise error
+        if (!ec)
+        {
 
-        // Authentication
-        if (OnClientConnect(newConnection)) {
-          // Authenticate successfully
-          m_deqConnections.push_back(std::move(newConnection));
+          // Make session
+          std::shared_ptr<session<T>> newConnection =
+            std::make_shared<session<T>>(session<T>::owner::server, m_asioContext,
+              std::move(socket), m_qMessagesIn);
 
-          // This will make the asio context unable to 'idle' and
-          // work continuously, causing the asio context to not stop
-          m_deqConnections.front()->ConnectToClient(nIDCounter++);
+          // Authentication
+          if (OnClientConnect(newConnection))
+          {
+            // Authenticate successfully
+            m_deqConnections.push_back(std::move(newConnection));
 
-          // LOG [Server]: New Session: Accept <nIDCounter>
+            // This will make the asio context unable to 'idle' and
+            // work continuously, causing the asio context to not stop
+            m_deqConnections.back()->ConnectToClient(nIDCounter++);
+
+          }
+          else
+          {
+            // When user fails authentication, newConnection will go out of scope
+            // and get destroyed automatically
+          }
         }
-        else {
-          // LOG [Session] : Connection Denied
-          // When user fails authentication, newConnection will go out of scope
-          // and get destroyed automatically
+        else
+        {
         }
-      }
-      else {
-        // LOG [Session]: A new connection has wrong <ec.message()>
-      }
-    }
-    WaitForClientConnection();
+        WaitForClientConnection();
+      });
   }
 
   template <typename T>
-  void IServer<T>::Stop() {
+  void IServer<T>::Stop()
+  {
     m_asioContext.stop();
 
-    if (m_threadContext.joinable()) m_threadContext.join();
-
-    // LOG [SERVER] Stop
+    if (m_threadContext.joinable())
+      m_threadContext.join();
   }
 
   template <typename T>
-  void IServer<T>::Update(size_t nMaxMessages, bool bWait) {
-    if (bWait) m_qMessagesIn.wait();
+  void IServer<T>::Update(size_t nMaxMessages, bool bWait)
+  {
+    if (bWait)
+      m_qMessagesIn.wait();
 
     size_t nCountMessage = 0;
-    while (nCountMessage++ < nMaxMessages && !m_deqConnections.empty()) {
+    while (nCountMessage++ < nMaxMessages && !m_deqConnections.empty())
+    {
       auto msg = m_deqConnections.pop_front();
 
       OnMessage(msg.remote, msg.msg);
@@ -126,15 +135,18 @@ namespace net
 
   template <typename T>
   void IServer<T>::MessageClient(std::shared_ptr<session<T>> client,
-    const message<T>& msg) {
-    if (client && client->IsConnected()) {
+    const message<T>& msg)
+  {
+    if (client && client->IsConnected())
+    {
       client->Send(msg);
     }
-    else {
+    else
+    {
       OnClientDisconnect(client);
 
       // std::shared_ptr<T>::reset set value to default
-      client->reset();
+      client.reset();
 
       // std::remove will shift all elements that need to be removed
       // and std::erase will remove all it
@@ -145,30 +157,34 @@ namespace net
   }
 
   template <typename T>
-  void IServer<T>::MessageAllClients(
-    const message<T>& msg,
-    std::shared_ptr<session<T>> pIgnoreClient) {
+  void IServer<T>::MessageAllClients(const message<T>& msg, std::shared_ptr<session<T>> pIgnoreClients)
+  {
     bool hasInvalidClient = false;
 
-    for (auto& client : m_deqConnections) {
-      if (client && client->IsConnected()) {
-        if (client != pIgnoreClient) {
+    for (auto& client : m_deqConnections)
+    {
+      if (client && client->IsConnected())
+      {
+        if (client != pIgnoreClients)
+        {
           client->Send(msg);
         }
       }
-      else {
+      else
+      {
         hasInvalidClient = true;
 
         OnClientDisconnect(client);
-        client->reset();
+        client.reset();
       }
     }
 
-    if (hasInvalidClient) {
+    if (hasInvalidClient)
+    {
       m_deqConnections.erase(
         std::remove(m_deqConnections.begin(), m_deqConnections.end(), nullptr),
         m_deqConnections.end());
     }
   }
 
-}  // namespace net
+} // namespace net
