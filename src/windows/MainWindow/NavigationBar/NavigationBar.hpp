@@ -1,10 +1,8 @@
 #pragma once
 
 #include <wx/wx.h>
-#include <wx/aui/auibook.h>
 #include <vector>
-#include "../../components/Button.hpp"
-#include "../../CaptureWindow/CaptureFrame.h"
+#include "ButtonNavigation.hpp"
 
 class NavigationBar : public wxPanel
 {
@@ -16,15 +14,14 @@ public:
 
     virtual ~NavigationBar();
 
-
-
 private:
     std::string id = "Username";
     std::string iconPath = "assets/user_icon.png";
 
-    wxBoxSizer* NavSizer, * ButtonSizer, * UserSizer;
+    wxBoxSizer* NavSizer, * UserSizer;
     wxStaticText* TitleText;
-    wxPanel* BtnPanel, * UserInfoPanel;
+    wxPanel* UserInfoPanel;
+    ButtonNavigation* BtnNav;
 
     void OnSettingSelected(wxMouseEvent&);
     void OnClick(wxMouseEvent&);
