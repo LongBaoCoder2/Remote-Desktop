@@ -48,7 +48,7 @@ NavigationBar::~NavigationBar()
 {
 }
 
-void NavigationBar::OnNavigation(const ButtonNavigation::Button_ID& Window_id)
+void NavigationBar::OnNavigation(const ButtonNavigation::Window_ID& Window_id)
 {
     if (Window_id != this->currentID) {
 

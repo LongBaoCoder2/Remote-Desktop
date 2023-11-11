@@ -89,9 +89,9 @@ public:
             (buttonRect.GetHeight() - textHeight) / 2.0);
     }
 
-    void SetSelected()
+    void SetSelected(bool isSelected)
     {
-        this->isSelected = !this->isSelected;
+        this->isSelected = isSelected;
     }
 
     std::string text;

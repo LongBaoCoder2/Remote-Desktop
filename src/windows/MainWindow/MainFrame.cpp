@@ -22,7 +22,7 @@ void MainFrame::SetupMainFrame()
 
     // Create and add the navigation bar to the main frame
     this->CreateNavBar();
-
+    this->CreateMainWindow();
     // Set MainPanel as the sizer for the main frame
     MainPanel->SetSizer(MainSizer);
 
@@ -37,29 +37,59 @@ MainFrame::~MainFrame()
 
 void MainFrame::CreateMainWindow()
 {
-    // Create the main window and add it to the MainSizer
-    auto mainWindow = new MainWindow(MainPanel, wxDefaultPosition, wxDefaultSize);
-    mainWindow->Center(); // Center the main window
-    MainSizer->Add(mainWindow, 0, wxEXPAND);
+    this->currentWindow = new HomeWindow(MainPanel);
+    GetAllWindow()[ButtonNavigation::Window_ID::HOME_WINDOW] = this->currentWindow;
+
+    MainSizer->Add(this->currentWindow, 0, wxEXPAND);
 }
 
-
-void CreateMenuWindow()
+std::map<ButtonNavigation::Window_ID, wxWindow*>& MainFrame::GetAllWindow()
 {
-
+    return AllWindow;
 }
 
-void CreateHomeWindow()
+void MainFrame::CreateMenuWindow()
 {
-
+    const bool hasMenuWindow = GetAllWindow().find(ButtonNavigation::Window_ID::MENU_WINDOW) != GetAllWindow().end();
+    if (!hasMenuWindow) {
+        GetAllWindow()[ButtonNavigation::Window_ID::MENU_WINDOW] = new MenuWindow(MainPanel);
+    }
+    this->currentWindow->Close();
+    this->currentWindow = GetAllWindow()[ButtonNavigation::Window_ID::MENU_WINDOW];
+    this->currentWindow->Show(true);
+    this->Refresh();
 }
 
-void CreateManageWindow()
+void MainFrame::CreateHomeWindow()
 {
-
+    // Not check as it was created
+    this->currentWindow->Close();
+    this->currentWindow = GetAllWindow()[ButtonNavigation::Window_ID::HOME_WINDOW];
+    this->currentWindow->Show(true);
+    this->Refresh();
 }
 
-void CreateSettingWindow()
+void MainFrame::CreateManageWindow()
 {
+    const bool hasManageWindow = GetAllWindow().find(ButtonNavigation::Window_ID::MANAGE_WINDOW) != GetAllWindow().end();
+    if (!hasManageWindow) {
+        GetAllWindow()[ButtonNavigation::Window_ID::MANAGE_WINDOW] = new ManageWindow(MainPanel);
+    }
+    this->currentWindow->Close();
+    this->currentWindow = GetAllWindow()[ButtonNavigation::Window_ID::MANAGE_WINDOW];
+    this->currentWindow->Show(true);
+    this->Refresh();
+}
 
+void MainFrame::CreateSettingWindow()
+{
+    const bool hasSettingWindow = GetAllWindow().find(ButtonNavigation::Window_ID::SETTING_WINDOW) != GetAllWindow().end();
+    if (!hasSettingWindow) {
+        GetAllWindow()[ButtonNavigation::Window_ID::SETTING_WINDOW] = new SettingWindow(MainPanel);
+    }
+
+    this->currentWindow->Close();
+    this->currentWindow = GetAllWindow()[ButtonNavigation::Window_ID::SETTING_WINDOW];
+    this->currentWindow->Show(true);
+    this->Refresh();
 }

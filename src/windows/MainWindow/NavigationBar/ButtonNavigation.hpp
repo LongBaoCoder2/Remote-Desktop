@@ -7,7 +7,7 @@
 class ButtonNavigation : public wxPanel
 {
 public:
-    enum Button_ID {
+    enum Window_ID {
         HOME_WINDOW = wxID_ANY + 1,
         MENU_WINDOW,
         MANAGE_WINDOW,
@@ -19,6 +19,7 @@ public:
         const wxSize& size = wxDefaultSize);
 private:
     wxBoxSizer* ButtonSizer;
+    std::vector<Button*> listButton;
 
     void OnClick(wxMouseEvent&);
     void OnSettingClick(wxMouseEvent&);

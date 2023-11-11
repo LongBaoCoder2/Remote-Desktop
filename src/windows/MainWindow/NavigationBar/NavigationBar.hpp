@@ -18,7 +18,7 @@ public:
 private:
     std::string id = "ADMIN";
     std::string iconPath = CONFIG_APP::USER_ICON_PATH;
-    ButtonNavigation::Button_ID currentID = ButtonNavigation::HOME_WINDOW;
+    ButtonNavigation::Window_ID currentID = ButtonNavigation::HOME_WINDOW;
 
     wxBoxSizer* NavSizer, * UserSizer;
     wxStaticText* TitleText;
@@ -26,5 +26,5 @@ private:
     ButtonNavigation* BtnNav;
 
 
-    void OnNavigation(const ButtonNavigation::Button_ID& Window_id);
+    void OnNavigation(const ButtonNavigation::Window_ID& Window_id);
 };

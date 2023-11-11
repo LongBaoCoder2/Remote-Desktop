@@ -38,6 +38,7 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/BasicTextWindow/*.cpp
     windows/MainWindow/ClientWindow/ClientWindow.cpp
     windows/MainWindow/ServerWindow/ServerWindow.cpp
+    windows/AllWindow/*/*.cpp
     utils/*.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 
