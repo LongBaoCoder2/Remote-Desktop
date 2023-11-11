@@ -24,10 +24,10 @@ NavigationBar::NavigationBar(wxWindow* parent,
     separateLine->SetBackgroundColour(*wxWHITE);
     ButtonSizer->Add(separateLine, 0, wxBOTTOM | wxALIGN_CENTER_HORIZONTAL, FromDIP(8));
 
-    auto HomeBtn = new Button(BtnPanel, wxID_ANY, "HOME", wxDefaultPosition, wxSize(220, 38));
-    auto MenuBtn = new Button(BtnPanel, wxID_ANY, "MENU", wxDefaultPosition, wxSize(220, 38));
-    auto ManagerBtn = new Button(BtnPanel, wxID_ANY, "MANAGER", wxDefaultPosition, wxSize(220, 38));
-    auto SettingBtn = new Button(BtnPanel, wxID_ANY, "SETTING", wxDefaultPosition, wxSize(220, 38));
+    auto HomeBtn = new Button(BtnPanel, wxID_ANY, "HOME", wxDefaultPosition, wxSize(220, 42));
+    auto MenuBtn = new Button(BtnPanel, wxID_ANY, "MENU", wxDefaultPosition, wxSize(220, 42));
+    auto ManagerBtn = new Button(BtnPanel, wxID_ANY, "MANAGER", wxDefaultPosition, wxSize(220, 42));
+    auto SettingBtn = new Button(BtnPanel, wxID_ANY, "SETTING", wxDefaultPosition, wxSize(220, 42));
     std::vector<Button*> listButton{
         HomeBtn,
         MenuBtn,
@@ -38,7 +38,7 @@ NavigationBar::NavigationBar(wxWindow* parent,
         button->Bind(wxEVT_LEFT_DOWN, &NavigationBar::OnClick, this);
         ButtonSizer->Add(button, 0, wxTOP | wxALIGN_CENTER, FromDIP(5));
     }
-    // SettingBtn->Bind(wxEVT_LEFT_DOWN, &NavigationBar::OnSettingSelected, this);
+    SettingBtn->Bind(wxEVT_LEFT_DOWN, &NavigationBar::OnSettingSelected, this, SettingBtn->GetId());
     BtnPanel->SetSizerAndFit(ButtonSizer);
 
     // User Icon
@@ -63,6 +63,18 @@ NavigationBar::NavigationBar(wxWindow* parent,
 
     this->SetBackgroundColour(wxColour(17, 25, 38));
     this->SetSizer(NavSizer);
+}
+
+void NavigationBar::OnSettingSelected(wxMouseEvent& e) {
+    wxMessageBox("Capture Frame activated");
+    CaptureFrame* captureFrame = new CaptureFrame("Capture Window", wxDefaultPosition, wxDefaultSize);
+    captureFrame->Show();
+}
+
+void NavigationBar::OnClick(wxMouseEvent& e)
+{
+    wxMessageBox("Button Click");
+    e.Skip();
 }
 
 NavigationBar::~NavigationBar()
