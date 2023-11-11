@@ -3,6 +3,8 @@
 #include <wx/wx.h>
 #include <wx/mstream.h>
 #include "../../../utils/Logger/WindowLogger.hpp"
+#include "ClientTextWindow.hpp"
+
 
 #define DEV
 
@@ -22,12 +24,18 @@ private:
     wxTextCtrl* textCtrl = nullptr;
 
     wxTimer* timer;
+    wxTimer* secondTimer;
     wxScreenDC screenDC;
     wxBitmap screenshot;
+
+    ClientTextWindow* clientTextWindow = nullptr;
+
+    int imagesSentThisSecond = 0;
 
     void UpdatePanel();
     void ClearPanel();
     void OnUpdateWindow(wxTimerEvent&);
     void OnReceiveImage(net::message<RemoteMessage>& msg);
+    void OnSecondTimer(wxTimerEvent& event);
     // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };

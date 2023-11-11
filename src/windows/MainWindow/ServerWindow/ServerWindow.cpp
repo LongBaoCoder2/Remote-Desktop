@@ -1,5 +1,6 @@
 #include "ServerWindow.hpp"
 #include "../../../utils/FileNameGenerator/FileNameGenerator.hpp"
+#include "../../constant.hpp"
 #include <algorithm>
 #include <iterator>
 
@@ -25,11 +26,16 @@ ServerWindow::ServerWindow(uint16_t port)
     this->Bind(wxEVT_TIMER, &ServerWindow::OnCaptureWindow, this, timer->GetId());
     timer->Start(DELAY_MS);
 
+    // Ở đâu đó trong constructor hoặc khởi tạo timer
+    secondTimer = new wxTimer(this, 3);
+    this->Bind(wxEVT_TIMER, &ServerWindow::OnSecondTimer, this, secondTimer->GetId());
+    secondTimer->Start(1000);  // Đặt timer chạy mỗi giây (1000ms)
+
     // this->SetSizerAndFit(MainSizer);
     this->Center();
 }
 
-void ServerWindow::takeScreenshot()
+void ServerWindow::takeScreenshot(int imgWidth, int imgHeight)
 {
     // Capture Screen
     // wxRect frameRect = CapturePanel->GetRect();
@@ -44,8 +50,8 @@ void ServerWindow::takeScreenshot()
     screenWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X);
     screenHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);
 
-    int imgWidth = LogPanel->GetSize().GetWidth();
-    int imgHeight = LogPanel->GetSize().GetHeight();
+    // int imgWidth = LogPanel->GetSize().GetWidth();
+    // int imgHeight = LogPanel->GetSize().GetHeight();
 
     // Tính toán tỷ lệ scale
     double scaleX = static_cast<double>(imgWidth) / screenWidth;
@@ -68,14 +74,18 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
     {
         takeScreenshot();
         wxImage image = screenshot.ConvertToImage();
-        wxImage image2 = oldscreenshot.ConvertToImage();
+        // wxImage image2 = oldscreenshot.ConvertToImage();
 
-        if (image.GetSize() == image2.GetSize()) {
-            size_t dataSize = image.GetWidth() * image.GetHeight() * 3;
-            if (memcmp(image.GetData(), image2.GetData(), dataSize) == 0)
-                return;
-        }
+        // Đặt mức chất lượng cho ảnh (giá trị từ 0 đến 100)
+        // image.SetOption(wxIMAGE_OPTION_QUALITY, 100);
+
+        // if (image.GetSize() == image2.GetSize()) {
+        //     size_t dataSize = image.GetWidth() * image.GetHeight() * 3;
+        //     if (memcmp(image.GetData(), image2.GetData(), dataSize) == 0)
+        //         return;
+        // }
         wxMemoryOutputStream memStream;
+        image.Rescale(CONFIG_UI::NORMAL_WINDOW.GetWidth(), CONFIG_UI::NORMAL_WINDOW.GetHeight());
         image.SaveFile(memStream, wxBITMAP_TYPE_JPEG);
 
         // Lấy dữ liệu nén
@@ -99,9 +109,19 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         sendThread.detach(); 
 
         oldscreenshot = screenshot;
+
+        // Tăng biến đếm
+        imagesSentThisSecond++;
     }
 }
 
+// Khi timer đếm giây chạy
+void ServerWindow::OnSecondTimer(wxTimerEvent& event)
+{
+    // In thông tin thống kê và đặt biến đếm về 0
+    textCtrl->AppendText(wxString::Format(wxT("Images sent this second: %d\n"), imagesSentThisSecond));
+    imagesSentThisSecond = 0;
+}
 
 ServerWindow::~ServerWindow()
 {

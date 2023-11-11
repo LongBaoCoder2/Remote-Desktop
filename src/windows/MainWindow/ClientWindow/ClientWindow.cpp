@@ -1,4 +1,5 @@
 #include "ClientWindow.hpp"
+#include "../../constant.hpp"
 
 ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
@@ -11,8 +12,11 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     }
     // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
 
-    CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1280, 960));
+    CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW);
     CapturePanel->SetBackgroundColour(wxColor(38, 37, 54));
+
+    clientTextWindow = new ClientTextWindow();
+    clientTextWindow->Show();
 
     // Tạo một wxTextCtrl để hiển thị văn bản
     // textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
@@ -31,6 +35,11 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     timer = new wxTimer(this, 1);
     this->Bind(wxEVT_TIMER, &ClientWindow::OnUpdateWindow, this, timer->GetId());
     timer->Start(DELAY_MS);
+
+    // Ở đâu đó trong constructor hoặc khởi tạo timer
+    secondTimer = new wxTimer(this, 4);
+    this->Bind(wxEVT_TIMER, &ClientWindow::OnSecondTimer, this, secondTimer->GetId());
+    secondTimer->Start(1000);  // Đặt timer chạy mỗi giây (1000ms)
 
     this->SetSizerAndFit(MainSizer);
     this->Center();
@@ -62,14 +71,20 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 
                 // Tạo một memory stream từ dữ liệu nhận được
                 wxMemoryInputStream memStream(msg.body.data(), msg.body.size());
-                // wxMessageBox(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()), wxT("Message"), wxICON_INFORMATION | wxOK);
 
-                // // Tải hình ảnh từ memory stream
+                // Tải hình ảnh từ memory stream
                 wxImage image;
                 image.LoadFile(memStream, wxBITMAP_TYPE_JPEG);
-                // wxMessageBox(wxT("Image convert successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
 
-                // // Chuyển đổi wxImage thành wxBitmap để hiển thị
+                // Tăng biến đếm
+                imagesSentThisSecond++;
+
+                // clientTextWindow->DisplayMessage(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()));
+                // wxMessageBox(wxT("Image convert successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
+                // wxMessageBox(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()), wxT("Message"), wxICON_INFORMATION | wxOK);
+
+
+                // Chuyển đổi wxImage thành wxBitmap để hiển thị
                 if (image.IsOk())
                 {
                     screenshot = wxBitmap(image);
@@ -119,6 +134,14 @@ void ClientWindow::OnReceiveImage(net::message<RemoteMessage>& msg)
     screenshot = wxBitmap(image);
 }
 
+
+// Khi timer đếm giây chạy
+void ClientWindow::OnSecondTimer(wxTimerEvent& event)
+{
+    // In thông tin thống kê và đặt biến đếm về 0
+    clientTextWindow->DisplayMessage(wxString::Format(wxT("Images sent this second: %d\n"), imagesSentThisSecond));
+    imagesSentThisSecond = 0;
+}
 
 ClientWindow::~ClientWindow()
 {

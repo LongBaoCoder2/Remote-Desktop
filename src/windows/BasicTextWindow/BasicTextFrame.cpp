@@ -11,8 +11,8 @@ BasicTextFrame::BasicTextFrame(const wxString& title, const wxPoint &pos, const 
     textCtrl->SetEditable(false);
 
     // Customize font
-    font = wxFont(16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
-    textCtrl->SetFont(font);
+    // font = wxFont(16, wxFONTFAMILY_DEFAULT, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_NORMAL);
+    // textCtrl->SetFont(font);
 }
 
 

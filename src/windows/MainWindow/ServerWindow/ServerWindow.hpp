@@ -27,13 +27,15 @@ private:
     wxStaticText *text;
     wxBitmap screenshot, oldscreenshot;
     wxTimer *timer;
+    wxTimer* secondTimer;
     wxScreenDC screenDC;
     wxTextCtrl* textCtrl;
+
+    int imagesSentThisSecond = 0;
     // std::vector<uint32_t> garbageIDs;
 
     void OnClientValidated(std::shared_ptr<net::session<RemoteMessage>> client);
-
-    void takeScreenShot(int imgWidth, int imgHeight);
-    void takeScreenshot();
+    void OnSecondTimer(wxTimerEvent& event);
+    void takeScreenshot(int imgWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X), int imgHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y));
     void OnCaptureWindow(wxTimerEvent &);
 };
