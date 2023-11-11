@@ -42,3 +42,24 @@ void MainFrame::CreateMainWindow()
     mainWindow->Center(); // Center the main window
     MainSizer->Add(mainWindow, 0, wxEXPAND);
 }
+
+
+void CreateMenuWindow()
+{
+
+}
+
+void CreateHomeWindow()
+{
+
+}
+
+void CreateManageWindow()
+{
+
+}
+
+void CreateSettingWindow()
+{
+
+}

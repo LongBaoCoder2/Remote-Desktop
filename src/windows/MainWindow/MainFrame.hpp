@@ -24,4 +24,10 @@ private:
   void SetupMainFrame();
   void CreateNavBar();
   void CreateMainWindow();
+
+  // Navigation Window
+  void CreateMenuWindow();
+  void CreateHomeWindow();
+  void CreateManageWindow();
+  void CreateSettingWindow();
 };

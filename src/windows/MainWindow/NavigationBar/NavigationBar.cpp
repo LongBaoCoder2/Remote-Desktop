@@ -47,3 +47,10 @@ NavigationBar::NavigationBar(wxWindow* parent,
 NavigationBar::~NavigationBar()
 {
 }
+
+void NavigationBar::OnNavigation(const ButtonNavigation::Button_ID& Window_id)
+{
+    if (Window_id != this->currentID) {
+
+    }
+}

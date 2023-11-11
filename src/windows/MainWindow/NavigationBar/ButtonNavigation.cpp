@@ -14,10 +14,10 @@ ButtonNavigation::ButtonNavigation(wxWindow* parent,
     ButtonSizer->Add(separateLine, 0, wxBOTTOM | wxALIGN_CENTER_HORIZONTAL, FromDIP(8));
 
     // Create navigation buttons
-    auto HomeBtn = new Button(this, wxID_ANY, "HOME", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
-    auto MenuBtn = new Button(this, wxID_ANY, "MENU", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
-    auto ManagerBtn = new Button(this, wxID_ANY, "MANAGER", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
-    auto SettingBtn = new Button(this, wxID_ANY, "SETTING", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
+    auto HomeBtn = new Button(this, Button_ID::HOME_WINDOW, "HOME", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
+    auto MenuBtn = new Button(this, Button_ID::MENU_WINDOW, "MENU", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
+    auto ManagerBtn = new Button(this, Button_ID::MANAGE_WINDOW, "MANAGER", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
+    auto SettingBtn = new Button(this, Button_ID::SETTING_WINDOW, "SETTING", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
     std::vector<Button*> listButton{
         HomeBtn,
         MenuBtn,
