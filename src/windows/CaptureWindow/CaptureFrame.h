@@ -8,7 +8,7 @@
 class CaptureFrame : public wxFrame
 {
 public:
-    CaptureFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+    CaptureFrame(wxWindow* parent, const wxString& title, const wxPoint& pos, const wxSize& size);
 
 private:
     const int DELAY_MS = 7;

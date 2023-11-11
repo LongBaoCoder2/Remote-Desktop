@@ -68,7 +68,7 @@ NavigationBar::NavigationBar(wxWindow* parent,
 
 void NavigationBar::OnSettingSelected(wxMouseEvent& e) {
     wxMessageBox("Capture Frame activated");
-    CaptureFrame* captureFrame = new CaptureFrame("Capture Window", wxDefaultPosition, wxDefaultSize);
+    CaptureFrame* captureFrame = new CaptureFrame(this->GetParent(), "Capture Window", wxDefaultPosition, wxDefaultSize);
     captureFrame->Show();
 }
 
