@@ -1,5 +1,6 @@
 #include "CaptureFrame.h"
 #include "../../utils/FileNameGenerator/FileNameGenerator.hpp"
+#include "../constant.hpp"
 
 CaptureFrame::CaptureFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size)
@@ -7,6 +8,14 @@ CaptureFrame::CaptureFrame(const wxString &title, const wxPoint &pos, const wxSi
     // Tạo một wxPanel để hiển thị hình ảnh chụp màn hình
     CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366, 768));
     CapturePanel->SetBackgroundColour(wxColor(38, 37, 54));
+    CapturePanel->Bind(wxEVT_PAINT, &CaptureFrame::OnPaint, CapturePanel);
+    
+    clientDC = new wxClientDC(CapturePanel);
+    // paintDC = new wxPaintDC(CapturePanel);
+    // bufferedDC = new wxBufferedDC(paintDC);
+
+    CaptureFrameLogger = new BasicTextFrame("Capture Frame Logger", wxDefaultPosition, CONFIG_UI::SMALL_WINDOW);
+    CaptureFrameLogger->Show();
 
     // Tạo một wxPanel để chứa các nút điều khiển
     ButtonPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
@@ -35,8 +44,13 @@ CaptureFrame::CaptureFrame(const wxString &title, const wxPoint &pos, const wxSi
     ButtonPanel->SetSizer(ButtonSizer);
 
     // Tạo một wxTimer để chụp màn hình theo khoảng thời gian định sẵn
-    timer = new wxTimer(this, wxID_ANY);
+    timer = new wxTimer(this, 5);
     this->Bind(wxEVT_TIMER, &CaptureFrame::OnCaptureScreen, this);
+
+    // Ở đâu đó trong constructor hoặc khởi tạo timer
+    secondTimer = new wxTimer(this, 6);
+    this->Bind(wxEVT_TIMER, &CaptureFrame::OnSecondTimer, this, secondTimer->GetId());
+    secondTimer->Start(1000);  // Đặt timer chạy mỗi giây (1000ms)
 
     // Đặt layout sử dụng MainSizer và căn giữa cửa sổ
     this->SetSizerAndFit(MainSizer);
@@ -71,11 +85,17 @@ void CaptureFrame::OnCaptureScreen(wxTimerEvent &e)
     if (CAPTURING)
     {
         takeScreenshot(CapturePanel->GetSize().GetWidth(), CapturePanel->GetSize().GetHeight());
-        
+
+        // Thiết lập wxBufferedDC để vẽ lên CapturePanel
+        // bufferedDC.SetTarget(CapturePanel);
+
+        // CapturePanel->Refresh();
+
         // Update Screen
-        wxClientDC clientDC(CapturePanel);
+        // wxClientDC clientDC(CapturePanel);
         // clientDC.Clear();
-        clientDC.DrawBitmap(screenshot, 0, 0, false);
+        clientDC->DrawBitmap(screenshot, 0, 0, false);
+        ++imagesDisplayedThisSecond;
     }
 }
 
@@ -99,7 +119,7 @@ void CaptureFrame::takeScreenshot(int imgWidth, int imgHeight) {
     double scaleY = static_cast<double>(imgHeight) / screenHeight;
 
     // biến này đóng vai trò buffer trung gian để thao tác trên screenshot
-    wxMemoryDC memDC(screenshot);
+    memDC.SelectObject(screenshot);
 
     // Thực hiện phép chuyển đổi để vẽ toàn bộ nội dung màn hình
     memDC.SetUserScale(scaleX, scaleY);
@@ -108,3 +128,29 @@ void CaptureFrame::takeScreenshot(int imgWidth, int imgHeight) {
     // bỏ screenshot ra khỏi memDC để lát dùng để vẽ lên
     memDC.SelectObject(wxNullBitmap);
 }
+
+// Khi timer đếm giây chạy
+void CaptureFrame::OnSecondTimer(wxTimerEvent& e)
+{
+    // In thông tin thống kê và đặt biến đếm về 0
+    CaptureFrameLogger->DisplayMessage(wxT("Capture Frame"), wxString::Format(wxT("Images displayed this second: %d\n"), imagesDisplayedThisSecond));
+    imagesDisplayedThisSecond = 0;
+}
+
+// void CaptureFrame::MyBufferedPanel::OnPaint(wxPaintEvent& event) {
+//     // Vẽ hình ảnh lên bằng bufferedDC
+//     wxBufferedPaintDC bufferedDC(this);
+//     bufferedDC.Clear();
+//     bufferedDC.DrawBitmap(screenshot, 0, 0, false);
+// }
+
+// CaptureFrame::MyBufferedPanel::MyBufferedPanel(
+//     wxWindow* parent, 
+//     wxWindowID id, 
+//     const wxPoint& pos, 
+//     const wxSize& size
+// )
+// : wxPanel(parent, id, pos, size)
+// {
+//     Bind(wxEVT_PAINT, &MyBufferedPanel::OnPaint, this);
+// }
