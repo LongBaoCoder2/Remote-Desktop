@@ -11,14 +11,13 @@ ButtonNavigation::ButtonNavigation(wxWindow* parent,
     // Create a separator line
     auto separateLine = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(220, FromDIP(1)));
     separateLine->SetBackgroundColour(wxColour(229, 229, 229));
-    separateLine->SetBackgroundColour(*wxWHITE);
     ButtonSizer->Add(separateLine, 0, wxBOTTOM | wxALIGN_CENTER_HORIZONTAL, FromDIP(8));
 
     // Create navigation buttons
-    auto HomeBtn = new Button(this, wxID_ANY, "HOME", wxDefaultPosition, wxSize(220, 42));
-    auto MenuBtn = new Button(this, wxID_ANY, "MENU", wxDefaultPosition, wxSize(220, 42));
-    auto ManagerBtn = new Button(this, wxID_ANY, "MANAGER", wxDefaultPosition, wxSize(220, 42));
-    auto SettingBtn = new Button(this, wxID_ANY, "SETTING", wxDefaultPosition, wxSize(220, 42));
+    auto HomeBtn = new Button(this, wxID_ANY, "HOME", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
+    auto MenuBtn = new Button(this, wxID_ANY, "MENU", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
+    auto ManagerBtn = new Button(this, wxID_ANY, "MANAGER", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
+    auto SettingBtn = new Button(this, wxID_ANY, "SETTING", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
     std::vector<Button*> listButton{
         HomeBtn,
         MenuBtn,

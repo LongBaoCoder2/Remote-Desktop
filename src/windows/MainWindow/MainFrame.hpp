@@ -1,12 +1,12 @@
 #pragma once
 
 #include <wx/wx.h>
-
 #include "ClientWindow/ClientWindow.hpp"
 #include "MenuWindow/MainWindow.hpp"
 #include "NavigationBar/NavigationBar.hpp"
 #include "ServerWindow/ServerWindow.hpp"
-
+#include "../CaptureWindow/CaptureFrame.h"
+#include "../constant.hpp"
 #include "../../utils/Logger/WindowLogger.hpp"
 
 class MainFrame : public wxFrame

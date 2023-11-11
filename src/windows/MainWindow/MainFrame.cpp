@@ -1,5 +1,5 @@
 #include "MainFrame.hpp"
-#include "../CaptureWindow/CaptureFrame.h"
+
 
 MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size)
@@ -11,7 +11,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 // Create the navigation bar and add it to MainSizer
 void MainFrame::CreateNavBar()
 {
-    Navbar = new NavigationBar(MainPanel, wxID_ANY, wxDefaultPosition, wxSize(256, 890));
+    Navbar = new NavigationBar(MainPanel, wxID_ANY, wxDefaultPosition, CONFIG_UI::NAVIGATION_SIZE);
     MainSizer->Add(Navbar, 0, wxEXPAND);
 }
 
@@ -27,7 +27,7 @@ void MainFrame::SetupMainFrame()
     MainPanel->SetSizer(MainSizer);
 
     // Configure the main frame background color
-    this->SetBackgroundColour(wxColour(249, 250, 251));
+    this->SetBackgroundColour(CONFIG_UI::PRIMARY_LIGHT_COLOR);
     this->Center(); // Center the main frame on the screen
 }
 

@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "constant.hpp"
 
 bool Application::OnInit()
 {
@@ -6,7 +7,7 @@ bool Application::OnInit()
     // LoginFrame *LoginWindow = new LoginFrame(wxT("Remote Desktop"), wxDefaultPosition, wxDefaultSize);
     // LoginWindow->Show(true);
 
-    MainFrame *MainWindow = new MainFrame("Main Menu", wxDefaultPosition, wxSize(1480, 890));
+    MainFrame* MainWindow = new MainFrame("Main Menu", wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW);
     MainWindow->Show(true);
 
     return true;

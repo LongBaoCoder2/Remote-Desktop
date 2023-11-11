@@ -3,6 +3,7 @@
 #include <wx/wx.h>
 #include <vector>
 #include "ButtonNavigation.hpp"
+#include "../../constant.hpp"
 
 class NavigationBar : public wxPanel
 {
@@ -15,8 +16,8 @@ public:
     virtual ~NavigationBar();
 
 private:
-    std::string id = "Username";
-    std::string iconPath = "assets/user_icon.png";
+    std::string id = "ADMIN";
+    std::string iconPath = CONFIG_APP::USER_ICON_PATH;
 
     wxBoxSizer* NavSizer, * UserSizer;
     wxStaticText* TitleText;

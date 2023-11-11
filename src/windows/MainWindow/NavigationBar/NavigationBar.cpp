@@ -40,7 +40,7 @@ NavigationBar::NavigationBar(wxWindow* parent,
     NavSizer->Add(UserInfoPanel, 0, wxALIGN_CENTER | wxTOP, FromDIP(60));
 
     // Set the background color for the NavigationBar
-    this->SetBackgroundColour(wxColour(17, 25, 38));
+    this->SetBackgroundColour(CONFIG_UI::PRIMARY_DARK_COLOR);
     this->SetSizer(NavSizer);
 }
 
