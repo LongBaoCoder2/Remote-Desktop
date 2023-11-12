@@ -92,6 +92,12 @@ public:
     void SetSelected(bool isSelected)
     {
         this->isSelected = isSelected;
+        this->Refresh();
+    }
+
+    bool GetSelected()
+    {
+        return this->isSelected;
     }
 
     std::string text;
