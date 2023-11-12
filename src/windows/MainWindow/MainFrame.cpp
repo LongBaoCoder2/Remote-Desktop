@@ -55,58 +55,6 @@ std::map<Window_ID, wxWindow*>& MainFrame::GetAllWindow()
     return AllWindow;
 }
 
-// void MainFrame::CreateMenuWindow()
-// {
-//     this->currentWindow->Hide();
-
-//     const bool hasMenuWindow = GetAllWindow().find(Window_ID::MENU_WINDOW) != GetAllWindow().end();
-//     if (!hasMenuWindow) {
-//         GetAllWindow()[Window_ID::MENU_WINDOW] = new MenuWindow(MainPanel);
-//         // MainSizer->Add(GetAllWindow()[Window_ID::MENU_WINDOW], 1, wxEXPAND);
-//     }
-//     this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];
-//     this->currentWindow->Show();
-//     Layout();
-// }
-
-// void MainFrame::CreateHomeWindow()
-// {
-//     // Not check as it was created
-//     this->currentWindow->Hide();
-//     this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];
-//     this->currentWindow->Show();
-//     Layout();
-// }
-
-// void MainFrame::CreateManageWindow()
-// {
-//     this->currentWindow->Hide();
-
-//     const bool hasManageWindow = GetAllWindow().find(Window_ID::MANAGE_WINDOW) != GetAllWindow().end();
-//     if (!hasManageWindow) {
-//         GetAllWindow()[Window_ID::MANAGE_WINDOW] = new ManageWindow(MainPanel);
-//         // MainSizer->Add(GetAllWindow()[Window_ID::MANAGE_WINDOW], 1, wxEXPAND);
-//     }
-//     this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];
-//     this->currentWindow->Show();
-//     Layout();
-// }
-
-// void MainFrame::CreateSettingWindow()
-// {
-//     this->currentWindow->Hide();
-
-//     const bool hasSettingWindow = GetAllWindow().find(Window_ID::SETTING_WINDOW) != GetAllWindow().end();
-//     if (!hasSettingWindow) {
-//         GetAllWindow()[Window_ID::SETTING_WINDOW] = new SettingWindow(MainPanel);
-//         // MainSizer->Add(GetAllWindow()[Window_ID::SETTING_WINDOW], 1, wxEXPAND);
-//     }
-
-//     this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];
-//     this->currentWindow->Show();
-//     Layout();
-// }
-
 void MainFrame::CreateMenuWindow()
 {
     // Hide the current window
