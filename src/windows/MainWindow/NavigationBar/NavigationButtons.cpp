@@ -18,7 +18,7 @@ NavigationButtons::NavigationButtons(NavigationBar* parentBar,
 
     // Create navigation buttons
     // Bind click events for the buttons
-    for (auto button : listButton)
+    for (auto& button : listButton)
     {
         button->Bind(wxEVT_LEFT_DOWN, &NavigationButtons::OnClick, this);
         ButtonSizer->Add(button, 0, wxTOP | wxALIGN_CENTER, FromDIP(5));
@@ -30,7 +30,7 @@ NavigationButtons::NavigationButtons(NavigationBar* parentBar,
 }
 
 void NavigationButtons::OnClick(wxMouseEvent& event) {
-    const Window_ID eventID = static_cast<Window_ID>(event.GetEventObject());
+    const Window_ID eventID = static_cast<Window_ID>(static_cast<wxWindow*>(event.GetEventObject())->GetId());
 
     for (auto& button : listButton) {
         if (button->GetId() != eventID) {
@@ -40,6 +40,7 @@ void NavigationButtons::OnClick(wxMouseEvent& event) {
             button->SetSelected(true);
         }
     }
+
 
     // Need code more
     this->parentBar->OnNavigation(eventID);

@@ -2,9 +2,9 @@
 
 NavigationBar::NavigationBar(wxWindow* parent,
     wxWindowID id,
+    MainFrame* MainParent,
     const wxPoint& pos,
-    const wxSize& size,
-    MainFrame* parentFrame)
+    const wxSize& size)
     : wxPanel(parent, id, pos, size)
 {
     // Dependency Injection MainFrame as Oservation
@@ -54,27 +54,25 @@ NavigationBar::~NavigationBar()
 void NavigationBar::OnNavigation(const Window_ID& Window_id)
 {
     if (Window_id != this->currentID) {
-        switch (this->currentID)
+        switch (Window_id)
         {
         case Window_ID::HOME_WINDOW:
             this->MainParent->CreateHomeWindow();
-            this->currentID = Window_ID::HOME_WINDOW;
             break;
 
         case Window_ID::MANAGE_WINDOW:
             this->MainParent->CreateManageWindow();
-            this->currentID = Window_ID::MANAGE_WINDOW;
             break;
 
         case Window_ID::MENU_WINDOW:
             this->MainParent->CreateMenuWindow();
-            this->currentID = Window_ID::MENU_WINDOW;
             break;
 
         case Window_ID::SETTING_WINDOW:
             this->MainParent->CreateSettingWindow();
-            this->currentID = Window_ID::SETTING_WINDOW;
             break;
         }
+
+        this->currentID = Window_id;
     }
 }

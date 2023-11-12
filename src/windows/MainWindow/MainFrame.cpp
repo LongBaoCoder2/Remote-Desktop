@@ -11,7 +11,7 @@ MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& si
 // Create the navigation bar and add it to MainSizer
 void MainFrame::CreateNavBar()
 {
-    Navbar = new NavigationBar(MainPanel, wxID_ANY, wxDefaultPosition, CONFIG_UI::NAVIGATION_SIZE, this);
+    Navbar = new NavigationBar(MainPanel, wxID_ANY, this, wxDefaultPosition, CONFIG_UI::NAVIGATION_SIZE);
     MainSizer->Add(Navbar, 0, wxEXPAND);
 }
 
@@ -38,59 +38,130 @@ MainFrame::~MainFrame()
 
 void MainFrame::CreateMainWindow()
 {
-    this->currentWindow = new HomeWindow(MainPanel);
-    GetAllWindow()[Window_ID::HOME_WINDOW] = this->currentWindow;
+    WindowPanel = new wxPanel(MainPanel, wxID_ANY, wxDefaultPosition, CONFIG_UI::MEDIUM_WINDOW - CONFIG_UI::NAVIGATION_SIZE);
+    WindowSizer = new wxBoxSizer(wxVERTICAL);
 
-    MainSizer->Add(this->currentWindow, 0, wxEXPAND);
+    this->currentWindow = new HomeWindow(WindowPanel, wxDefaultPosition, WindowPanel->GetSize());
+    GetAllWindow()[Window_ID::HOME_WINDOW] = this->currentWindow;
+    WindowSizer->Add(this->currentWindow, 1, wxEXPAND);
+
+    WindowPanel->SetSizerAndFit(WindowSizer);
+    MainSizer->Add(WindowPanel, 0, wxEXPAND);
 }
 
 std::map<Window_ID, wxWindow*>& MainFrame::GetAllWindow()
 {
+    static std::map<Window_ID, wxWindow*> AllWindow;
     return AllWindow;
 }
 
+// void MainFrame::CreateMenuWindow()
+// {
+//     this->currentWindow->Hide();
+
+//     const bool hasMenuWindow = GetAllWindow().find(Window_ID::MENU_WINDOW) != GetAllWindow().end();
+//     if (!hasMenuWindow) {
+//         GetAllWindow()[Window_ID::MENU_WINDOW] = new MenuWindow(MainPanel);
+//         // MainSizer->Add(GetAllWindow()[Window_ID::MENU_WINDOW], 1, wxEXPAND);
+//     }
+//     this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];
+//     this->currentWindow->Show();
+//     Layout();
+// }
+
+// void MainFrame::CreateHomeWindow()
+// {
+//     // Not check as it was created
+//     this->currentWindow->Hide();
+//     this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];
+//     this->currentWindow->Show();
+//     Layout();
+// }
+
+// void MainFrame::CreateManageWindow()
+// {
+//     this->currentWindow->Hide();
+
+//     const bool hasManageWindow = GetAllWindow().find(Window_ID::MANAGE_WINDOW) != GetAllWindow().end();
+//     if (!hasManageWindow) {
+//         GetAllWindow()[Window_ID::MANAGE_WINDOW] = new ManageWindow(MainPanel);
+//         // MainSizer->Add(GetAllWindow()[Window_ID::MANAGE_WINDOW], 1, wxEXPAND);
+//     }
+//     this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];
+//     this->currentWindow->Show();
+//     Layout();
+// }
+
+// void MainFrame::CreateSettingWindow()
+// {
+//     this->currentWindow->Hide();
+
+//     const bool hasSettingWindow = GetAllWindow().find(Window_ID::SETTING_WINDOW) != GetAllWindow().end();
+//     if (!hasSettingWindow) {
+//         GetAllWindow()[Window_ID::SETTING_WINDOW] = new SettingWindow(MainPanel);
+//         // MainSizer->Add(GetAllWindow()[Window_ID::SETTING_WINDOW], 1, wxEXPAND);
+//     }
+
+//     this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];
+//     this->currentWindow->Show();
+//     Layout();
+// }
+
 void MainFrame::CreateMenuWindow()
 {
+    // Hide the current window
+    this->currentWindow->Hide();
+
     const bool hasMenuWindow = GetAllWindow().find(Window_ID::MENU_WINDOW) != GetAllWindow().end();
     if (!hasMenuWindow) {
-        GetAllWindow()[Window_ID::MENU_WINDOW] = new MenuWindow(MainPanel);
+        GetAllWindow()[Window_ID::MENU_WINDOW] = new MenuWindow(WindowPanel, wxDefaultPosition, WindowPanel->GetSize());
+        WindowSizer->Add(GetAllWindow()[Window_ID::MENU_WINDOW], 1, wxEXPAND);
     }
-    this->currentWindow->Close();
     this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];
-    this->currentWindow->Show(true);
-    this->Refresh();
+    this->currentWindow->Show();
+    Layout();
 }
 
 void MainFrame::CreateHomeWindow()
 {
-    // Not check as it was created
-    this->currentWindow->Close();
-    this->currentWindow = GetAllWindow()[Window_ID::HOME_WINDOW];
-    this->currentWindow->Show(true);
-    this->Refresh();
+    // Hide the current window
+    this->currentWindow->Hide();
+
+    // Ensure that HomeWindow has been created
+    if (GetAllWindow().find(Window_ID::HOME_WINDOW) != GetAllWindow().end()) {
+        this->currentWindow = GetAllWindow()[Window_ID::HOME_WINDOW];
+        this->currentWindow->Show();
+        Layout();
+    }
 }
 
 void MainFrame::CreateManageWindow()
 {
+    // Hide the current window
+    this->currentWindow->Hide();
+
     const bool hasManageWindow = GetAllWindow().find(Window_ID::MANAGE_WINDOW) != GetAllWindow().end();
     if (!hasManageWindow) {
-        GetAllWindow()[Window_ID::MANAGE_WINDOW] = new ManageWindow(MainPanel);
+        GetAllWindow()[Window_ID::MANAGE_WINDOW] = new ManageWindow(WindowPanel, wxDefaultPosition, WindowPanel->GetSize());
+        WindowSizer->Add(GetAllWindow()[Window_ID::MANAGE_WINDOW], 1, wxEXPAND);
     }
-    this->currentWindow->Close();
     this->currentWindow = GetAllWindow()[Window_ID::MANAGE_WINDOW];
-    this->currentWindow->Show(true);
-    this->Refresh();
+    this->currentWindow->Show();
+    Layout();
 }
 
 void MainFrame::CreateSettingWindow()
 {
+    // Hide the current window
+    this->currentWindow->Hide();
+
     const bool hasSettingWindow = GetAllWindow().find(Window_ID::SETTING_WINDOW) != GetAllWindow().end();
     if (!hasSettingWindow) {
-        GetAllWindow()[Window_ID::SETTING_WINDOW] = new SettingWindow(MainPanel);
+        GetAllWindow()[Window_ID::SETTING_WINDOW] = new SettingWindow(WindowPanel, wxDefaultPosition, WindowPanel->GetSize());
+        WindowSizer->Add(GetAllWindow()[Window_ID::SETTING_WINDOW], 1, wxEXPAND);
     }
 
-    this->currentWindow->Close();
     this->currentWindow = GetAllWindow()[Window_ID::SETTING_WINDOW];
-    this->currentWindow->Show(true);
-    this->Refresh();
+    this->currentWindow->Show();
+    Layout();
 }

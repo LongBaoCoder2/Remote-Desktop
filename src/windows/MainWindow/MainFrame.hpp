@@ -2,6 +2,7 @@
 
 #include <wx/wx.h>
 #include <map>
+#include <memory>
 
 #include "ClientWindow/ClientWindow.hpp"
 // #include "MenuWindow/MainWindow.hpp"
@@ -39,8 +40,9 @@ private:
   wxBoxSizer* MainSizer = nullptr;
   NavigationBar* Navbar = nullptr;
 
-  std::map<Window_ID, wxWindow*> AllWindow;
   wxWindow* currentWindow = nullptr;
+  wxBoxSizer* WindowSizer = nullptr;
+  wxPanel* WindowPanel = nullptr;
 
   void SetupMainFrame();
   void CreateNavBar();

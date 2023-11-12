@@ -6,7 +6,8 @@
 
 class Application : public wxApp
 {
-
+private:
+    MainFrame* MainWindow;
 public:
     virtual bool OnInit();
 };

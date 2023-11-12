@@ -14,9 +14,9 @@ class NavigationBar : public wxPanel
 public:
     NavigationBar(wxWindow* parent,
         wxWindowID id,
+        MainFrame* parentFrame,
         const wxPoint& pos = wxDefaultPosition,
-        const wxSize& size = wxDefaultSize,
-        MainFrame* parentFrame = nullptr);
+        const wxSize& size = wxDefaultSize);
 
     virtual ~NavigationBar();
 
