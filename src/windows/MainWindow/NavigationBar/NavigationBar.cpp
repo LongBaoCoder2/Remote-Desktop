@@ -3,9 +3,13 @@
 NavigationBar::NavigationBar(wxWindow* parent,
     wxWindowID id,
     const wxPoint& pos,
-    const wxSize& size)
+    const wxSize& size,
+    MainFrame* parentFrame)
     : wxPanel(parent, id, pos, size)
 {
+    // Dependency Injection MainFrame as Oservation
+    this->MainParent = MainParent;
+
     // Create a vertical sizer for arranging elements
     NavSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -14,8 +18,7 @@ NavigationBar::NavigationBar(wxWindow* parent,
     TitleText->SetFont(wxFont(15, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
     TitleText->SetForegroundColour(*wxWHITE);
 
-
-    BtnNav = new ButtonNavigation(this);
+    BtnNav = new NavigationButtons(this);
 
     // Create user icon and username information
     UserInfoPanel = new wxPanel(this, wxID_ANY);
@@ -48,9 +51,30 @@ NavigationBar::~NavigationBar()
 {
 }
 
-void NavigationBar::OnNavigation(const ButtonNavigation::Window_ID& Window_id)
+void NavigationBar::OnNavigation(const Window_ID& Window_id)
 {
     if (Window_id != this->currentID) {
+        switch (this->currentID)
+        {
+        case Window_ID::HOME_WINDOW:
+            this->MainParent->CreateHomeWindow();
+            this->currentID = Window_ID::HOME_WINDOW;
+            break;
 
+        case Window_ID::MANAGE_WINDOW:
+            this->MainParent->CreateManageWindow();
+            this->currentID = Window_ID::MANAGE_WINDOW;
+            break;
+
+        case Window_ID::MENU_WINDOW:
+            this->MainParent->CreateMenuWindow();
+            this->currentID = Window_ID::MENU_WINDOW;
+            break;
+
+        case Window_ID::SETTING_WINDOW:
+            this->MainParent->CreateSettingWindow();
+            this->currentID = Window_ID::SETTING_WINDOW;
+            break;
+        }
     }
 }
