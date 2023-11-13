@@ -19,8 +19,9 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     clientTextWindow->Show();
 
     // Tạo một wxTextCtrl để hiển thị văn bản
-    // textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE);
-    // textCtrl->SetBackgroundColour(wxColor(255, 255, 255));
+   
+    textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
+        wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
 
 
     // Tạo một wxBoxSizer với hướng ngang
@@ -43,6 +44,10 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
 
     this->SetSizerAndFit(MainSizer);
     this->Center();
+        
+    CapturePanel->Bind(wxEVT_LEFT_DOWN, &ClientWindow::OnMouseLeftClick, this);
+    CapturePanel->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
+    CapturePanel->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
 }
 
 void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
@@ -141,6 +146,41 @@ void ClientWindow::OnSecondTimer(wxTimerEvent& event)
     // In thông tin thống kê và đặt biến đếm về 0
     clientTextWindow->DisplayMessage(wxString::Format(wxT("Images sent this second: %d\n"), imagesSentThisSecond));
     imagesSentThisSecond = 0;
+}
+
+void ClientWindow::OnMouseLeftClick(wxMouseEvent& event) {
+    textCtrl->AppendText(wxString::Format(wxT("Got it")));
+    // Tạo message chuột
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::MouseClick;
+    // m << event.GetX() << event.GetY() << static_cast<int32_t>(event.GetButton());
+    m << event.GetX() << event.GetY() << static_cast<int32_t>(1); // 1 for left click
+    
+    // Gửi message
+    Send(m);
+    event.Skip(); // Để sự kiện được xử lý tiếp
+}
+
+void ClientWindow::OnKeyDown(wxKeyEvent& event) {
+    // Tạo message bàn phím
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::KeyPress;
+    m << static_cast<int32_t>(event.GetKeyCode()) << true; // true for key down
+    
+    // Gửi message
+    Send(m);
+    event.Skip();
+}
+
+void ClientWindow::OnKeyUp(wxKeyEvent& event) {
+    // Tạo message bàn phím
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::KeyRelease;
+    m << static_cast<int32_t>(event.GetKeyCode()) << false; // false for key up
+    
+    // Gửi message
+    Send(m);
+    event.Skip();
 }
 
 ClientWindow::~ClientWindow()

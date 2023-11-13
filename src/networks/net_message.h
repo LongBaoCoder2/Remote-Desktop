@@ -40,7 +40,7 @@ namespace net
 
             std::memcpy(msg.body.data() + i, &data, sizeof(DataType));
 
-            msg.header.size = msg.body.size;
+            msg.header.size = msg.body.size();
 
             return msg;
         }
@@ -54,7 +54,7 @@ namespace net
 
             msg.body.resize(i);
 
-            msg.header.size = msg.body.size;
+            msg.header.size = msg.body.size();
 
             return msg;
         }

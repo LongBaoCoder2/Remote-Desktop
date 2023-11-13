@@ -14,6 +14,7 @@ protected:
     bool OnClientConnect(std::shared_ptr<net::session<RemoteMessage>> client) override;
     void OnClientDisconnect(std::shared_ptr<net::session<RemoteMessage>> client) override;
     void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage> &msg) override;
+    void OnMessageReceived(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage>& msg);
 
 private:
     const int DELAY_MS = 1;

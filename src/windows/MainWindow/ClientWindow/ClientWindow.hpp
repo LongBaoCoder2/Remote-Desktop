@@ -37,5 +37,9 @@ private:
     void OnUpdateWindow(wxTimerEvent&);
     void OnReceiveImage(net::message<RemoteMessage>& msg);
     void OnSecondTimer(wxTimerEvent& event);
+    void ClientWindow::OnMouseLeftClick(wxMouseEvent& event);
+    void ClientWindow::OnKeyDown(wxKeyEvent& event);
+    void ClientWindow::OnKeyUp(wxKeyEvent& event);
+
     // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };

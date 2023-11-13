@@ -89,13 +89,13 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         auto t2 = std::chrono::high_resolution_clock::now();
         auto ms_int_12    = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
-        textCtrl->AppendText(wxString::Format(wxT("Take screenshot takes: %lld ms.\n"), ms_int_12.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Take screenshot takes: %lld ms.\n"), ms_int_12.count()));
 
         // takeScreenshot();
         wxImage image = screenshot.ConvertToImage();
         auto t3 = std::chrono::high_resolution_clock::now();
         auto ms_int_23    = std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2);
-        textCtrl->AppendText(wxString::Format(wxT("Convert image takes: %lld ms.\n"), ms_int_23.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Convert image takes: %lld ms.\n"), ms_int_23.count()));
 
         // wxImage image2 = oldscreenshot.ConvertToImage();
 
@@ -112,7 +112,7 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         image.SaveFile(memStream, wxBITMAP_TYPE_JPEG);
         auto t4 = std::chrono::high_resolution_clock::now();
         auto ms_int_34    = std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3);
-        textCtrl->AppendText(wxString::Format(wxT("Save file takes: %lld ms.\n"), ms_int_34.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Save file takes: %lld ms.\n"), ms_int_34.count()));
 
         // Lấy dữ liệu nén
         size_t dataSize = memStream.GetSize();
@@ -131,16 +131,16 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
 
         auto t5 = std::chrono::high_resolution_clock::now();
         auto ms_int_45    = std::chrono::duration_cast<std::chrono::milliseconds>(t5 - t4);
-        textCtrl->AppendText(wxString::Format(wxT("Assign data to msg takes: %lld ms.\n"), ms_int_45.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Assign data to msg takes: %lld ms.\n"), ms_int_45.count()));
 
         MessageAllClients(*msg);
         auto t6 = std::chrono::high_resolution_clock::now();
         auto ms_int_56    = std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t5);
-        textCtrl->AppendText(wxString::Format(wxT("Send message takes: %lld ms.\n"), ms_int_56.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Send message takes: %lld ms.\n"), ms_int_56.count()));
 
         auto ms_int_61   = std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t1);
-        textCtrl->AppendText(wxString::Format(wxT("All server operations take: %lld ms.\n"), ms_int_61.count()));
-        textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu bytes.\n\n\n"), dataSize));
+        // textCtrl->AppendText(wxString::Format(wxT("All server operations take: %lld ms.\n"), ms_int_61.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu bytes.\n\n\n"), dataSize));
 
         // Gửi message đến tất cả clients
         // std::thread sendThread([this, msg]() {
@@ -176,7 +176,7 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
 void ServerWindow::OnSecondTimer(wxTimerEvent& event)
 {
     // In thông tin thống kê và đặt biến đếm về 0
-    textCtrl->AppendText(wxString::Format(wxT("Images sent this second: %d\n"), imagesSentThisSecond));
+    // textCtrl->AppendText(wxString::Format(wxT("Images sent this second: %d\n"), imagesSentThisSecond));
     imagesSentThisSecond = 0;
 }
 
@@ -246,4 +246,30 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
     // {
 
     // }
+
+    textCtrl->AppendText(wxString::Format(wxT("Some shit msg is received")));
+    switch (msg.header.id) {
+
+        case RemoteMessage::MouseClick: {
+            int x, y;
+            int32_t button;
+            msg >> x >> y >> button;
+            // Giả lập click chuột
+            
+            textCtrl->AppendText(wxString::Format(wxT("Some Click activate in (%d, %d).\n"), x, y));
+            if(button == 1)
+                textCtrl->AppendText(wxString::Format(wxT("Left Click activate in (%d, %d).\n"), x, y));
+            else if(button == 2) 
+                textCtrl->AppendText(wxString::Format(wxT("Right Click activate in (%d, %d).\n"), x, y));
+            break;
+        }
+        case RemoteMessage::KeyPress: {
+            int32_t key;
+            bool is_down;
+            msg >> key >> is_down;
+            // Giả lập nhấn phím
+            break;
+        }
+    }
 }
+
