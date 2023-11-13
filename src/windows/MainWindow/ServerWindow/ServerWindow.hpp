@@ -14,7 +14,6 @@ protected:
     bool OnClientConnect(std::shared_ptr<net::session<RemoteMessage>> client) override;
     void OnClientDisconnect(std::shared_ptr<net::session<RemoteMessage>> client) override;
     void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage> &msg) override;
-    void OnMessageReceived(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage>& msg);
 
 private:
     const int DELAY_MS = 1;
@@ -31,12 +30,15 @@ private:
     wxBitmap screenshot, oldscreenshot;
     wxTimer *timer;
     wxTimer* secondTimer;
+    wxTimer* QueueTimer;
     wxScreenDC screenDC;
     wxTextCtrl* textCtrl;
 
     int imagesSentThisSecond = 0;
     // std::vector<uint32_t> garbageIDs;
 
+
+    void OnUpdateWindow(wxTimerEvent& event);
     void OnClientValidated(std::shared_ptr<net::session<RemoteMessage>> client);
     void OnSecondTimer(wxTimerEvent& event);
     void takeScreenshot(int imgWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X), int imgHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y));

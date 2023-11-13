@@ -32,8 +32,15 @@ ServerWindow::ServerWindow(uint16_t port)
     this->Bind(wxEVT_TIMER, &ServerWindow::OnSecondTimer, this, secondTimer->GetId());
     secondTimer->Start(1000);  // Đặt timer chạy mỗi giây (1000ms)
 
+    QueueTimer = new wxTimer(this, 5);
+    this->Bind(wxEVT_TIMER, &ServerWindow::OnUpdateWindow, this, QueueTimer->GetId());
+    QueueTimer->Start(DELAY_MS);
     // this->SetSizerAndFit(MainSizer);
     this->Center();
+}
+
+void ServerWindow::OnUpdateWindow(wxTimerEvent& event) {
+    IServer<RemoteMessage>::Update(-1, true);
 }
 
 void ServerWindow::takeScreenshot(int imgWidth, int imgHeight)

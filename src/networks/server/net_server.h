@@ -125,9 +125,9 @@ namespace net
       m_qMessagesIn.wait();
 
     size_t nCountMessage = 0;
-    while (nCountMessage++ < nMaxMessages && !m_deqConnections.empty())
+    while (nCountMessage++ < nMaxMessages && !m_qMessagesIn.empty())
     {
-      auto msg = m_deqConnections.pop_front();
+      auto msg = m_qMessagesIn.pop_front();
 
       OnMessage(msg.remote, msg.msg);
     }
