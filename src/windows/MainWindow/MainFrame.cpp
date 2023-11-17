@@ -42,7 +42,7 @@ void MainFrame::CreateMainWindow()
     WindowPanel = new wxPanel(MainPanel, wxID_ANY, wxDefaultPosition, MainSize);
     WindowSizer = new wxBoxSizer(wxVERTICAL);
 
-    this->currentWindow = new HomeWindow(WindowPanel, wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW - CONFIG_UI::NAVIGATION_SIZE);
+    this->currentWindow = new HomeWindow(WindowPanel, Navbar, wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW - CONFIG_UI::NAVIGATION_SIZE);
     GetAllWindow()[Window_ID::HOME_WINDOW] = this->currentWindow;
     WindowSizer->Add(this->currentWindow, 1, wxEXPAND);
 

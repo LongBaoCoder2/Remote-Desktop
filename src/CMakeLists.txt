@@ -40,6 +40,8 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/MainWindow/ClientWindow/ClientWindow.cpp
     windows/MainWindow/ServerWindow/ServerWindow.cpp
     windows/AllWindow/*/*.cpp
+    windows/AllWindow/MenuWindow/ListUserPanel.cpp
+    windows/AllWindow/MenuWindow/UserPanel.cpp
     utils/*.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 

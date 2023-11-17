@@ -22,6 +22,7 @@ NavigationBar::NavigationBar(wxWindow* parent,
 
     // Create user icon and username information
     UserInfoPanel = new wxPanel(this, wxID_ANY);
+    UserInfoPanel->SetWindowStyle(wxALIGN_BOTTOM);
     UserSizer = new wxBoxSizer(wxVERTICAL);
     wxImage iconImage("./assets/user_icon.png", wxBITMAP_TYPE_PNG);
 

@@ -17,8 +17,9 @@ namespace CONFIG_UI
     const wxSize PRIMARY_BUTTON_SIZE = wxSize(220, 42);
 
     // Configuration of color
-    const wxColour PRIMARY_LIGHT_COLOR = wxColour(249, 250, 252);
+    const wxColour PRIMARY_LIGHT_COLOR = wxColour(237, 238, 241);
     const wxColour SECONDARY_LIGHT_COLOR = wxColour(255, 255, 255);
+
 
     const wxColour PRIMARY_DARK_COLOR = wxColour(15, 23, 36);
 }

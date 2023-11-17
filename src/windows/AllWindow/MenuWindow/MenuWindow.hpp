@@ -1,8 +1,11 @@
 #pragma once
 
 #include <wx/wx.h>
+#include "../../constant.hpp"
+#include "../../components/Button.hpp"
+#include "ListUserPanel.hpp"
 
-class MenuWindow : public wxWindow
+class MenuWindow : public wxPanel
 {
 public:
 
