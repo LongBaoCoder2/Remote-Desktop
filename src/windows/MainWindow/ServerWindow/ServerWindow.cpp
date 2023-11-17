@@ -10,7 +10,7 @@ ServerWindow::ServerWindow(uint16_t port)
 
     LogPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366, 768));
     textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
-                                     wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
+        wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
 
     // Sắp xếp layout
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -60,7 +60,7 @@ void ServerWindow::takeScreenshot()
     memDC.SelectObject(wxNullBitmap);
 }
 
-void ServerWindow::OnCaptureWindow(wxTimerEvent &event)
+void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
 {
     if (nCountUser)
     {
@@ -78,7 +78,7 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent &event)
         // size_t dataSize = memBuffer->GetDataLeft();
         // size_t dataSize = memStream.GetSize();
         size_t dataSize = 20;
-        auto *dataBuffer = new uint8_t[dataSize + 10];
+        auto* dataBuffer = new uint8_t[dataSize + 10];
         for (int i = 0; i < 20; ++i) {
             dataBuffer[i] = 1;
         }
@@ -146,7 +146,7 @@ void ServerWindow::OnClientDisconnect(std::shared_ptr<net::session<RemoteMessage
     }
 }
 
-void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage> &msg)
+void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage>& msg)
 {
     // if (!garbageIDs.empty())
     // {

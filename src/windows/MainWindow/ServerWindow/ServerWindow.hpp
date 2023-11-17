@@ -13,7 +13,7 @@ public:
 protected:
     bool OnClientConnect(std::shared_ptr<net::session<RemoteMessage>> client) override;
     void OnClientDisconnect(std::shared_ptr<net::session<RemoteMessage>> client) override;
-    void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage> &msg) override;
+    void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage>& msg) override;
 
 private:
     const int DELAY_MS = 1000;
@@ -22,11 +22,11 @@ private:
     size_t nCountUser = 0;
     int screenWidth;
     int screenHeight;
-    wxPanel *LogPanel;
+    wxPanel* LogPanel;
 
-    wxStaticText *text;
+    wxStaticText* text;
     wxBitmap screenshot;
-    wxTimer *timer;
+    wxTimer* timer;
     wxScreenDC screenDC;
     wxTextCtrl* textCtrl;
     // std::vector<uint32_t> garbageIDs;
@@ -35,5 +35,5 @@ private:
 
     void takeScreenShot(int imgWidth, int imgHeight);
     void takeScreenshot();
-    void OnCaptureWindow(wxTimerEvent &);
+    void OnCaptureWindow(wxTimerEvent&);
 };

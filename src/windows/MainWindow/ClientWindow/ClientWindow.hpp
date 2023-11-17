@@ -9,7 +9,7 @@
 class ClientWindow : public net::IClient<RemoteMessage>, public wxFrame
 {
 public:
-    ClientWindow(const std::string &host, uint16_t port);
+    ClientWindow(const std::string& host, uint16_t port);
 
     virtual ~ClientWindow();
 
@@ -18,16 +18,16 @@ private:
     bool CAPTURING = false;
     bool isWaitingForConnection = true;
 
-    wxPanel *CapturePanel = nullptr;
+    wxPanel* CapturePanel = nullptr;
     wxTextCtrl* textCtrl = nullptr;
 
-    wxTimer *timer;
+    wxTimer* timer;
     wxScreenDC screenDC;
     wxBitmap screenshot;
 
     void UpdatePanel();
     void ClearPanel();
-    void OnUpdateWindow(wxTimerEvent &);
+    void OnUpdateWindow(wxTimerEvent&);
 
     // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };

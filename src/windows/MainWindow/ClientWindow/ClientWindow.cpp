@@ -1,6 +1,6 @@
 #include "ClientWindow.hpp"
 
-ClientWindow::ClientWindow(const std::string &host, uint16_t port)
+ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
 {
 
@@ -20,7 +20,7 @@ ClientWindow::ClientWindow(const std::string &host, uint16_t port)
 
 
     // Tạo một wxBoxSizer với hướng ngang
-    wxBoxSizer *MainSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* MainSizer = new wxBoxSizer(wxHORIZONTAL);
 
     // Thêm CapturePanel vào MainSizer với tỷ lệ 1
     MainSizer->Add(CapturePanel, 1, wxEXPAND, 0);
@@ -36,7 +36,7 @@ ClientWindow::ClientWindow(const std::string &host, uint16_t port)
     this->Center();
 }
 
-void ClientWindow::OnUpdateWindow(wxTimerEvent &event)
+void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 {
     if (IsConnected())
     {
