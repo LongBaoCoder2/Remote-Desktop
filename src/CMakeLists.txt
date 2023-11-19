@@ -25,6 +25,7 @@ set(SOURCE_DIR "")
 # )
 file(GLOB_RECURSE SOURCE_FILES 
     main.cpp 
+    models/*.cpp
     windows/Application.cpp 
     windows/LoginWindow/LoginFrame.cpp 
     windows/CaptureWindow/*.cpp
@@ -45,6 +46,7 @@ file(GLOB_RECURSE SOURCE_FILES
     utils/*.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 
+    models/*.hpp
     windows/Application.h 
     windows/LoginWindow/LoginFrame.h 
     windows/CaptureWindow/*.h
