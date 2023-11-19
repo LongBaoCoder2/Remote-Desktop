@@ -8,12 +8,13 @@ bool Application::OnInit()
     LoginWindow = new LoginFrame(wxT("Login"), wxDefaultPosition, wxDefaultSize);
     LoginWindow->Show(true);
 
-    Connect(wxID_ANY, NavigateToMainWindow, wxCommandEventHandler(Application::OnNavigateToMainWindow));
+    Connect(wxID_ANY, UserLoginEvent, wxCommandEventHandler(Application::OnUserLogin));
+    Connect(wxID_ANY, AdminLoginEvent, wxCommandEventHandler(Application::OnAdminLogin));
 
     return true;
 }
 
-void Application::OnNavigateToMainWindow(wxCommandEvent& event)
+void Application::NavigateToMainWindow(std::unique_ptr<IModel> Model)
 {
     if (LoginWindow) {
         LoginWindow->Destroy();
@@ -23,3 +24,15 @@ void Application::OnNavigateToMainWindow(wxCommandEvent& event)
     MainWindow->Show(true);
 }
 
+void Application::OnUserLogin(wxCommandEvent& event) {
+    std::string ID = LoginWindow->GetID();
+    std::unique_ptr<IModel> User = factory.Create(Owned::USER, ID);
+
+    NavigateToMainWindow(std::move(User));
+}
+
+void Application::OnAdminLogin(wxCommandEvent& event) {
+    std::unique_ptr<IModel> Admin = factory.Create(Owned::ADMIN, "ADMIN");
+
+    NavigateToMainWindow(std::move(Admin));
+}

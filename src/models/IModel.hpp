@@ -4,12 +4,13 @@
 
 // Specify type of User
 #ifndef OWNED
+#define OWNED
 enum class Owned : uint8_t
 {
-    SERVER = 0,
-    CLIENT,
-#define ADMIN CLIENT
-#define USER SERVER
+    ADMIN = 0,
+    USER,
+#define CLIENT ADMIN 
+#define SERVER USER 
 };
 #endif
 
@@ -21,8 +22,6 @@ public:
     IModel(std::string ID, std::string IPAddress = "")
         : ID(ID), IPAddress(IPAddress) {}
 
-    // Not permit to copy semantics
-    IModel(const IModel& model) = delete;
 
     virtual ~IModel() {};
 

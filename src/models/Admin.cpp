@@ -1,41 +1,26 @@
 #include "Admin.hpp"
 
-void Admin::SetPassword(std::string Password)
+Admin::Admin(std::string IP, std::string IPAddress)
+    : IModel(IP, IPAddress)
 {
-    this->Password = Password;
 }
-
-std::string Admin::GetPassword() const
-{
-    return this->Password;
-}
-
-// bool Admin::checkValidation() const
-// {
-//     if (this->GetID().compare("admin") || this->GetPassword().compare("admin"))
-//         return true;
-//     return false;
-// }
 
 Owned Admin::GetTypeOwned() const
 {
     return Owned::ADMIN;
 }
 
-std::shared_ptr<User> Admin::GetUser(int index) const
+std::shared_ptr<User> Admin::GetUserByIndex(int index)
 {
-    if (index >= ListUserAccess.size())
-        return nullptr;
-
-    return ListUserAccess[index];
+    return std::move(ListUserAccess[index]);
 }
 
-std::shared_ptr<User> Admin::GetUser(const std::string &IPAddress) const
+std::shared_ptr<User> Admin::GetUserByIP(const std::string& IPAddress)
 {
-    for (const auto &user : ListUserAccess)
+    for (const auto& user : ListUserAccess)
     {
         if ((*user).GetIPAddress() == IPAddress)
-            return user;
+            return std::move(user);
     }
 
     return nullptr;
@@ -43,15 +28,8 @@ std::shared_ptr<User> Admin::GetUser(const std::string &IPAddress) const
 
 bool Admin::AppendUser(std::shared_ptr<User> user)
 {
-    try
-    {
-        ListUserAccess.push_back(std::move(user));
-        return true;
-    }
-    catch (std::exception &e)
-    {
-        return false;
-    }
+    ListUserAccess.push_back(std::move(user));
+    return true;
 }
 
 bool Admin::RemoveUser(int index)
@@ -63,10 +41,10 @@ bool Admin::RemoveUser(int index)
     return true;
 }
 
-bool Admin::RemoveUser(const std::string &IPAddress)
+bool Admin::RemoveUser(const std::string& IPAddress)
 {
     size_t index = 0;
-    for (const auto &user : ListUserAccess)
+    for (const auto& user : ListUserAccess)
     {
         if ((*user).GetIPAddress() == IPAddress)
             break;

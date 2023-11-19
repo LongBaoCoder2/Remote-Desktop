@@ -4,6 +4,7 @@
 #include "LoginWindow/LoginFrame.h"
 #include "MainWindow/MainFrame.hpp"
 #include "../models/IModel.hpp"
+#include "../models/ModelFactory.hpp"
 
 class Application : public wxApp
 {
@@ -11,9 +12,11 @@ private:
     MainFrame* MainWindow = nullptr;
     LoginFrame* LoginWindow = nullptr;
 
-    std::unique_ptr<IModel> Model;
+    ModelFactory factory;
 
-    void OnNavigateToMainWindow(wxCommandEvent& event);
+    void NavigateToMainWindow(std::unique_ptr<IModel> Model);
+    void OnUserLogin(wxCommandEvent& event);
+    void OnAdminLogin(wxCommandEvent& event);
 
 public:
     virtual bool OnInit();

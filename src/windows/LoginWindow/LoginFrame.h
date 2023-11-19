@@ -3,13 +3,16 @@
 #include <wx/wx.h>
 #include "../components/Button.hpp"
 #include "../MainWindow/MainFrame.hpp"
+#include "../../models/ModelFactory.hpp"
 
-wxDECLARE_EVENT(NavigateToMainWindow, wxCommandEvent);
-
+wxDECLARE_EVENT(UserLoginEvent, wxCommandEvent);
+wxDECLARE_EVENT(AdminLoginEvent, wxCommandEvent);
 
 class LoginFrame : public wxFrame {
 private:
   std::unique_ptr<IModel> Model;
+  std::string ID;
+  std::string Password;
 
   bool isAdminLogin = false;
 
@@ -38,9 +41,12 @@ private:
 
   void setupImageForm();
 
+  bool ValidateUser();
+
   void OnCheckAdmin(wxCommandEvent&);
   void OnSubmit(wxMouseEvent& e);
-  void SendNavigationEvent();
+  void SendUserLoginEvent();
+  void SendAdminLoginEvent();
 
   // void OnLogin(wxCommandEvent& event);
 
@@ -48,4 +54,6 @@ public:
   LoginFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
 
   ~LoginFrame();
+
+  std::string GetID();
 };
