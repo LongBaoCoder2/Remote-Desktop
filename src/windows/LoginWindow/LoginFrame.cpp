@@ -1,8 +1,4 @@
 #include "LoginFrame.h"
-#include "../CaptureWindow/CaptureFrame.h"
-#include "Validation/IDValidation.hpp"
-#include "Validation/PasswordValidation.hpp"
-#include <iostream>
 
 wxDEFINE_EVENT(NavigateToMainWindow, wxCommandEvent);
 
@@ -145,7 +141,7 @@ LoginFrame::~LoginFrame()
 void LoginFrame::SendNavigationEvent()
 {
     wxCommandEvent event(NavigateToMainWindow);
-    wxGetApp().ProcessEvent(event);
+    wxTheApp->ProcessEvent(event);
 }
 
 void LoginFrame::OnSubmit(wxMouseEvent& e)

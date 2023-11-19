@@ -19,7 +19,7 @@ void Application::OnNavigateToMainWindow(wxCommandEvent& event)
         LoginWindow->Destroy();
     }
 
-    MainWindow = new MainFrame(wxT("Remote Desktop"), wxDefaultPosition, wxDefaultSize, std::move(Model));
+    MainWindow = new MainFrame(wxT("Remote Desktop"), wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW, std::move(Model));
     MainWindow->Show(true);
 }
 

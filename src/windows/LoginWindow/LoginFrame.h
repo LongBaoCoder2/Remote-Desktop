@@ -3,7 +3,6 @@
 #include <wx/wx.h>
 #include "../components/Button.hpp"
 #include "../MainWindow/MainFrame.hpp"
-#include "../Application.h"
 
 wxDECLARE_EVENT(NavigateToMainWindow, wxCommandEvent);
 
