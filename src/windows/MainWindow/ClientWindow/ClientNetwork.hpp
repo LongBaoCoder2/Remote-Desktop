@@ -9,6 +9,12 @@ enum class RemoteMessage : uint32_t
     SERVER_UPDATE,
     CLIENT_ACCEPT,
     MouseClick,
+    MouseUnClick,
     KeyPress,
-    KeyRelease
+    KeyRelease,
+    DoubleClick,
+    MouseMove,
+    MouseLeave,
+    MouseEnter,
+    MouseWheel
 };

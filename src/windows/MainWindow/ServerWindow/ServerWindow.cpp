@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <iterator>
 #include <chrono>
+#include <windows.h>
+
 
 ServerWindow::ServerWindow(uint16_t port)
     : wxFrame(nullptr, wxID_ANY, "Server Window", wxDefaultPosition, wxSize(1366, 768)), net::IServer<RemoteMessage>(port), oldscreenshot()
@@ -32,16 +34,25 @@ ServerWindow::ServerWindow(uint16_t port)
     this->Bind(wxEVT_TIMER, &ServerWindow::OnSecondTimer, this, secondTimer->GetId());
     secondTimer->Start(1000);  // Đặt timer chạy mỗi giây (1000ms)
 
-    QueueTimer = new wxTimer(this, 5);
-    this->Bind(wxEVT_TIMER, &ServerWindow::OnUpdateWindow, this, QueueTimer->GetId());
-    QueueTimer->Start(DELAY_MS);
+    // QueueTimer = new wxTimer(this, 5);
+    // this->Bind(wxEVT_TIMER, &ServerWindow::OnUpdateWindow, this, QueueTimer->GetId());
+    // QueueTimer->Start(DELAY_MS);
     // this->SetSizerAndFit(MainSizer);
     this->Center();
+
+    m_updateMess = std::thread([this]
+        {
+            while(true) {
+                IServer<RemoteMessage>::Update(-1, true);
+            }
+        }
+    );
+    
 }
 
-void ServerWindow::OnUpdateWindow(wxTimerEvent& event) {
-    IServer<RemoteMessage>::Update(-1, true);
-}
+// void ServerWindow::OnUpdateWindow(wxTimerEvent& event) {
+//     IServer<RemoteMessage>::Update(-1, true);
+// }
 
 void ServerWindow::takeScreenshot(int imgWidth, int imgHeight)
 {
@@ -236,45 +247,196 @@ void ServerWindow::OnClientDisconnect(std::shared_ptr<net::session<RemoteMessage
 
 void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage>& msg)
 {
-    // if (!garbageIDs.empty())
-    // {
-    //     for (auto pid : garbageIDs)
-    //     {
-    //         net::message<GameMsg> m;
-    //         m.header.id = RemoteMessage:REMOTE_CLIENT;
-    //         m << pid;
-    //         std::cout << "Removing " << pid << "\n";
-    //         MessageAllClients(m);
-    //     }
-    //     garbageIDs.clear();
-    // }
-
-    // switch (msg.header.id)
-    // {
-
-    // }
-
-    textCtrl->AppendText(wxString::Format(wxT("Some shit msg is received")));
     switch (msg.header.id) {
 
+        // case RemoteMessage::MouseClick: {
+        //     int x, y;
+        //     int button;
+        //     msg >> button >> y >> x;
+        //     // Giả lập click chuột
+            
+        //     switch (button) {
+        //         case wxMOUSE_BTN_LEFT:
+        //             textCtrl->AppendText(wxString::Format(wxT("Left Click activate in (%d, %d).\n"), x, y));
+        //             break;
+        //         case wxMOUSE_BTN_RIGHT:
+        //             textCtrl->AppendText(wxString::Format(wxT("Right Click activate in (%d, %d).\n"), x, y));
+        //             break;
+        //         case wxMOUSE_BTN_MIDDLE:
+        //             textCtrl->AppendText(wxString::Format(wxT("Middle Click activate in (%d, %d).\n"), x, y));
+        //         default:
+        //             // Handle other button values if necessary
+        //             break;
+        //     }
+        //     break;
+        // }
         case RemoteMessage::MouseClick: {
             int x, y;
-            int32_t button;
-            msg >> x >> y >> button;
-            // Giả lập click chuột
-            
-            textCtrl->AppendText(wxString::Format(wxT("Some Click activate in (%d, %d).\n"), x, y));
-            if(button == 1)
-                textCtrl->AppendText(wxString::Format(wxT("Left Click activate in (%d, %d).\n"), x, y));
-            else if(button == 2) 
-                textCtrl->AppendText(wxString::Format(wxT("Right Click activate in (%d, %d).\n"), x, y));
+            int button;
+            msg >> button >> y >> x;
+
+            // Convert screen coordinates to absolute coordinates
+            double fScreenWidth    = 1600 - 1; 
+            double fScreenHeight  = 900 - 1; 
+            double fx = x * (65535.0f / fScreenWidth);
+            double fy = y * (65535.0f / fScreenHeight);
+
+            textCtrl->AppendText(wxString::Format(wxT("(%f, %f).\n"), fScreenWidth, fScreenHeight));
+            INPUT Input = {0};
+            Input.type      = INPUT_MOUSE;
+            Input.mi.dwFlags  = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+            Input.mi.dx = fx;
+            Input.mi.dy = fy;
+            SendInput(1, &Input, sizeof(INPUT));
+
+            switch (button) {
+                case wxMOUSE_BTN_LEFT:
+                    textCtrl->AppendText(wxString::Format(wxT("Left Click activate in (%f, %f).\n"), fx, fy));
+                    ZeroMemory(&Input, sizeof(INPUT));
+                    Input.type = INPUT_MOUSE;
+                    Input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
+                    SendInput(1, &Input, sizeof(INPUT));
+                    break;
+
+                case wxMOUSE_BTN_RIGHT:
+                    ZeroMemory(&Input, sizeof(INPUT));
+                    Input.type = INPUT_MOUSE;
+                    Input.mi.dwFlags = MOUSEEVENTF_RIGHTDOWN;
+                    SendInput(1, &Input, sizeof(INPUT));
+                    break;
+
+                case wxMOUSE_BTN_MIDDLE:
+                    ZeroMemory(&Input, sizeof(INPUT));
+                    Input.type = INPUT_MOUSE;
+                    Input.mi.dwFlags = MOUSEEVENTF_MIDDLEDOWN;
+                    SendInput(1, &Input, sizeof(INPUT));
+                    break;
+
+                default:
+                    // Handle other button values if necessary
+                    break;
+            }
             break;
         }
+
+        case RemoteMessage::MouseUnClick: {
+            int x, y;
+            int button;
+            msg >> button >> y >> x;
+
+            // Convert screen coordinates to absolute coordinates
+            double fScreenWidth   = 1600 - 1; 
+            double fScreenHeight  = 900 - 1; 
+            double fx = x * (65535.0f / fScreenWidth);
+            double fy = y * (65535.0f / fScreenHeight);
+
+            INPUT Input = {0};
+            Input.type      = INPUT_MOUSE;
+            Input.mi.dwFlags  = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+            Input.mi.dx = fx;
+            Input.mi.dy = fy;
+            SendInput(1, &Input, sizeof(INPUT));
+
+            switch (button) {
+                case wxMOUSE_BTN_LEFT:
+                    ZeroMemory(&Input, sizeof(INPUT));
+                    Input.type = INPUT_MOUSE;
+                    Input.mi.dwFlags = MOUSEEVENTF_LEFTUP;
+                    SendInput(1, &Input, sizeof(INPUT));
+                    break;
+
+                case wxMOUSE_BTN_RIGHT:
+                    ZeroMemory(&Input, sizeof(INPUT));
+                    Input.type = INPUT_MOUSE;
+                    Input.mi.dwFlags = MOUSEEVENTF_RIGHTUP;
+                    SendInput(1, &Input, sizeof(INPUT));
+                    break;
+
+                case wxMOUSE_BTN_MIDDLE:
+                    ZeroMemory(&Input, sizeof(INPUT));
+                    Input.type = INPUT_MOUSE;
+                    Input.mi.dwFlags = MOUSEEVENTF_MIDDLEUP;
+                    SendInput(1, &Input, sizeof(INPUT));
+                    break;
+
+                default:
+                    // Handle other button values if necessary
+                    break;
+            }
+            break;
+        }
+
+        case RemoteMessage::MouseMove: {
+            int x, y;
+            msg >> y >> x; // Extract coordinates
+
+            double fScreenWidth    = 1600 - 1; 
+            double fScreenHeight  = 900 - 1; 
+            double fx = x * (65535.0f / fScreenWidth);
+            double fy = y * (65535.0f / fScreenHeight);
+            // Simulate mouse move
+            INPUT Input = {0};
+            Input.type = INPUT_MOUSE;
+            Input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+            Input.mi.dx = fx;
+            Input.mi.dy = fy;
+            SendInput(1, &Input, sizeof(INPUT));
+            break;
+        }
+
+        case RemoteMessage::DoubleClick: {
+            int x, y, button;
+            msg >> button >> y >> x; // Extract coordinates and button
+
+            double fScreenWidth    = 1600 - 1; 
+            double fScreenHeight  = 900 - 1; 
+            double fx = x * (65535.0f / fScreenWidth);
+            double fy = y * (65535.0f / fScreenHeight);
+
+            // Simulate double click
+            INPUT Input[2] = {};
+            Input[0].type = Input[1].type = INPUT_MOUSE;
+            Input[0].mi.dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+            Input[1].mi.dwFlags = MOUSEEVENTF_LEFTDOWN | MOUSEEVENTF_LEFTUP;
+            SendInput(2, Input, sizeof(INPUT));
+            break;
+        }
+
+        case RemoteMessage::MouseWheel: {
+            int x, y, delta;
+            msg >> delta >> y >> x; // Extract coordinates and wheel delta
+
+            double fScreenWidth    = 1600 - 1; 
+            double fScreenHeight  = 900 - 1; 
+            double fx = x * (65535.0f / fScreenWidth);
+            double fy = y * (65535.0f / fScreenHeight);
+            // Simulate mouse wheel scroll
+            INPUT Input = {0};
+            Input.type = INPUT_MOUSE;
+            Input.mi.dwFlags = MOUSEEVENTF_WHEEL;
+            Input.mi.mouseData = delta;
+            SendInput(1, &Input, sizeof(INPUT));
+            break;
+        }
+
+
         case RemoteMessage::KeyPress: {
             int32_t key;
             bool is_down;
-            msg >> key >> is_down;
-            // Giả lập nhấn phím
+            msg >> is_down >> key; // Extract key code and state
+
+            textCtrl->AppendText(wxString::Format(wxT("Key Taken ! %d %d.\n"), key, is_down));
+            
+
+            INPUT input = {0};
+            input.type = INPUT_KEYBOARD;
+            input.ki.wVk = key; // Virtual key code
+
+            if (!is_down) {
+                input.ki.dwFlags = KEYEVENTF_KEYUP;
+            }
+
+            SendInput(1, &input, sizeof(INPUT));
             break;
         }
     }

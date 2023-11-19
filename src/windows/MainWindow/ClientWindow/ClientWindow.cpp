@@ -45,9 +45,39 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     this->SetSizerAndFit(MainSizer);
     this->Center();
         
-    CapturePanel->Bind(wxEVT_LEFT_DOWN, &ClientWindow::OnMouseLeftClick, this);
+    // Inside ClientWindow constructor or appropriate setup function
+
+    // Binding mouse down events
+    CapturePanel->Bind(wxEVT_LEFT_DOWN, &ClientWindow::OnMouseClick, this);
+    CapturePanel->Bind(wxEVT_MIDDLE_DOWN, &ClientWindow::OnMouseClick, this);
+    CapturePanel->Bind(wxEVT_RIGHT_DOWN, &ClientWindow::OnMouseClick, this);
+    // CapturePanel->Bind(wxEVT_AUX1_DOWN, &ClientWindow::OnMouseClick, this);
+    // CapturePanel->Bind(wxEVT_AUX2_DOWN, &ClientWindow::OnMouseClick, this);
+
+    // Binding mouse up events
+    CapturePanel->Bind(wxEVT_LEFT_UP, &ClientWindow::OnMouseUnClick, this);
+    CapturePanel->Bind(wxEVT_MIDDLE_UP, &ClientWindow::OnMouseUnClick, this);
+    CapturePanel->Bind(wxEVT_RIGHT_UP, &ClientWindow::OnMouseUnClick, this);
+    // CapturePanel->Bind(wxEVT_AUX1_UP, &ClientWindow::OnMouseUnClick, this);
+    // CapturePanel->Bind(wxEVT_AUX2_UP, &ClientWindow::OnMouseUnClick, this);
+
+    // Binding double-click events
+    CapturePanel->Bind(wxEVT_LEFT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    CapturePanel->Bind(wxEVT_MIDDLE_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    CapturePanel->Bind(wxEVT_RIGHT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    // CapturePanel->Bind(wxEVT_AUX1_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    // CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+
+    // Binding other mouse events
+    CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this);
+    // CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
+    // CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
+    CapturePanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
+
+
     CapturePanel->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
     CapturePanel->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
+
 }
 
 void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
@@ -148,13 +178,66 @@ void ClientWindow::OnSecondTimer(wxTimerEvent& event)
     imagesSentThisSecond = 0;
 }
 
-void ClientWindow::OnMouseLeftClick(wxMouseEvent& event) {
-    textCtrl->AppendText(wxString::Format(wxT("Got it")));
+void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::DoubleClick;
+    m << event.GetX() << event.GetY() << event.GetButton();
+    Send(m);
+    event.Skip();
+
+}
+
+void ClientWindow::OnMouseMove(wxMouseEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::MouseMove;
+    m << event.GetX() << event.GetY();
+    Send(m);
+    event.Skip();
+}
+
+// void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
+//     net::message<RemoteMessage> m;
+//     m.header.id = RemoteMessage::MouseLeave;
+//     Send(m);
+//     event.Skip();
+// }
+
+// void ClientWindow::OnMouseEnter(wxMouseEvent& event) {
+//     net::message<RemoteMessage> m;
+//     m.header.id = RemoteMessage::MouseEnter;
+//     Send(m);
+//     event.Skip();
+// }
+
+void ClientWindow::OnMouseWheel(wxMouseEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::MouseWheel;
+    m << event.GetX() << event.GetY() << event.GetWheelRotation();
+    Send(m);
+    event.Skip();
+}
+
+
+void ClientWindow::OnMouseClick(wxMouseEvent& event) {
     // Tạo message chuột
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::MouseClick;
-    // m << event.GetX() << event.GetY() << static_cast<int32_t>(event.GetButton());
-    m << event.GetX() << event.GetY() << static_cast<int32_t>(1); // 1 for left click
+    // int32_t button = MapMouseButton(event.GetButton());
+    int button = event.GetButton();
+    m << event.GetX() << event.GetY() << button;
+    
+    // Gửi message
+    Send(m);
+    event.Skip(); // Để sự kiện được xử lý tiếp
+}
+
+void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
+    // Tạo message chuột
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::MouseUnClick;
+    // int32_t button = MapMouseButton(event.GetButton());
+    int button = event.GetButton();
+    m << event.GetX() << event.GetY() << button;
     
     // Gửi message
     Send(m);
@@ -163,6 +246,8 @@ void ClientWindow::OnMouseLeftClick(wxMouseEvent& event) {
 
 void ClientWindow::OnKeyDown(wxKeyEvent& event) {
     // Tạo message bàn phím
+    
+    // clientTextWindow->DisplayMessage(wxString::Format(wxT("Got it\n")));
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyPress;
     m << static_cast<int32_t>(event.GetKeyCode()) << true; // true for key down

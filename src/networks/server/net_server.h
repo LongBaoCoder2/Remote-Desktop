@@ -160,7 +160,7 @@ namespace net
   void IServer<T>::MessageAllClients(const message<T>& msg, std::shared_ptr<session<T>> pIgnoreClients)
   {
     bool hasInvalidClient = false;
-
+    pIgnoreClients = nullptr;
     for (auto& client : m_deqConnections)
     {
       if (client && client->IsConnected())

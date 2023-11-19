@@ -33,6 +33,8 @@ private:
     wxTimer* QueueTimer;
     wxScreenDC screenDC;
     wxTextCtrl* textCtrl;
+    
+    std::thread m_updateMess;
 
     int imagesSentThisSecond = 0;
     // std::vector<uint32_t> garbageIDs;
