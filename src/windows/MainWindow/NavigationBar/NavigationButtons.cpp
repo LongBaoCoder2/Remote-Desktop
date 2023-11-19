@@ -50,6 +50,6 @@ void NavigationButtons::OnClick(wxMouseEvent& event) {
 void NavigationButtons::OnSettingClick(wxMouseEvent& event) {
     wxMessageBox("Capture Frame activated");
     // Create and show the CaptureFrame
-    CaptureFrame* captureFrame = new CaptureFrame(this->GetParent()->GetParent(), "Capture Window", wxDefaultPosition, wxDefaultSize);
+    CaptureFrame* captureFrame = new CaptureFrame(nullptr, "Capture Window", wxDefaultPosition, wxDefaultSize);
     captureFrame->Show();
 }

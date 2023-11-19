@@ -4,7 +4,9 @@
 #include "Validation/PasswordValidation.hpp"
 #include <iostream>
 
-LoginFrame::LoginFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
+wxDEFINE_EVENT(NavigateToMainWindow, wxCommandEvent);
+
+LoginFrame::LoginFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size)
 {
 
@@ -76,11 +78,8 @@ void LoginFrame::setupLoginForm()
     ErrorHint = new wxStaticText(FormPanel, wxID_ANY, "");
     this->styleText(ErrorHint);
 
-    SubmitBtn = new wxButton(FormPanel, wxID_ANY, "LOGIN", wxDefaultPosition, wxSize(220, 50));
-    SubmitBtn->SetFont(wxFont(12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
-    SubmitBtn->SetBackgroundColour(wxColour(0, 0, 0));
-    SubmitBtn->SetForegroundColour(wxColour(255, 255, 255));
-    SubmitBtn->Bind(wxEVT_BUTTON, &LoginFrame::OnSubmit, this);
+    SubmitBtn = new Button(FormPanel, wxID_ANY, "LOGIN", wxDefaultPosition, wxSize(220, 50));
+    SubmitBtn->Bind(wxEVT_LEFT_DOWN, &LoginFrame::OnSubmit, this);
 
     FormSizer->Add(TitleText, 1, wxALIGN_CENTER | wxALL, FromDIP(10));
     FormSizer->Add(IDPanel, 1, wxTOP | wxEXPAND, FromDIP(15));
@@ -97,10 +96,10 @@ void LoginFrame::setupLoginForm()
 void LoginFrame::setupImageForm()
 {
 
-    wxPNGHandler *handler = new wxPNGHandler;
+    wxPNGHandler* handler = new wxPNGHandler;
     wxImage::AddHandler(handler);
     // image = new wxStaticBitmap(this, wxID_ANY, , wxPoint(50, 100), wxSize(100, 500));
-    wxImage logoImage("asserts/RD.png", wxBITMAP_TYPE_PNG);
+    wxImage logoImage("assets/RD.png", wxBITMAP_TYPE_PNG);
 
     if (logoImage.IsOk())
     {
@@ -109,7 +108,7 @@ void LoginFrame::setupImageForm()
     }
 }
 
-void LoginFrame::styleText(wxStaticText *text)
+void LoginFrame::styleText(wxStaticText* text)
 {
     text->SetFont(wxFont(12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
 }
@@ -143,16 +142,23 @@ LoginFrame::~LoginFrame()
 {
 }
 
-void LoginFrame::OnSubmit(wxCommandEvent &e)
+void LoginFrame::SendNavigationEvent()
 {
+    wxCommandEvent event(NavigateToMainWindow);
+    wxGetApp().ProcessEvent(event);
 }
 
-void LoginFrame::OnCheckAdmin(wxCommandEvent &e)
+void LoginFrame::OnSubmit(wxMouseEvent& e)
 {
-    wxCheckBox *checkBox = wxDynamicCast(e.GetEventObject(), wxCheckBox);
+    SendNavigationEvent();
+}
+
+void LoginFrame::OnCheckAdmin(wxCommandEvent& e)
+{
+    wxCheckBox* checkBox = wxDynamicCast(e.GetEventObject(), wxCheckBox);
     if (checkBox)
     {
-        wxWindow *pwPanel = AdminCheck->GetParent()->FindWindow(PwPanel->GetId());
+        wxWindow* pwPanel = AdminCheck->GetParent()->FindWindow(PwPanel->GetId());
 
         if (pwPanel)
         {

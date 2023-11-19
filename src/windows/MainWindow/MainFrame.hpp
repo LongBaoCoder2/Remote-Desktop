@@ -5,7 +5,6 @@
 #include <memory>
 
 #include "ClientWindow/ClientWindow.hpp"
-// #include "MenuWindow/MainWindow.hpp"
 #include "NavigationBar/NavigationBar.hpp"
 #include "ServerWindow/ServerWindow.hpp"
 #include "../CaptureWindow/CaptureFrame.h"
@@ -18,13 +17,15 @@
 #include "../AllWindow/ManageWindow/ManageWindow.hpp"
 #include "NavigationBar/WindowID.hpp"
 
+#include "../../models/IModel.hpp"
+
 class NavigationBar;
 
 class MainFrame : public wxFrame
 {
 public:
 
-  MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size);
+  MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size, std::unique_ptr<IModel> model);
   ~MainFrame();
 
   std::map<Window_ID, wxWindow*>& GetAllWindow();
@@ -36,6 +37,8 @@ public:
   void CreateSettingWindow();
 
 private:
+  std::unique_ptr <IModel> Model;
+
   wxPanel* MainPanel = nullptr;
   wxBoxSizer* MainSizer = nullptr;
   NavigationBar* Navbar = nullptr;

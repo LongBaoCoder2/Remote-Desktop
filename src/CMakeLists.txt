@@ -55,6 +55,7 @@ file(GLOB_RECURSE HEADER_FILES
     windows/BasicTextWindow/*.hpp
     windows/MainWindow/ClientWindow/*.hpp
     windows/MainWindow/ServerWindow/*.hpp
+    windows/LoginWindow/NavigationEvent.hpp
     networks/client/*.h
     networks/server/*.h
     utils/*.hpp
@@ -76,7 +77,7 @@ else()
     # the WIN32 is needed for Windows in order for it to look for WinMain
     # instead of the main function. This is ignored on other systems,
     # so it works on all platforms
-    add_executable(main WIN32 ${SOURCE_FILES} main.exe.manifest)
+    add_executable(main WIN32 ${SOURCE_FILES} ${HEADER_FILES} main.exe.manifest)
 endif()
 
 target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})
