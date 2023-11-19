@@ -151,7 +151,7 @@ void LoginFrame::OnSubmit(wxMouseEvent& e)
 {
     bool isValidUser = ValidateUser();
     if (!isValidUser) {
-        wxMessageBox("Invalid information" "Authentication error");
+        wxMessageBox("Invalid information", "Authentication error");
 
         return;
     }

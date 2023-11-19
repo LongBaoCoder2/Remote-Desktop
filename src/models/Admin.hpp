@@ -1,5 +1,6 @@
 #pragma once
 
+#include "IModel.hpp"
 #include "User.hpp"
 #include <vector>
 #include <memory>
