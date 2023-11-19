@@ -28,6 +28,4 @@ private:
     void UpdatePanel();
     void ClearPanel();
     void OnUpdateWindow(wxTimerEvent&);
-
-    // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };
