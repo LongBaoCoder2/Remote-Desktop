@@ -22,6 +22,11 @@ private:
     size_t nCountUser = 0;
     int screenWidth;
     int screenHeight;
+    double fx;
+    double fy;
+    int x, y;
+    int button;
+    int delta;
     wxPanel *LogPanel;
 
     wxStaticText *text;
