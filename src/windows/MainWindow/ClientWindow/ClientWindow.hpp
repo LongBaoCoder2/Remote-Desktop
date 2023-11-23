@@ -2,6 +2,7 @@
 #include "ClientNetwork.hpp"
 #include <wx/wx.h>
 #include <wx/mstream.h>
+#include <wx/overlay.h>
 #include "../../../utils/Logger/WindowLogger.hpp"
 #include "ClientTextWindow.hpp"
 
@@ -16,12 +17,14 @@ public:
     virtual ~ClientWindow();
 
 private:
-    const int DELAY_MS = 1;
+    const int DELAY_MS = 10;
     bool CAPTURING = false;
     bool isWaitingForConnection = true;
 
     wxPanel* CapturePanel = nullptr;
+    wxPanel* MouseKeyPanel = nullptr;
     wxTextCtrl* textCtrl = nullptr;
+    wxOverlay* overlay = nullptr;
 
     wxTimer* timer;
     wxTimer* secondTimer;
@@ -42,7 +45,7 @@ private:
     void ClientWindow::OnKeyDown(wxKeyEvent& event);
     void ClientWindow::OnKeyUp(wxKeyEvent& event);
     void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event);
-    void ClientWindow::OnMouseMove(wxMouseEvent& event);
+    // void ClientWindow::OnMouseMove(wxMouseEvent& event);
     // void ClientWindow::OnMouseLeave(wxMouseEvent& event);
     // void ClientWindow::OnMouseEnter(wxMouseEvent& event);
     void ClientWindow::OnMouseWheel(wxMouseEvent& event);

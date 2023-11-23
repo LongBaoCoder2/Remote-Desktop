@@ -11,8 +11,10 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
         wxMessageBox(wxT("Failed to connect to Server."), wxT("Error"), wxICON_ERROR | wxOK);
     }
     // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
+    MouseKeyPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, CONFIG_UI::MEDIUM_WINDOW);
+    // MouseKeyPanel->SetBackgroundStyle(wxBG_STYLE_TRANSPARENT);
 
-    CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW);
+    CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, CONFIG_UI::MEDIUM_WINDOW);
     CapturePanel->SetBackgroundColour(wxColor(38, 37, 54));
 
     clientTextWindow = new ClientTextWindow();
@@ -47,36 +49,40 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
         
     // Inside ClientWindow constructor or appropriate setup function
 
+    // Sử dụng overlay để vẽ lớp nhận tín hiệu chuột trên cùng
+    // overlay = new wxOverlay();
+    // overlay->Reset();
+
     // Binding mouse down events
-    CapturePanel->Bind(wxEVT_LEFT_DOWN, &ClientWindow::OnMouseClick, this);
-    CapturePanel->Bind(wxEVT_MIDDLE_DOWN, &ClientWindow::OnMouseClick, this);
-    CapturePanel->Bind(wxEVT_RIGHT_DOWN, &ClientWindow::OnMouseClick, this);
+    MouseKeyPanel->Bind(wxEVT_LEFT_DOWN, &ClientWindow::OnMouseClick, this);
+    MouseKeyPanel->Bind(wxEVT_MIDDLE_DOWN, &ClientWindow::OnMouseClick, this);
+    MouseKeyPanel->Bind(wxEVT_RIGHT_DOWN, &ClientWindow::OnMouseClick, this);
     // CapturePanel->Bind(wxEVT_AUX1_DOWN, &ClientWindow::OnMouseClick, this);
     // CapturePanel->Bind(wxEVT_AUX2_DOWN, &ClientWindow::OnMouseClick, this);
 
     // Binding mouse up events
-    CapturePanel->Bind(wxEVT_LEFT_UP, &ClientWindow::OnMouseUnClick, this);
-    CapturePanel->Bind(wxEVT_MIDDLE_UP, &ClientWindow::OnMouseUnClick, this);
-    CapturePanel->Bind(wxEVT_RIGHT_UP, &ClientWindow::OnMouseUnClick, this);
+    MouseKeyPanel->Bind(wxEVT_LEFT_UP, &ClientWindow::OnMouseUnClick, this);
+    MouseKeyPanel->Bind(wxEVT_MIDDLE_UP, &ClientWindow::OnMouseUnClick, this);
+    MouseKeyPanel->Bind(wxEVT_RIGHT_UP, &ClientWindow::OnMouseUnClick, this);
     // CapturePanel->Bind(wxEVT_AUX1_UP, &ClientWindow::OnMouseUnClick, this);
     // CapturePanel->Bind(wxEVT_AUX2_UP, &ClientWindow::OnMouseUnClick, this);
 
     // Binding double-click events
-    CapturePanel->Bind(wxEVT_LEFT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
-    CapturePanel->Bind(wxEVT_MIDDLE_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
-    CapturePanel->Bind(wxEVT_RIGHT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    MouseKeyPanel->Bind(wxEVT_LEFT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    MouseKeyPanel->Bind(wxEVT_MIDDLE_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    MouseKeyPanel->Bind(wxEVT_RIGHT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
     // CapturePanel->Bind(wxEVT_AUX1_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
     // CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
 
     // Binding other mouse events
-    CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this);
+    // CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this);
     // CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
     // CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
-    CapturePanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
+    MouseKeyPanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
 
 
-    CapturePanel->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
-    CapturePanel->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
+    MouseKeyPanel->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
+    MouseKeyPanel->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
 
 }
 
@@ -114,7 +120,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 // Tăng biến đếm
                 imagesSentThisSecond++;
 
-                // clientTextWindow->DisplayMessage(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()));
+                clientTextWindow->DisplayMessage(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()));
                 // wxMessageBox(wxT("Image convert successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
                 // wxMessageBox(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()), wxT("Message"), wxICON_INFORMATION | wxOK);
 
@@ -144,15 +150,16 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
     }
 
     UpdatePanel();
+    event.Skip();
 }
 
 void ClientWindow::UpdatePanel()
 {
     // clientDC.Clear();
-    // if (screenshot.IsOk()) {
+    if (screenshot.IsOk()) {
         wxClientDC clientDC(CapturePanel);
         clientDC.DrawBitmap(screenshot, 0, 0, false);
-    // }
+    }
 }
 
 void ClientWindow::ClearPanel()
@@ -174,8 +181,9 @@ void ClientWindow::OnReceiveImage(net::message<RemoteMessage>& msg)
 void ClientWindow::OnSecondTimer(wxTimerEvent& event)
 {
     // In thông tin thống kê và đặt biến đếm về 0
-    clientTextWindow->DisplayMessage(wxString::Format(wxT("Images sent this second: %d\n"), imagesSentThisSecond));
+    clientTextWindow->DisplayMessage(wxString::Format(wxT("Images received this second: %d\n"), imagesSentThisSecond));
     imagesSentThisSecond = 0;
+    event.Skip();
 }
 
 void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
@@ -187,26 +195,26 @@ void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
 
 }
 
-void ClientWindow::OnMouseMove(wxMouseEvent& event) {
-    net::message<RemoteMessage> m;
-    m.header.id = RemoteMessage::MouseMove;
-    m << event.GetX() << event.GetY();
-    Send(m);
-    event.Skip();
-}
+// void ClientWindow::OnMouseMove(wxMouseEvent& event) {
+//     net::message<RemoteMessage> m;
+//     m.header.id = RemoteMessage::MouseMove;
+//     m << event.GetX() << event.GetY();
+//     Send(m);
+//     // event.Skip();
+// }
 
 // void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
 //     net::message<RemoteMessage> m;
 //     m.header.id = RemoteMessage::MouseLeave;
 //     Send(m);
-//     event.Skip();
+//     // event.Skip();
 // }
 
 // void ClientWindow::OnMouseEnter(wxMouseEvent& event) {
 //     net::message<RemoteMessage> m;
 //     m.header.id = RemoteMessage::MouseEnter;
 //     Send(m);
-//     event.Skip();
+//     // event.Skip();
 // }
 
 void ClientWindow::OnMouseWheel(wxMouseEvent& event) {

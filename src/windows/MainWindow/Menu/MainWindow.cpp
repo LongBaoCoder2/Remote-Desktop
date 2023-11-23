@@ -14,7 +14,8 @@ MainWindow::MainWindow(wxWindow *parent, const wxPoint &pos, const wxSize &size)
                        [](wxMouseEvent &e)
                        {
                            wxMessageBox("Client");
-                           ClientWindow *clientwindow = new ClientWindow("127.0.0.1", 60000);
+                           ClientWindow *clientwindow = new ClientWindow("192.168.1.13", 60000);
+                        //    ClientWindow *clientwindow = new ClientWindow("127.0.0.1", 60000);
                            clientwindow->Show();
                         //    e.Skip();
                        });

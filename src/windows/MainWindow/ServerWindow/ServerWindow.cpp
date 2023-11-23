@@ -102,8 +102,8 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         /* Getting number of milliseconds as an integer. */
 
         auto t1 = std::chrono::high_resolution_clock::now();
-        //takeScreenshot(CONFIG_UI::NORMAL_WINDOW.GetWidth(), CONFIG_UI::NORMAL_WINDOW.GetHeight());
-        takeScreenshot();
+        takeScreenshot(CONFIG_UI::MEDIUM_WINDOW.GetWidth(), CONFIG_UI::MEDIUM_WINDOW.GetHeight());
+        // takeScreenshot();
         // takeScreenshot(160, 90);
         auto t2 = std::chrono::high_resolution_clock::now();
         auto ms_int_12    = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
