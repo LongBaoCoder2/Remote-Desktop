@@ -1,3 +1,5 @@
+#pragma once
+
 #include <wx/wx.h>
 #include <wx/bitmap.h>
 #include <wx/timer.h>
@@ -8,7 +10,7 @@
 class CaptureFrame : public wxFrame
 {
 public:
-    CaptureFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
+    CaptureFrame(wxWindow* parent, const wxString& title, const wxPoint& pos, const wxSize& size);
 
 private:
 
@@ -30,9 +32,9 @@ private:
     BasicTextFrame* CaptureFrameLogger = nullptr;
 
 
-    wxButton *startCaptureBtn = nullptr;
-    wxButton *stopCaptureBtn = nullptr;
-    wxButton *saveCaptureBtn = nullptr;
+    wxButton* startCaptureBtn = nullptr;
+    wxButton* stopCaptureBtn = nullptr;
+    wxButton* saveCaptureBtn = nullptr;
 
     wxTimer *timer;
     wxTimer* secondTimer;
@@ -54,8 +56,8 @@ private:
     // void OnPaint(wxPaintEvent &event);
     void OnSecondTimer(wxTimerEvent& event);
 
-    void OnStartPress(wxCommandEvent &);
-    void OnStopPress(wxCommandEvent &);
-    void onSavePress(wxCommandEvent &);
+    void OnStartPress(wxCommandEvent&);
+    void OnStopPress(wxCommandEvent&);
+    void onSavePress(wxCommandEvent&);
     void takeScreenshot(int imgWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X), int imgHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y));
 };

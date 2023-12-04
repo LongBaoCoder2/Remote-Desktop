@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 
-project(wx_cmake_template_core LANGUAGES CXX)
+project(RemoteDesktop LANGUAGES CXX)
 
 # Set C++17 as the standard for the entire project
 set(CMAKE_CXX_STANDARD 17)
@@ -27,23 +27,29 @@ set(SOURCE_DIR "")
 # )
 file(GLOB_RECURSE SOURCE_FILES 
     main.cpp 
+    models/*.cpp
     windows/Application.cpp 
     windows/LoginWindow/LoginFrame.cpp 
     windows/CaptureWindow/*.cpp
     networks/*.cpp
     networks/client/*.cpp
     networks/server/*.cpp
-    windows/MainWindow/Menu/*.cpp
+    windows/MainWindow/NavigationBar/NavigationBar.cpp
+    windows/MainWindow/NavigationBar/NavigationButtons.cpp
     windows/MainWindow/*.cpp
     networks/*.cpp
     utils/FileNameGenerator/*.cpp
     windows/BasicTextWindow/*.cpp
     windows/MainWindow/ClientWindow/ClientWindow.cpp
     windows/MainWindow/ServerWindow/ServerWindow.cpp
+    windows/AllWindow/*/*.cpp
+    windows/AllWindow/MenuWindow/ListUserPanel.cpp
+    windows/AllWindow/MenuWindow/UserPanel.cpp
     utils/*.cpp
     windows/MainWindow/SettingsWindow/*.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 
+    models/*.hpp
     windows/Application.h 
     windows/LoginWindow/LoginFrame.h 
     windows/CaptureWindow/*.h
@@ -55,6 +61,7 @@ file(GLOB_RECURSE HEADER_FILES
     windows/BasicTextWindow/*.hpp
     windows/MainWindow/ClientWindow/*.hpp
     windows/MainWindow/ServerWindow/*.hpp
+    windows/LoginWindow/NavigationEvent.hpp
     networks/client/*.h
     networks/server/*.h
     utils/*.hpp
@@ -69,7 +76,7 @@ include_directories(../thirdparty/asio)
 
 if(APPLE)
     # create bundle on apple compiles
-    add_executable(main MACOSX_BUNDLE ${SOURCE_FILES} ${HEADER_FILES})
+    add_executable(main MACOSX_BUNDLE ${SOURCE_FILES})
 
     # Set a custom plist file for the app bundle - needed for Mac OS Retina display
     set_target_properties(main PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
@@ -77,8 +84,7 @@ else()
     # the WIN32 is needed for Windows in order for it to look for WinMain
     # instead of the main function. This is ignored on other systems,
     # so it works on all platforms
-    add_executable(main WIN32 ${SOURCE_FILES} main.exe.manifest)
-    # add_executable(main ${SOURCE_FILES} main.exe.manifest)
+    add_executable(main WIN32 ${SOURCE_FILES} ${HEADER_FILES} main.exe.manifest)
 endif()
 
 target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})

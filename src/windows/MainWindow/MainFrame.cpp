@@ -1,133 +1,116 @@
 #include "MainFrame.hpp"
 
-#include "../CaptureWindow/CaptureFrame.h"
-#include "SettingsWindow/SettingsFrame.hpp"
 
-MainFrame::MainFrame(const wxString &title, const wxPoint &pos,
-                     const wxSize &size)
-    : wxFrame(nullptr, wxID_ANY, title, pos, size) {
-  // MainPanel = new wxPanel(this, wxID_ANY);
-  // auto MainSizer = new wxBoxSizer(wxHORIZONTAL);
-
-  // Navbar = new NavigationBar(this, wxID_ANY, wxDefaultPosition, wxSize(256,
-  // 890)); MainSizer->Add(Navbar, 0, wxEXPAND);
-
-  // MainPanel->SetSizerAndFit(MainSizer);
-
-  // this->SetBackgroundColour(wxColour(244, 243, 243));
-  // this->Center();
-  // Tạo icon từ một tập tin hình ảnh
-  wxIcon AppIcon;
-  AppIcon.CopyFromBitmap(wxBitmap("assets\\app_icon1.png", wxBITMAP_TYPE_PNG));
-
-  // Đặt icon cho cửa sổ
-  this->SetIcon(AppIcon);
-  this->SetupMainMenu();
-
-  // logger = std::make_unique<Logger>(this);
+MainFrame::MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size, std::unique_ptr<IModel> model)
+    : wxFrame(nullptr, wxID_ANY, title, pos, size), Model(std::move(model))
+{
+    // Setup the main frame
+    this->SetupMainFrame();
 }
 
-void MainFrame::SetupNavbar() {
-  // navPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(256,
-  // 720));
-  NavSizer = new wxBoxSizer(wxVERTICAL);
-  // navPanel = new wxPanel(this, wxID_ANY);
-  // navPanel->SetSize(this->GetSize());
-
-  // Set title
-  auto titleText = new wxStaticText(navbarPanel, wxID_ANY, "Remote Desktop");
-  titleText->SetFont(
-      wxFont(15, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
-  titleText->SetForegroundColour(*wxWHITE);
-
-  // Button Sizer
-  buttonSizer = new wxBoxSizer(wxVERTICAL);
-  btnPanel = new wxPanel(navbarPanel, wxID_ANY);
-
-  // Button Navigation
-  auto separateLine =
-      new wxPanel(btnPanel, wxID_ANY, wxDefaultPosition, wxSize(240, 5));
-  buttonSizer->Add(separateLine, 0, wxEXPAND | wxBOTTOM, FromDIP(8));
-
-  auto HomeBtn = new MyButton(btnPanel, wxID_ANY, "HOME", wxDefaultPosition,
-                              wxSize(220, 45));
-  auto MenuBtn = new MyButton(btnPanel, wxID_ANY, "MENU", wxDefaultPosition,
-                              wxSize(220, 45));
-  auto ManagerBtn = new MyButton(btnPanel, wxID_ANY, "MANAGER",
-                                 wxDefaultPosition, wxSize(220, 45));
-  auto SettingBtn = new MyButton(btnPanel, wxID_ANY, "SETTING",
-                                 wxDefaultPosition, wxSize(220, 45));
-  std::vector<MyButton *> listButton{HomeBtn, MenuBtn, ManagerBtn, SettingBtn};
-  for (auto button : listButton) {
-    // button->SetFont(wxFont(10, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL,
-    // wxFONTWEIGHT_MEDIUM)); button->SetBackgroundColour(wxColour(0, 0, 0));
-    // button->SetForegroundColour(wxColour(255, 255, 255));
-    button->Bind(wxEVT_LEFT_DOWN, &MainFrame::OnClickSelected, this);
-    buttonSizer->Add(button, 0, wxTOP | wxALIGN_CENTER, FromDIP(5));
-  }
-  SettingBtn->Bind(wxEVT_LEFT_DOWN, &MainFrame::OnSettingSelected, this);
-  btnPanel->SetSizerAndFit(buttonSizer);
-  // ButtonSizer->Add(HomeBtn, 1, wxTOP | wxALIGN_CENTER, FromDIP(5));
-  // HomeBtn->Bind(wxEVT_BUTTON, &NavigationBar::OnClick, this);
-
-  // User Icon
-  userInfoPanel = new wxPanel(navbarPanel, wxID_ANY);
-  userSizer = new wxBoxSizer(wxVERTICAL);
-
-  // auto userIcon = new wxPanel(userInfoPanel, 0, wxDefaultPosition, wxSize(50,
-  // 50)); userIcon->SetBackgroundColour(wxColour(100, 200, 100));
-  // userSizer->Add(userIcon, 0, wxALIGN_CENTER);
-  wxImage iconImage("./assets/user_icon.png", wxBITMAP_TYPE_PNG);
-
-  if (iconImage.IsOk()) {
-    wxBitmap iconBitmap(iconImage.Rescale(64, 64));
-    auto userBitmap = new wxStaticBitmap(userInfoPanel, wxID_ANY, iconBitmap);
-    userSizer->Add(userBitmap, 0, wxALL, FromDIP(5));
-  }
-
-  auto userText = new wxStaticText(userInfoPanel, wxID_ANY, "Username");
-  userSizer->Add(userText, 0, wxALIGN_CENTER | wxALL, FromDIP(5));
-  userInfoPanel->SetSizerAndFit(userSizer);
-
-  NavSizer->Add(titleText, 0, wxALIGN_CENTER | wxTOP | wxBOTTOM, FromDIP(25));
-  NavSizer->Add(btnPanel, 0, wxEXPAND | wxTOP | wxBOTTOM, FromDIP(40));
-  NavSizer->Add(userInfoPanel, 0, wxALIGN_CENTER | wxTOP, FromDIP(60));
-
-  navbarPanel->SetBackgroundColour(wxColour(17, 25, 38));
-
-  navbarPanel->SetSizer(NavSizer);
+// Create the navigation bar and add it to MainSizer
+void MainFrame::CreateNavBar()
+{
+    Navbar = new NavigationBar(MainPanel, wxID_ANY, this, wxDefaultPosition, CONFIG_UI::NAVIGATION_SIZE);
+    MainSizer->Add(Navbar, 0, wxEXPAND);
 }
 
-void MainFrame::OnClickSelected(wxMouseEvent &event) {
-  wxMessageBox("Button Clicked");
+void MainFrame::SetupMainFrame()
+{
+    MainPanel = new wxPanel(this, wxID_ANY);
+    MainSizer = new wxBoxSizer(wxHORIZONTAL);
 
-  event.Skip();
+    // Create and add the navigation bar to the main frame
+    this->CreateNavBar();
+    this->CreateMainWindow();
+
+    // Set MainPanel as the sizer for the main frame
+    MainPanel->SetSizer(MainSizer);
+
+    // Configure the main frame background color
+    this->SetBackgroundColour(CONFIG_UI::PRIMARY_LIGHT_COLOR);
+    this->Center(); // Center the main frame on the screen
 }
 
-void MainFrame::OnSettingSelected(wxMouseEvent &) {
-  wxMessageBox("Settings Window");
-  // CaptureFrame* captureFrame = new CaptureFrame("Capture Window",
-  // wxDefaultPosition, wxDefaultSize); captureFrame->Show();
-  SettingsFrame *settingsFrame = new SettingsFrame();
-  settingsFrame->Show();
+MainFrame::~MainFrame()
+{
 }
 
-void MainFrame::SetupMainMenu() {
-  MainPanel = new wxPanel(this, wxID_ANY);
-  auto MainSizer = new wxBoxSizer(wxHORIZONTAL);
+void MainFrame::CreateMainWindow()
+{
+    auto MainSize = this->GetSize() - CONFIG_UI::NAVIGATION_SIZE;
+    WindowPanel = new wxPanel(MainPanel, wxID_ANY, wxDefaultPosition, MainSize);
+    WindowSizer = new wxBoxSizer(wxVERTICAL);
 
-  navbarPanel =
-      new wxPanel(MainPanel, wxID_ANY, wxDefaultPosition, wxSize(256, 890));
-  this->SetupNavbar();
-  MainSizer->Add(navbarPanel, 0, wxEXPAND);
+    this->currentWindow = new HomeWindow(WindowPanel, Navbar, wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW - CONFIG_UI::NAVIGATION_SIZE);
+    GetAllWindow()[Window_ID::HOME_WINDOW] = this->currentWindow;
+    WindowSizer->Add(this->currentWindow, 1, wxEXPAND);
 
-  auto mainWindow = new MainWindow(MainPanel, wxDefaultPosition, wxDefaultSize);
-  mainWindow->Center();
-  MainSizer->Add(mainWindow, 0, wxEXPAND);
-
-  MainPanel->SetSizer(MainSizer);
-  this->SetBackgroundColour(wxColour(244, 243, 243));
-  this->Center();
+    WindowPanel->SetSizerAndFit(WindowSizer);
+    MainSizer->Add(WindowPanel, 0, wxEXPAND);
 }
 
-MainFrame::~MainFrame() {}
+std::map<Window_ID, wxWindow*>& MainFrame::GetAllWindow()
+{
+    static std::map<Window_ID, wxWindow*> AllWindow;
+    return AllWindow;
+}
+
+void MainFrame::CreateMenuWindow()
+{
+    // Hide the current window
+    this->currentWindow->Hide();
+
+    const bool hasMenuWindow = GetAllWindow().find(Window_ID::MENU_WINDOW) != GetAllWindow().end();
+    if (!hasMenuWindow) {
+        GetAllWindow()[Window_ID::MENU_WINDOW] = new MenuWindow(WindowPanel, wxDefaultPosition, WindowPanel->GetSize());
+        WindowSizer->Add(GetAllWindow()[Window_ID::MENU_WINDOW], 1, wxEXPAND);
+    }
+    this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];
+    this->currentWindow->Show();
+    Layout();
+}
+
+void MainFrame::CreateHomeWindow()
+{
+    // Hide the current window
+    this->currentWindow->Hide();
+
+    // Ensure that HomeWindow has been created
+    if (GetAllWindow().find(Window_ID::HOME_WINDOW) != GetAllWindow().end()) {
+        this->currentWindow = GetAllWindow()[Window_ID::HOME_WINDOW];
+        this->currentWindow->Show();
+        Layout();
+    }
+}
+
+void MainFrame::CreateManageWindow()
+{
+    // Hide the current window
+    this->currentWindow->Hide();
+
+    const bool hasManageWindow = GetAllWindow().find(Window_ID::MANAGE_WINDOW) != GetAllWindow().end();
+    if (!hasManageWindow) {
+        GetAllWindow()[Window_ID::MANAGE_WINDOW] = new ManageWindow(WindowPanel, wxDefaultPosition, WindowPanel->GetSize());
+        WindowSizer->Add(GetAllWindow()[Window_ID::MANAGE_WINDOW], 1, wxEXPAND);
+    }
+    this->currentWindow = GetAllWindow()[Window_ID::MANAGE_WINDOW];
+    this->currentWindow->Show();
+    Layout();
+}
+
+void MainFrame::CreateSettingWindow()
+{
+    // Hide the current window
+    this->currentWindow->Hide();
+
+    const bool hasSettingWindow = GetAllWindow().find(Window_ID::SETTING_WINDOW) != GetAllWindow().end();
+    if (!hasSettingWindow) {
+        GetAllWindow()[Window_ID::SETTING_WINDOW] = new SettingWindow(WindowPanel, wxDefaultPosition, WindowPanel->GetSize());
+        WindowSizer->Add(GetAllWindow()[Window_ID::SETTING_WINDOW], 1, wxEXPAND);
+    }
+
+    this->currentWindow = GetAllWindow()[Window_ID::SETTING_WINDOW];
+    this->currentWindow->Show();
+    Layout();
+}

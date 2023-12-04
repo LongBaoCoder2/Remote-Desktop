@@ -1,48 +1,53 @@
 #pragma once
 
 #include <wx/wx.h>
+#include <map>
+#include <memory>
 
 #include "ClientWindow/ClientWindow.hpp"
-#include "Menu/MainWindow.hpp"
-#include "Navbar/Navbar.hpp"
+#include "NavigationBar/NavigationBar.hpp"
 #include "ServerWindow/ServerWindow.hpp"
+#include "../CaptureWindow/CaptureFrame.h"
+#include "../constant.hpp"
 
 #include "../../utils/Logger/WindowLogger.hpp"
+#include "../AllWindow/HomeWindow/HomeWindow.hpp"
+#include "../AllWindow/SettingWindow/SettingWindow.hpp"
+#include "../AllWindow/MenuWindow/MenuWindow.hpp"
+#include "../AllWindow/ManageWindow/ManageWindow.hpp"
+#include "NavigationBar/WindowID.hpp"
+
+#include "../../models/IModel.hpp"
+
+class NavigationBar;
 
 class MainFrame : public wxFrame
 {
 public:
-  enum class Windows : unsigned int
-  {
-    HOME = 0,
-    MENU,
-    MANAGER,
-    SETTINGS
-  };
 
-  MainFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
-
+  MainFrame(const wxString& title, const wxPoint& pos, const wxSize& size, std::unique_ptr<IModel> model);
   ~MainFrame();
 
+  std::map<Window_ID, wxWindow*>& GetAllWindow();
+
+  // Navigation Window
+  void CreateMenuWindow();
+  void CreateHomeWindow();
+  void CreateManageWindow();
+  void CreateSettingWindow();
+
 private:
-  //
-  void OnClickSelected(wxMouseEvent &);
-  void OnSettingSelected(wxMouseEvent &);
-  //
+  std::unique_ptr <IModel> Model;
 
-  wxPanel *MainPanel = nullptr;
+  wxPanel* MainPanel = nullptr;
+  wxBoxSizer* MainSizer = nullptr;
+  NavigationBar* Navbar = nullptr;
 
-  // Navigation
-  wxPanel *navbarPanel = nullptr;
-  wxBoxSizer *NavSizer, *buttonSizer, *userSizer;
-  wxPanel *btnPanel, *userInfoPanel;
+  wxWindow* currentWindow = nullptr;
+  wxBoxSizer* WindowSizer = nullptr;
+  wxPanel* WindowPanel = nullptr;
 
-  void SetupNavbar();
-  void SetupMainMenu();
-
-  // NavigationBar *Navbar = nullptr;
-  std::unique_ptr<Logger> logger;
-
-  Windows curWindows = Windows::HOME;
-  wxWindow *currentWindows = nullptr;
+  void SetupMainFrame();
+  void CreateNavBar();
+  void CreateMainWindow();
 };

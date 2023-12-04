@@ -2,8 +2,8 @@
 #include "../../utils/FileNameGenerator/FileNameGenerator.hpp"
 #include "../constant.hpp"
 
-CaptureFrame::CaptureFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
-    : wxFrame(nullptr, wxID_ANY, title, pos, size)
+CaptureFrame::CaptureFrame(wxWindow* parent, const wxString& title, const wxPoint& pos, const wxSize& size)
+    : wxFrame(parent, wxID_ANY, title, pos, size)
 {
     // Tạo một wxPanel để hiển thị hình ảnh chụp màn hình
     CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366, 768));
@@ -22,7 +22,7 @@ CaptureFrame::CaptureFrame(const wxString &title, const wxPoint &pos, const wxSi
     ButtonPanel->SetBackgroundColour(wxColor(52, 51, 62));
 
     // Tạo một wxBoxSizer chứa CapturePanel và ButtonPanel
-    wxBoxSizer *MainSizer = new wxBoxSizer(wxVERTICAL);
+    wxBoxSizer* MainSizer = new wxBoxSizer(wxVERTICAL);
     MainSizer->Add(CapturePanel, 1, wxEXPAND, 0);
     MainSizer->Add(ButtonPanel, 0, wxEXPAND, 0);
 
@@ -37,7 +37,7 @@ CaptureFrame::CaptureFrame(const wxString &title, const wxPoint &pos, const wxSi
     this->Bind(wxEVT_BUTTON, &CaptureFrame::onSavePress, this, saveCaptureBtn->GetId());
 
     // Tạo một wxBoxSizer chứa nút "Start Capture" và "Stop Capture" va "Save Capture"
-    wxBoxSizer *ButtonSizer = new wxBoxSizer(wxHORIZONTAL);
+    wxBoxSizer* ButtonSizer = new wxBoxSizer(wxHORIZONTAL);
     ButtonSizer->Add(startCaptureBtn, 0, wxALIGN_CENTER | wxALL, FromDIP(10));
     ButtonSizer->Add(stopCaptureBtn, 0, wxALIGN_CENTER | wxALL, FromDIP(10));
     ButtonSizer->Add(saveCaptureBtn, 0, wxALIGN_CENTER | wxALL, FromDIP(10));
@@ -57,13 +57,13 @@ CaptureFrame::CaptureFrame(const wxString &title, const wxPoint &pos, const wxSi
     this->Center();
 }
 
-void CaptureFrame::OnStartPress(wxCommandEvent &e)
+void CaptureFrame::OnStartPress(wxCommandEvent& e)
 {
     CAPTURING = true;
     timer->Start(DELAY_MS);
 }
 
-void CaptureFrame::OnStopPress(wxCommandEvent &e)
+void CaptureFrame::OnStopPress(wxCommandEvent& e)
 {
     CAPTURING = false;
     timer->Stop();
@@ -71,7 +71,7 @@ void CaptureFrame::OnStopPress(wxCommandEvent &e)
     clientDC.Clear();
 }
 
-void CaptureFrame::onSavePress(wxCommandEvent &e) {
+void CaptureFrame::onSavePress(wxCommandEvent& e) {
     takeScreenshot();
     // Chuyển đổi wxBitmap thành wxImage
     wxImage image = screenshot.ConvertToImage();
@@ -80,7 +80,7 @@ void CaptureFrame::onSavePress(wxCommandEvent &e) {
     image.SaveFile(CreateScreenshotFileName(), wxBITMAP_TYPE_PNG);
 }
 
-void CaptureFrame::OnCaptureScreen(wxTimerEvent &e)
+void CaptureFrame::OnCaptureScreen(wxTimerEvent& e)
 {
     if (CAPTURING)
     {

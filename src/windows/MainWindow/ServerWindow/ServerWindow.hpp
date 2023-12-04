@@ -13,7 +13,7 @@ public:
 protected:
     bool OnClientConnect(std::shared_ptr<net::session<RemoteMessage>> client) override;
     void OnClientDisconnect(std::shared_ptr<net::session<RemoteMessage>> client) override;
-    void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage> &msg) override;
+    void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage>& msg) override;
 
 private:
     const int DELAY_MS = 1;
@@ -36,6 +36,11 @@ private:
     wxTimer *timer;
     wxTimer* secondTimer;
     wxTimer* QueueTimer;
+    wxPanel* LogPanel;
+
+    wxStaticText* text;
+    wxBitmap screenshot;
+    wxTimer* timer;
     wxScreenDC screenDC;
     wxTextCtrl* textCtrl;
     

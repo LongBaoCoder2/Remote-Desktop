@@ -1,10 +1,10 @@
 #include "LoginFrame.h"
-#include "../CaptureWindow/CaptureFrame.h"
-#include "Validation/IDValidation.hpp"
-#include "Validation/PasswordValidation.hpp"
-#include <iostream>
 
-LoginFrame::LoginFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
+wxDEFINE_EVENT(UserLoginEvent, wxCommandEvent);
+wxDEFINE_EVENT(AdminLoginEvent, wxCommandEvent);
+
+
+LoginFrame::LoginFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size)
 {
 
@@ -76,11 +76,8 @@ void LoginFrame::setupLoginForm()
     ErrorHint = new wxStaticText(FormPanel, wxID_ANY, "");
     this->styleText(ErrorHint);
 
-    SubmitBtn = new wxButton(FormPanel, wxID_ANY, "LOGIN", wxDefaultPosition, wxSize(220, 50));
-    SubmitBtn->SetFont(wxFont(12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
-    SubmitBtn->SetBackgroundColour(wxColour(0, 0, 0));
-    SubmitBtn->SetForegroundColour(wxColour(255, 255, 255));
-    SubmitBtn->Bind(wxEVT_BUTTON, &LoginFrame::OnSubmit, this);
+    SubmitBtn = new Button(FormPanel, wxID_ANY, "LOGIN", wxDefaultPosition, wxSize(220, 50));
+    SubmitBtn->Bind(wxEVT_LEFT_DOWN, &LoginFrame::OnSubmit, this);
 
     FormSizer->Add(TitleText, 1, wxALIGN_CENTER | wxALL, FromDIP(10));
     FormSizer->Add(IDPanel, 1, wxTOP | wxEXPAND, FromDIP(15));
@@ -97,10 +94,10 @@ void LoginFrame::setupLoginForm()
 void LoginFrame::setupImageForm()
 {
 
-    wxPNGHandler *handler = new wxPNGHandler;
+    wxPNGHandler* handler = new wxPNGHandler;
     wxImage::AddHandler(handler);
     // image = new wxStaticBitmap(this, wxID_ANY, , wxPoint(50, 100), wxSize(100, 500));
-    wxImage logoImage("asserts/RD.png", wxBITMAP_TYPE_PNG);
+    wxImage logoImage("assets/RD.png", wxBITMAP_TYPE_PNG);
 
     if (logoImage.IsOk())
     {
@@ -109,50 +106,70 @@ void LoginFrame::setupImageForm()
     }
 }
 
-void LoginFrame::styleText(wxStaticText *text)
+void LoginFrame::styleText(wxStaticText* text)
 {
     text->SetFont(wxFont(12, wxFONTFAMILY_ROMAN, wxFONTSTYLE_NORMAL, wxFONTWEIGHT_BOLD));
 }
 
-// void LoginFrame::OnLogin(wxCommandEvent& event)
-// {
-//     wxString enteredID = IDInput->GetValue();
-//     wxString enteredPassword = PwInput->GetValue();
-//     wxString noti = "Notification";
-//     wxString message;
-
-//     // Thực hiện xác thực ID và mật khẩu tại đây (ví dụ: so sánh với giá trị mẫu)
-//     if (enteredID == "admin" && enteredPassword == "password") {
-//         // Xử lý khi đăng nhập thành công
-//         message = wxT("Login success!");
-//         wxMessageBox(message, noti, wxOK | wxICON_INFORMATION);
-//         // Tạo và hiển thị CaptureFrame
-//         CaptureFrame* captureFrame = new CaptureFrame("Capture Window", wxDefaultPosition, wxDefaultSize);
-//         captureFrame->Show();
-
-//         // Đóng cửa sổ LoginFrame
-//         this->Close();
-//     } else {
-//         // Xử lý khi đăng nhập thất bại
-//         message = wxT("Login failed!");
-//         wxMessageBox(message, noti, wxOK | wxICON_ERROR);
-//     }
-// }
 
 LoginFrame::~LoginFrame()
 {
 }
 
-void LoginFrame::OnSubmit(wxCommandEvent &e)
+bool LoginFrame::ValidateUser()
 {
+    bool isValid = true;
+    if (isAdminLogin) {
+        std::string ID = IDInput->GetValue();
+        std::string Password = PwInput->GetValue();
+
+        isValid = CheckValidation::checkValidationAdmin(ID, Password);
+    }
+    else {
+        std::string ID = IDInput->GetValue();
+
+        isValid = CheckValidation::checkValidationUser(ID);
+    }
+
+    return isValid;
 }
 
-void LoginFrame::OnCheckAdmin(wxCommandEvent &e)
+
+void LoginFrame::SendUserLoginEvent()
 {
-    wxCheckBox *checkBox = wxDynamicCast(e.GetEventObject(), wxCheckBox);
+    wxCommandEvent event(UserLoginEvent);
+    wxTheApp->ProcessEvent(event);
+}
+
+void LoginFrame::SendAdminLoginEvent()
+{
+    wxCommandEvent event(AdminLoginEvent);
+    wxTheApp->ProcessEvent(event);
+}
+
+void LoginFrame::OnSubmit(wxMouseEvent& e)
+{
+    bool isValidUser = ValidateUser();
+    if (!isValidUser) {
+        wxMessageBox("Invalid information", "Authentication error");
+
+        return;
+    }
+
+    if (isAdminLogin) {
+        SendAdminLoginEvent();
+    }
+    else {
+        SendUserLoginEvent();
+    }
+}
+
+void LoginFrame::OnCheckAdmin(wxCommandEvent& e)
+{
+    wxCheckBox* checkBox = wxDynamicCast(e.GetEventObject(), wxCheckBox);
     if (checkBox)
     {
-        wxWindow *pwPanel = AdminCheck->GetParent()->FindWindow(PwPanel->GetId());
+        wxWindow* pwPanel = AdminCheck->GetParent()->FindWindow(PwPanel->GetId());
 
         if (pwPanel)
         {
@@ -165,4 +182,9 @@ void LoginFrame::OnCheckAdmin(wxCommandEvent &e)
             pwPanel->GetParent()->Layout();
         }
     }
+}
+
+std::string LoginFrame::GetID()
+{
+    return std::string(IDInput->GetValue());
 }

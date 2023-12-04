@@ -8,10 +8,10 @@
 class MainWindow : public wxWindow
 {
 public:
-    MainWindow(wxWindow *parent, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
+    MainWindow(wxWindow* parent, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
 
     ~MainWindow();
 
 private:
-    void OnServerButtonClick(wxMouseEvent &);
+    void OnServerButtonClick(wxMouseEvent&);
 };
