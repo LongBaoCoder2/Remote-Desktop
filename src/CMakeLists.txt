@@ -54,7 +54,6 @@ file(GLOB_RECURSE HEADER_FILES
     windows/LoginWindow/LoginFrame.h 
     windows/CaptureWindow/*.h
     windows/MainWindow/*.hpp
-    windows/MainWindow/Menu/*.hpp
     networks/*.h
     windows/*.hpp
     utils/FileNameGenerator/*.hpp

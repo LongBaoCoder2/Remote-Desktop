@@ -10,12 +10,7 @@ bool Application::OnInit()
 
     Connect(wxID_ANY, UserLoginEvent, wxCommandEventHandler(Application::OnUserLogin));
     Connect(wxID_ANY, AdminLoginEvent, wxCommandEventHandler(Application::OnAdminLogin));
-
-  MainFrame *MainWindow =
-      new MainFrame("Main Menu", wxDefaultPosition, CONFIG_UI::SMALL_WINDOW);
-  MainWindow->Show(true);
-
-  return true;
+    return true;
 }
 
 void Application::NavigateToMainWindow(std::unique_ptr<IModel> Model)

@@ -27,7 +27,6 @@ private:
     int x, y;
     int button;
     int delta;
-    wxPanel *LogPanel;
 
     wxStaticText *text;
     wxRect frameRect;
@@ -37,10 +36,6 @@ private:
     wxTimer* secondTimer;
     wxTimer* QueueTimer;
     wxPanel* LogPanel;
-
-    wxStaticText* text;
-    wxBitmap screenshot;
-    wxTimer* timer;
     wxScreenDC screenDC;
     wxTextCtrl* textCtrl;
     
