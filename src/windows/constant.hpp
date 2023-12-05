@@ -29,4 +29,5 @@ namespace CONFIG_APP
     const wxString NAME_APP = "Remote Desktop";
 
     const std::string USER_ICON_PATH = "assets/user_icon.png";
+    const uint16_t PORT = 8282;
 };
