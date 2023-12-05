@@ -5,7 +5,7 @@
 
 class SettingsFrame : public wxFrame {
 public:
-    SettingsFrame(const wxString& title = "Remote Desktop options", const wxPoint &pos = wxDefaultPosition, const wxSize &size = CONFIG_UI::SMALL_WINDOW);
+    SettingsFrame(wxWindow* parent, const wxString& title = "Remote Desktop options", const wxPoint& pos = wxDefaultPosition, const wxSize& size = CONFIG_UI::SMALL_WINDOW);
 
     void OnSidebarSelection(wxCommandEvent& event);
 

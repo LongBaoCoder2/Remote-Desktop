@@ -16,6 +16,8 @@
 #include "../AllWindow/MenuWindow/MenuWindow.hpp"
 #include "../AllWindow/ManageWindow/ManageWindow.hpp"
 #include "NavigationBar/WindowID.hpp"
+#include "SettingsWindow/SettingsFrame.hpp"
+
 
 #include "../../models/IModel.hpp"
 
@@ -37,7 +39,15 @@ public:
   void CreateSettingWindow();
 
 private:
+  void SetupMainFrame();
+  void CreateNavBar();
+  void CreateMainWindow();
+
+private:
   std::unique_ptr <IModel> Model;
+
+  // Settings Frame
+  SettingsFrame* settingsFrame = nullptr;
 
   wxPanel* MainPanel = nullptr;
   wxBoxSizer* MainSizer = nullptr;
@@ -46,8 +56,4 @@ private:
   wxWindow* currentWindow = nullptr;
   wxBoxSizer* WindowSizer = nullptr;
   wxPanel* WindowPanel = nullptr;
-
-  void SetupMainFrame();
-  void CreateNavBar();
-  void CreateMainWindow();
 };

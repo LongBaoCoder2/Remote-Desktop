@@ -10,14 +10,15 @@
 class Application : public wxApp
 {
 private:
+    void NavigateToMainWindow(std::unique_ptr<IModel> Model);
+    void OnUserLogin(wxCommandEvent& event);
+    void OnAdminLogin(wxCommandEvent& event);
+
+private:
     MainFrame* MainWindow = nullptr;
     LoginFrame* LoginWindow = nullptr;
 
     ModelFactory factory;
-
-    void NavigateToMainWindow(std::unique_ptr<IModel> Model);
-    void OnUserLogin(wxCommandEvent& event);
-    void OnAdminLogin(wxCommandEvent& event);
 
 public:
     virtual bool OnInit();

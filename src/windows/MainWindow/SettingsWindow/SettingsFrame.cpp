@@ -1,7 +1,7 @@
 #include "SettingsFrame.hpp"
 
-SettingsFrame::SettingsFrame(const wxString& title, const wxPoint &pos, const wxSize &size)
-: wxFrame(NULL, wxID_ANY, title, pos, size)
+SettingsFrame::SettingsFrame(wxWindow* parent, const wxString& title, const wxPoint& pos, const wxSize& size)
+    : wxFrame(parent, wxID_ANY, title, pos, size)
 {
     // Tạo Sidebar Menu bên trái
     sidebar = new wxListBox(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
@@ -58,36 +58,36 @@ void SettingsFrame::OnSidebarSelection(wxCommandEvent& event) {
     SidebarItem selectedItem = static_cast<SidebarItem>(selectedItemIndex);
 
     switch (selectedItem) {
-        case SidebarItem::GENERAL:
-            ShowDetailViewForGeneral();
-            break;
-        case SidebarItem::ACCOUNT:
-            ShowDetailViewForAccount();
-            break;
-        case SidebarItem::SECURITY:
-            ShowDetailViewForSecurity();
-            break;
-        case SidebarItem::REMOTE_CONTROL:
-            ShowDetailViewForRemoteControl();
-            break;
-        case SidebarItem::MEETING:
-            ShowDetailViewForMeeting();
-            break;
-        case SidebarItem::AUDIO_CONFERENCING:
-            ShowDetailViewForAudioConferencing();
-            break;
-        case SidebarItem::VIDEO:
-            ShowDetailViewForVideo();
-            break;
-        case SidebarItem::CUSTOM_INVITATION:
-            ShowDetailViewForCustomInvitation();
-            break;
-        case SidebarItem::ADVANCED:
-            ShowDetailViewForAdvanced();
-            break;
-        default:
-            // Xử lý khi một mục khác được chọn (nếu cần)
-            break;
+    case SidebarItem::GENERAL:
+        ShowDetailViewForGeneral();
+        break;
+    case SidebarItem::ACCOUNT:
+        ShowDetailViewForAccount();
+        break;
+    case SidebarItem::SECURITY:
+        ShowDetailViewForSecurity();
+        break;
+    case SidebarItem::REMOTE_CONTROL:
+        ShowDetailViewForRemoteControl();
+        break;
+    case SidebarItem::MEETING:
+        ShowDetailViewForMeeting();
+        break;
+    case SidebarItem::AUDIO_CONFERENCING:
+        ShowDetailViewForAudioConferencing();
+        break;
+    case SidebarItem::VIDEO:
+        ShowDetailViewForVideo();
+        break;
+    case SidebarItem::CUSTOM_INVITATION:
+        ShowDetailViewForCustomInvitation();
+        break;
+    case SidebarItem::ADVANCED:
+        ShowDetailViewForAdvanced();
+        break;
+    default:
+        // Xử lý khi một mục khác được chọn (nếu cần)
+        break;
     }
 
     // wxString selectedItemText = dynamic_cast<wxListBox*>(event.GetEventObject())->GetString(selectedItemIndex);
@@ -125,7 +125,7 @@ void SettingsFrame::ShowDetailViewForGeneral() {
 void SettingsFrame::ShowDetailViewForAccount() {
     wxString category = "Account";
     int index = static_cast<int>(SidebarItem::ACCOUNT);
-    
+
     ClearPanelContents(detailView);
 
     wxStaticText* text1 = new wxStaticText(detailView, wxID_ANY, wxString::Format("Detail View for %s", category));

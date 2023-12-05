@@ -99,18 +99,24 @@ void MainFrame::CreateManageWindow()
     Layout();
 }
 
+// void MainFrame::CreateSettingWindow()
+// {
+//     // Hide the current window
+//     this->currentWindow->Hide();
+
+//     const bool hasSettingWindow = GetAllWindow().find(Window_ID::SETTING_WINDOW) != GetAllWindow().end();
+//     if (!hasSettingWindow) {
+//         GetAllWindow()[Window_ID::SETTING_WINDOW] = new SettingWindow(WindowPanel, wxDefaultPosition, WindowPanel->GetSize());
+//         WindowSizer->Add(GetAllWindow()[Window_ID::SETTING_WINDOW], 1, wxEXPAND);
+//     }
+
+//     this->currentWindow = GetAllWindow()[Window_ID::SETTING_WINDOW];
+//     this->currentWindow->Show();
+//     Layout();
+// }
+
 void MainFrame::CreateSettingWindow()
 {
-    // Hide the current window
-    this->currentWindow->Hide();
-
-    const bool hasSettingWindow = GetAllWindow().find(Window_ID::SETTING_WINDOW) != GetAllWindow().end();
-    if (!hasSettingWindow) {
-        GetAllWindow()[Window_ID::SETTING_WINDOW] = new SettingWindow(WindowPanel, wxDefaultPosition, WindowPanel->GetSize());
-        WindowSizer->Add(GetAllWindow()[Window_ID::SETTING_WINDOW], 1, wxEXPAND);
-    }
-
-    this->currentWindow = GetAllWindow()[Window_ID::SETTING_WINDOW];
-    this->currentWindow->Show();
-    Layout();
+    settingsFrame = new SettingsFrame(this);
+    settingsFrame->Show();
 }
