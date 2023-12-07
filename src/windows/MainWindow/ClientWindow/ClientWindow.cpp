@@ -11,10 +11,10 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
         wxMessageBox(wxT("Failed to connect to Server."), wxT("Error"), wxICON_ERROR | wxOK);
     }
     // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
-    MouseKeyPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, CONFIG_UI::MEDIUM_WINDOW);
+    MouseKeyPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, CONFIG_UI::CLIENT_WINDOW_SIZE);
     // MouseKeyPanel->SetBackgroundStyle(wxBG_STYLE_TRANSPARENT);
 
-    CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, CONFIG_UI::MEDIUM_WINDOW);
+    CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, CONFIG_UI::CLIENT_WINDOW_SIZE);
     CapturePanel->SetBackgroundColour(wxColor(38, 37, 54));
 
     clientTextWindow = new ClientTextWindow();

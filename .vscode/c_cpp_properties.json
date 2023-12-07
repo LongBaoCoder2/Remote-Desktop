@@ -26,8 +26,7 @@
                 "${workspaceFolder}/thirdparty/asio",
                 "${workspaceFolder}/src/utils/FileNameGenerator",
                 "${workspaceFolder}/build/subprojects/Source/wxWidgets_external/include",
-                "${workspaceFolder}/build/subprojects/Source/wxWidgets_external/include",
-                "${workspaceFolder}/thirdparty/asio"
+                "${workspaceFolder}/build/stage/include"
             ],
             "defines": [
                 "__WXMSW__",

@@ -6,11 +6,15 @@
 
 namespace CONFIG_UI
 {
+    const int screenWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X);
+    const int screenHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);
     // Size of window | frame
-    const wxSize VERY_SMALL_WINDOW = wxSize(1920 / 4, 1080 / 2);
-    const wxSize NORMAL_WINDOW = wxSize(1600, 900);
-    const wxSize SMALL_WINDOW = wxSize(960, 540);
-    const wxSize MEDIUM_WINDOW = wxSize(1280, 720);
+    const wxSize VERY_SMALL_WINDOW = wxSize(screenWidth / 4, screenHeight / 2);
+    const wxSize NORMAL_WINDOW = wxSize(screenWidth / 5 * 4, screenHeight / 5 * 4);
+    const wxSize SMALL_WINDOW = wxSize(screenWidth / 5 * 2, screenHeight / 5 * 2);
+    const wxSize MEDIUM_WINDOW = wxSize(screenWidth / 5 * 3, screenHeight / 5 * 3);
+
+    const wxSize CLIENT_WINDOW_SIZE = wxSize(1280, 720);
 
     // Size of control
     const wxSize NAVIGATION_SIZE = wxSize(256, 900);
