@@ -67,10 +67,10 @@ file(GLOB_RECURSE HEADER_FILES
 )
 add_definitions(-D_WIN32_WINNT=0x0601)
 
-set(OpenCV_DIR C:/ProgramData/opencv/build)
+# set(OpenCV_DIR C:/ProgramData/opencv/build)
 
-find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
+# find_package(OpenCV REQUIRED)
+# include_directories(${OpenCV_INCLUDE_DIRS})
 
 include(${wxWidgets_USE_FILE})
 include_directories(../thirdparty/asio)
