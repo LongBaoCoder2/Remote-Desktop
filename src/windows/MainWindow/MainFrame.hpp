@@ -5,18 +5,15 @@
 #include <memory>
 
 #include "ClientWindow/ClientWindow.hpp"
-#include "NavigationBar/NavigationBar.hpp"
+#include "../components/NavigationBar/NavigationBar.hpp"
 #include "ServerWindow/ServerWindow.hpp"
-#include "../CaptureWindow/CaptureFrame.h"
 #include "../constant.hpp"
 
-#include "../../utils/Logger/WindowLogger.hpp"
-#include "../AllWindow/HomeWindow/HomeWindow.hpp"
-#include "../AllWindow/SettingWindow/SettingWindow.hpp"
-#include "../AllWindow/MenuWindow/MenuWindow.hpp"
-#include "../AllWindow/ManageWindow/ManageWindow.hpp"
-#include "NavigationBar/WindowID.hpp"
 #include "SettingsWindow/SettingsFrame.hpp"
+#include "HomeWindow/HomeWindow.hpp"
+#include "MenuWindow/MenuWindow.hpp"
+#include "ManageWindow/ManageWindow.hpp"
+#include "../components/NavigationBar/WindowID.hpp"
 
 
 #include "../../models/IModel.hpp"

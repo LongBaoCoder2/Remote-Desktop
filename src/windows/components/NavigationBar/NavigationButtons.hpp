@@ -2,7 +2,6 @@
 
 #include <wx/wx.h>
 #include "../../components/Button.hpp"
-#include "../../CaptureWindow/CaptureFrame.h"
 #include "NavigationBar.hpp"
 #include "../../constant.hpp"
 #include "WindowID.hpp"

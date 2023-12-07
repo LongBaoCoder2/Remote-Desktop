@@ -3,7 +3,6 @@
 #include <wx/wx.h>
 #include <wx/mstream.h>
 #include <wx/overlay.h>
-#include "../../../utils/Logger/WindowLogger.hpp"
 #include "ClientTextWindow.hpp"
 
 
