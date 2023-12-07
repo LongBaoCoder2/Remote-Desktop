@@ -36,6 +36,8 @@ namespace net
         void StartListening();
         void Send(const message<T>& msg);
 
+        tsqueue<message<T>>& getMessageQueueIn();
+
     private:
         void WriteHeader();
         void WriteBody();
@@ -52,6 +54,12 @@ namespace net
         owner m_nOwnerType = owner::server;
         uint32_t id = 0;
     };
+
+    template <typename T>
+    tsqueue<message<T>>& session<T>::getMessageQueueIn()
+    {
+        return m_qMessagesOut;
+    }
 
     template <typename T>
     session<T>::session(owner parent, asio::io_context& asioContext, asio::ip::tcp::socket socket, tsqueue<owned_message<T>>& qIn)

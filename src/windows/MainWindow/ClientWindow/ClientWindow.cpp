@@ -1,18 +1,16 @@
 #include "ClientWindow.hpp"
 #include "../../constant.hpp"
 
-ClientWindow::ClientWindow(const std::string& host, uint16_t port)
+ClientWindow::ClientWindow(const std::string& host)
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
 {
 
-    if (!ConnectToServer(host, port))
+    if (!ConnectToServer(host))
     {
         // LOG
         wxMessageBox(wxT("Failed to connect to Server."), wxT("Error"), wxICON_ERROR | wxOK);
     }
     // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
-    MouseKeyPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, CONFIG_UI::MEDIUM_WINDOW);
-    // MouseKeyPanel->SetBackgroundStyle(wxBG_STYLE_TRANSPARENT);
 
     CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, CONFIG_UI::MEDIUM_WINDOW);
     CapturePanel->SetBackgroundColour(wxColor(38, 37, 54));
@@ -21,7 +19,6 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     clientTextWindow->Show();
 
     // Tạo một wxTextCtrl để hiển thị văn bản
-
     textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
         wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
 
@@ -47,30 +44,24 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     this->SetSizerAndFit(MainSizer);
     this->Center();
 
-    // Inside ClientWindow constructor or appropriate setup function
-
-    // Sử dụng overlay để vẽ lớp nhận tín hiệu chuột trên cùng
-    // overlay = new wxOverlay();
-    // overlay->Reset();
-
     // Binding mouse down events
-    MouseKeyPanel->Bind(wxEVT_LEFT_DOWN, &ClientWindow::OnMouseClick, this);
-    MouseKeyPanel->Bind(wxEVT_MIDDLE_DOWN, &ClientWindow::OnMouseClick, this);
-    MouseKeyPanel->Bind(wxEVT_RIGHT_DOWN, &ClientWindow::OnMouseClick, this);
+    this->Bind(wxEVT_LEFT_DOWN, &ClientWindow::OnMouseClick, this);
+    this->Bind(wxEVT_MIDDLE_DOWN, &ClientWindow::OnMouseClick, this);
+    this->Bind(wxEVT_RIGHT_DOWN, &ClientWindow::OnMouseClick, this);
     // CapturePanel->Bind(wxEVT_AUX1_DOWN, &ClientWindow::OnMouseClick, this);
     // CapturePanel->Bind(wxEVT_AUX2_DOWN, &ClientWindow::OnMouseClick, this);
 
     // Binding mouse up events
-    MouseKeyPanel->Bind(wxEVT_LEFT_UP, &ClientWindow::OnMouseUnClick, this);
-    MouseKeyPanel->Bind(wxEVT_MIDDLE_UP, &ClientWindow::OnMouseUnClick, this);
-    MouseKeyPanel->Bind(wxEVT_RIGHT_UP, &ClientWindow::OnMouseUnClick, this);
+    this->Bind(wxEVT_LEFT_UP, &ClientWindow::OnMouseUnClick, this);
+    this->Bind(wxEVT_MIDDLE_UP, &ClientWindow::OnMouseUnClick, this);
+    this->Bind(wxEVT_RIGHT_UP, &ClientWindow::OnMouseUnClick, this);
     // CapturePanel->Bind(wxEVT_AUX1_UP, &ClientWindow::OnMouseUnClick, this);
     // CapturePanel->Bind(wxEVT_AUX2_UP, &ClientWindow::OnMouseUnClick, this);
 
     // Binding double-click events
-    MouseKeyPanel->Bind(wxEVT_LEFT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
-    MouseKeyPanel->Bind(wxEVT_MIDDLE_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
-    MouseKeyPanel->Bind(wxEVT_RIGHT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    this->Bind(wxEVT_LEFT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    this->Bind(wxEVT_MIDDLE_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    this->Bind(wxEVT_RIGHT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
     // CapturePanel->Bind(wxEVT_AUX1_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
     // CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
 
@@ -78,19 +69,19 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     // CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this);
     // CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
     // CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
-    MouseKeyPanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
+    this->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
 
 
-    MouseKeyPanel->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
-    MouseKeyPanel->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
-
+    this->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
+    this->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
 }
 
 void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 {
-
     if (IsConnected())
     {
+        size_t sizeOfQueue = m_connectionEvent->getMessageQueueIn().count();
+        clientTextWindow->DisplayMessage(wxString::Format(wxT("Queue size: %zu"), sizeOfQueue));
         while (!Incoming().empty())
         {
             auto msg = Incoming().pop_front().msg;
@@ -192,7 +183,6 @@ void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
     m << event.GetX() << event.GetY() << event.GetButton();
     Send(m);
     event.Skip();
-
 }
 
 // void ClientWindow::OnMouseMove(wxMouseEvent& event) {
@@ -279,5 +269,6 @@ void ClientWindow::OnKeyUp(wxKeyEvent& event) {
 ClientWindow::~ClientWindow()
 {
     timer->Stop();
+    secondTimer->Stop();
     ClearPanel();
 }

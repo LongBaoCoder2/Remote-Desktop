@@ -7,7 +7,7 @@
 class ServerWindow : public net::IServer<RemoteMessage>, public wxFrame
 {
 public:
-    ServerWindow(uint16_t port);
+    ServerWindow();
     virtual ~ServerWindow();
 
 protected:
@@ -16,7 +16,7 @@ protected:
     void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage>& msg) override;
 
 private:
-    const int DELAY_MS = 1;
+    const int DELAY_MS = 10;
     bool CAPTURING = false;
     // bool hasUser = false;
     size_t nCountUser = 0;
@@ -28,17 +28,17 @@ private:
     int button;
     int delta;
 
-    wxStaticText *text;
+    wxStaticText* text;
     wxRect frameRect;
     wxMemoryDC memDC;
     wxBitmap screenshot, oldscreenshot;
-    wxTimer *timer;
+    wxTimer* timer;
     wxTimer* secondTimer;
     wxTimer* QueueTimer;
     wxPanel* LogPanel;
     wxScreenDC screenDC;
     wxTextCtrl* textCtrl;
-    
+
     std::thread m_updateMess;
 
     int imagesSentThisSecond = 0;
@@ -49,6 +49,6 @@ private:
     void OnClientValidated(std::shared_ptr<net::session<RemoteMessage>> client);
     void OnSecondTimer(wxTimerEvent& event);
     void takeScreenshot(int imgWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X), int imgHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y));
-    void OnCaptureWindow(wxTimerEvent &);
+    void OnCaptureWindow(wxTimerEvent&);
     // void CaptureAndSend();
 };

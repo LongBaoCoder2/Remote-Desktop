@@ -32,5 +32,5 @@ private:
     };
 
     void OnClick(wxMouseEvent&);
-    void OnSettingClick(wxMouseEvent&);
+    // void OnSettingClick(wxMouseEvent&);
 };

@@ -62,7 +62,7 @@ namespace net
         bool empty()
         {
             // std::scoped_lock lock(muxQueue);
-            std::scoped_lock  lock(muxQueue);
+            std::scoped_lock lock(muxQueue);
             return deqQueue.empty();
         }
         size_t count()

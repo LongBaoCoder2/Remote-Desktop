@@ -15,7 +15,7 @@ namespace net
   class IServer
   {
   public:
-    IServer(uint16_t port);
+    IServer();
     virtual ~IServer();
 
     bool Start();
@@ -23,8 +23,8 @@ namespace net
     void WaitForClientConnection();
 
     void MessageClient(std::shared_ptr<session<T>> client, const message<T>& msg);
-    // void MessageAllClients(const message<T>& msg,
-    //   std::shared_ptr<session<T>> pIgnoreClient = nullptr);
+    void MessageAllClients(const message<T>& msg,
+      std::shared_ptr<session<T>> pIgnoreClient = nullptr);
     void Update(size_t nMaxMessages = -1, bool bWait = false);
 
   protected:
@@ -47,7 +47,7 @@ namespace net
     uint32_t nIDCounter = 10000;
   };
   template <typename T>
-  IServer<T>::IServer(uint16_t port)
+  IServer<T>::IServer()
     : m_AcceptorImage(m_asioContext,
       asio::ip::tcp::endpoint(asio::ip::tcp::v4(), CONFIG_APP::IMAGE_PORT)),
     m_AcceptorEvent(m_asioContext,
@@ -206,35 +206,37 @@ namespace net
     }
   }
 
-  // template <typename T>
-  // void IServer<T>::MessageAllClients(const message<T>& msg, std::shared_ptr<session<T>> pIgnoreClients)
-  // {
-  //   bool hasInvalidClient = false;
-  //   pIgnoreClients = nullptr;
-  //   for (auto& client : m_deqConnections)
-  //   {
-  //     if (client && client->IsConnected())
-  //     {
-  //       if (client != pIgnoreClients)
-  //       {
-  //         client->Send(msg);
-  //       }
-  //     }
-  //     else
-  //     {
-  //       hasInvalidClient = true;
+  template <typename T>
+  void IServer<T>::MessageAllClients(const message<T>& msg, std::shared_ptr<session<T>> pIgnoreClients)
+  {
+    // bool hasInvalidClient = false;
+    // pIgnoreClients = nullptr;
+    // for (auto& client : m_deqConnections)
+    // {
+    //   if (client && client->IsConnected())
+    //   {
+    //     if (client != pIgnoreClients)
+    //     {
+    //       client->Send(msg);
+    //     }
+    //   }
+    //   else
+    //   {
+    //     hasInvalidClient = true;
 
-  //       OnClientDisconnect(client);
-  //       client.reset();
-  //     }
-  //   }
+    //     OnClientDisconnect(client);
+    //     client.reset();
+    //   }
+    // }
 
-  //   if (hasInvalidClient)
-  //   {
-  //     m_deqConnections.erase(
-  //       std::remove(m_deqConnections.begin(), m_deqConnections.end(), nullptr),
-  //       m_deqConnections.end());
-  //   }
-  // }
+    // if (hasInvalidClient)
+    // {
+    //   m_deqConnections.erase(
+    //     std::remove(m_deqConnections.begin(), m_deqConnections.end(), nullptr),
+    //     m_deqConnections.end());
+    // }
+
+    MessageClient(m_ConnectionImage, msg);
+  }
 
 } // namespace net

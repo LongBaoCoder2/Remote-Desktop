@@ -31,11 +31,12 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/Application.cpp 
     windows/LoginWindow/LoginFrame.cpp 
     windows/CaptureWindow/*.cpp
-    networks/*.cpp
-    networks/client/*.cpp
-    networks/server/*.cpp
+    # networks/*.cpp
+    # networks/client/*.cpp
+    # networks/server/*.cpp
     windows/MainWindow/NavigationBar/NavigationBar.cpp
     windows/MainWindow/NavigationBar/NavigationButtons.cpp
+    windows/MainWindow/SettingsWindow/*.cpp
     windows/MainWindow/*.cpp
     networks/*.cpp
     utils/FileNameGenerator/*.cpp
@@ -46,7 +47,6 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/AllWindow/MenuWindow/ListUserPanel.cpp
     windows/AllWindow/MenuWindow/UserPanel.cpp
     utils/*.cpp
-    windows/MainWindow/SettingsWindow/*.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 
     models/*.hpp
@@ -64,14 +64,19 @@ file(GLOB_RECURSE HEADER_FILES
     networks/client/*.h
     networks/server/*.h
     utils/*.hpp
-    windows/MainWindow/SettingsWindow/*.hpp
 )
-
 add_definitions(-D_WIN32_WINNT=0x0601)
 
+set(OpenCV_DIR C:/ProgramData/opencv/build)
+
+find_package(OpenCV REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 include(${wxWidgets_USE_FILE})
 include_directories(../thirdparty/asio)
+
+link_directories(${LINK_WEBP})
+
 
 if(APPLE)
     # create bundle on apple compiles
@@ -87,3 +92,5 @@ else()
 endif()
 
 target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})
+
+
