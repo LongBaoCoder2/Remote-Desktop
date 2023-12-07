@@ -21,7 +21,7 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
     clientTextWindow->Show();
 
     // Tạo một wxTextCtrl để hiển thị văn bản
-   
+
     textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
         wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
 
@@ -46,7 +46,7 @@ ClientWindow::ClientWindow(const std::string& host, uint16_t port)
 
     this->SetSizerAndFit(MainSizer);
     this->Center();
-        
+
     // Inside ClientWindow constructor or appropriate setup function
 
     // Sử dụng overlay để vẽ lớp nhận tín hiệu chuột trên cùng
@@ -233,7 +233,7 @@ void ClientWindow::OnMouseClick(wxMouseEvent& event) {
     // int32_t button = MapMouseButton(event.GetButton());
     int button = event.GetButton();
     m << event.GetX() << event.GetY() << button;
-    
+
     // Gửi message
     Send(m);
     event.Skip(); // Để sự kiện được xử lý tiếp
@@ -246,7 +246,7 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
     // int32_t button = MapMouseButton(event.GetButton());
     int button = event.GetButton();
     m << event.GetX() << event.GetY() << button;
-    
+
     // Gửi message
     Send(m);
     event.Skip(); // Để sự kiện được xử lý tiếp
@@ -254,12 +254,12 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
 
 void ClientWindow::OnKeyDown(wxKeyEvent& event) {
     // Tạo message bàn phím
-    
+
     // clientTextWindow->DisplayMessage(wxString::Format(wxT("Got it\n")));
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyPress;
     m << static_cast<int32_t>(event.GetKeyCode()) << true; // true for key down
-    
+
     // Gửi message
     Send(m);
     event.Skip();
@@ -270,7 +270,7 @@ void ClientWindow::OnKeyUp(wxKeyEvent& event) {
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyRelease;
     m << static_cast<int32_t>(event.GetKeyCode()) << false; // false for key up
-    
+
     // Gửi message
     Send(m);
     event.Skip();
