@@ -258,7 +258,7 @@ void ClientWindow::OnKeyDown(wxKeyEvent& event) {
     // clientTextWindow->DisplayMessage(wxString::Format(wxT("Got it\n")));
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyPress;
-    m << static_cast<int32_t>(event.GetKeyCode()) << true; // true for key down
+    m << static_cast<uint32_t>(event.GetRawKeyCode()); // true for key down
     
     // Gửi message
     Send(m);
@@ -269,7 +269,7 @@ void ClientWindow::OnKeyUp(wxKeyEvent& event) {
     // Tạo message bàn phím
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyRelease;
-    m << static_cast<int32_t>(event.GetKeyCode()) << false; // false for key up
+    m << static_cast<uint32_t>(event.GetRawKeyCode()); // false for key up
     
     // Gửi message
     Send(m);

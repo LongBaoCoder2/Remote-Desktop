@@ -108,13 +108,13 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         auto t2 = std::chrono::high_resolution_clock::now();
         auto ms_int_12    = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
-        textCtrl->AppendText(wxString::Format(wxT("Take screenshot takes: %lld ms.\n"), ms_int_12.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Take screenshot takes: %lld ms.\n"), ms_int_12.count()));
 
         // takeScreenshot();
         wxImage image = screenshot.ConvertToImage();
         auto t3 = std::chrono::high_resolution_clock::now();
         auto ms_int_23    = std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2);
-        textCtrl->AppendText(wxString::Format(wxT("Convert image takes: %lld ms.\n"), ms_int_23.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Convert image takes: %lld ms.\n"), ms_int_23.count()));
 
         // wxImage image2 = oldscreenshot.ConvertToImage();
 
@@ -131,7 +131,7 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         image.SaveFile(memStream, wxBITMAP_TYPE_JPEG);
         auto t4 = std::chrono::high_resolution_clock::now();
         auto ms_int_34    = std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3);
-        textCtrl->AppendText(wxString::Format(wxT("Save file takes: %lld ms.\n"), ms_int_34.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Save file takes: %lld ms.\n"), ms_int_34.count()));
 
         // Lấy dữ liệu nén
         size_t dataSize = memStream.GetSize();
@@ -150,16 +150,16 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
 
         auto t5 = std::chrono::high_resolution_clock::now();
         auto ms_int_45    = std::chrono::duration_cast<std::chrono::milliseconds>(t5 - t4);
-        textCtrl->AppendText(wxString::Format(wxT("Assign data to msg takes: %lld ms.\n"), ms_int_45.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Assign data to msg takes: %lld ms.\n"), ms_int_45.count()));
 
         MessageAllClients(*msg);
         auto t6 = std::chrono::high_resolution_clock::now();
         auto ms_int_56    = std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t5);
-        textCtrl->AppendText(wxString::Format(wxT("Send message takes: %lld ms.\n"), ms_int_56.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Send message takes: %lld ms.\n"), ms_int_56.count()));
 
         auto ms_int_61   = std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t1);
-        textCtrl->AppendText(wxString::Format(wxT("All server operations take: %lld ms.\n"), ms_int_61.count()));
-        textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu bytes.\n\n\n"), dataSize));
+        // textCtrl->AppendText(wxString::Format(wxT("All server operations take: %lld ms.\n"), ms_int_61.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu bytes.\n\n\n"), dataSize));
 
         // Gửi message đến tất cả clients
         // std::thread sendThread([this, msg]() {
@@ -405,24 +405,36 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
 
 
         case RemoteMessage::KeyPress: {
-            int32_t key;
-            bool is_down;
-            msg >> is_down >> key; // Extract key code and state
-
-            //textCtrl->AppendText(wxString::Format(wxT("Key Taken ! %d %d.\n"), key, is_down));
-            
+            uint32_t rawKeyCode;
+            // bool is_down;
+            msg >> rawKeyCode; // Trích xuất mã phím và trạng thái
 
             INPUT input = {0};
             input.type = INPUT_KEYBOARD;
-            input.ki.wVk = key; // Virtual key code
-
-            if (!is_down) {
-                input.ki.dwFlags = KEYEVENTF_KEYUP;
-            }
+            input.ki.wVk = static_cast<WORD>(rawKeyCode); // Mã phím
 
             SendInput(1, &input, sizeof(INPUT));
             break;
         }
+
+        case RemoteMessage::KeyRelease: {
+            uint32_t rawKeyCode;
+            msg >> rawKeyCode; // Trích xuất mã phím và trạng thái
+
+            INPUT input = {0};
+            input.type = INPUT_KEYBOARD;
+            input.ki.wVk = static_cast<WORD>(rawKeyCode); // Mã phím
+
+            input.ki.dwFlags = KEYEVENTF_KEYUP;
+
+            SendInput(1, &input, sizeof(INPUT));
+            break;
+        }
+
+        default: {
+            textCtrl->AppendText("Fix bug di!!!\n");
+        }
+           
     }
 }
 
