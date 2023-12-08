@@ -16,5 +16,6 @@ enum class RemoteMessage : uint32_t
     MouseMove,
     MouseLeave,
     MouseEnter,
-    MouseWheel
+    MouseWheel,
+    MetaData
 };

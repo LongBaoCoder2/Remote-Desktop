@@ -5,6 +5,7 @@
 #include <iterator>
 #include <chrono>
 #include <windows.h>
+#include "../getHost_Info.hpp"
 
 
 ServerWindow::ServerWindow()
@@ -100,13 +101,13 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         auto t2 = std::chrono::high_resolution_clock::now();
         auto ms_int_12 = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
-        textCtrl->AppendText(wxString::Format(wxT("Take screenshot takes: %lld ms.\n"), ms_int_12.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Take screenshot takes: %lld ms.\n"), ms_int_12.count()));
 
         // takeScreenshot();
         wxImage image = screenshot.ConvertToImage();
         auto t3 = std::chrono::high_resolution_clock::now();
         auto ms_int_23 = std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2);
-        textCtrl->AppendText(wxString::Format(wxT("Convert image takes: %lld ms.\n"), ms_int_23.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Convert image takes: %lld ms.\n"), ms_int_23.count()));
 
 
         // Đặt mức chất lượng cho ảnh (giá trị từ 0 đến 100)
@@ -122,7 +123,7 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         image.SaveFile(memStream, wxBITMAP_TYPE_JPEG);
         auto t4 = std::chrono::high_resolution_clock::now();
         auto ms_int_34 = std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3);
-        textCtrl->AppendText(wxString::Format(wxT("Save file takes: %lld ms.\n"), ms_int_34.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Save file takes: %lld ms.\n"), ms_int_34.count()));
 
         // Lấy dữ liệu nén
         size_t dataSize = memStream.GetSize();
@@ -141,16 +142,16 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
 
         auto t5 = std::chrono::high_resolution_clock::now();
         auto ms_int_45 = std::chrono::duration_cast<std::chrono::milliseconds>(t5 - t4);
-        textCtrl->AppendText(wxString::Format(wxT("Assign data to msg takes: %lld ms.\n"), ms_int_45.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Assign data to msg takes: %lld ms.\n"), ms_int_45.count()));
 
         MessageAllClients(*msg);
         auto t6 = std::chrono::high_resolution_clock::now();
         auto ms_int_56 = std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t5);
-        textCtrl->AppendText(wxString::Format(wxT("Send message takes: %lld ms.\n"), ms_int_56.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Send message takes: %lld ms.\n"), ms_int_56.count()));
 
         auto ms_int_61 = std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t1);
-        textCtrl->AppendText(wxString::Format(wxT("All server operations take: %lld ms.\n"), ms_int_61.count()));
-        textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu bytes.\n\n\n"), dataSize));
+        // textCtrl->AppendText(wxString::Format(wxT("All server operations take: %lld ms.\n"), ms_int_61.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu bytes.\n\n\n"), dataSize));
 
         // Gửi message đến tất cả clients
         // std::thread sendThread([this, msg]() {
@@ -170,7 +171,7 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
 void ServerWindow::OnSecondTimer(wxTimerEvent& event)
 {
     // In thông tin thống kê và đặt biến đếm về 0
-    textCtrl->AppendText(wxString::Format(wxT("Images sent this second: %d\n\n"), imagesSentThisSecond));
+    // textCtrl->AppendText(wxString::Format(wxT("Images sent this second: %d\n\n"), imagesSentThisSecond));
     imagesSentThisSecond = 0;
 }
 
@@ -198,20 +199,23 @@ bool ServerWindow::OnClientConnect(std::shared_ptr<net::session<RemoteMessage>> 
     }
     return true;
 }
-
 void ServerWindow::OnClientValidated(std::shared_ptr<net::session<RemoteMessage>> client)
 {
     // Client passed validation check, so send them a message informing
     // them they can continue to communicate
     net::message<RemoteMessage> msg;
     msg.header.id = RemoteMessage::SERVER_ACCEPT;
+    std::string IP_Addr = GetIPAddress();
+    std::string Mac_Addr = GetMACAddress();
+    std::string OS_ver = GetCurrentWindowName();
+    msg << IP_Addr << Mac_Addr << OS_ver;
     client->Send(msg);
 }
 
 void ServerWindow::OnClientDisconnect(std::shared_ptr<net::session<RemoteMessage>> client)
 {
     if (client)
-    {
+    { 
         nCountUser--;
 
         if (nCountUser == 0)
@@ -551,6 +555,16 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
         //     }
         //     break;
         // }
+   case RemoteMessage::MetaData: {
+        std::string IP_Addr = GetIPAddress();
+        std::string Mac_Addr = GetMACAddress();
+        std::string OS_ver = GetCurrentWindowName();
+        msg >> OS_ver >> Mac_Addr >> IP_Addr; 
+        textCtrl->AppendText(wxString::Format(wxT("IP : %s \n Mac : %s \n Os : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
+        // textCtrl->AppendText(wxString::Format(wxT("%d\n"), x));
+        break;
+    }
+
     case RemoteMessage::MouseClick: {
         msg >> button >> y >> x;
 

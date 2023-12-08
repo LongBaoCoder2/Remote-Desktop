@@ -59,6 +59,35 @@ namespace net
             return msg;
         }
 
+        friend message<T>& operator << (message<T>& msg, const std::string& data) {
+                size_t length = data.size();
+
+                for (int i = length - 1; i >= 0; --i) {
+                    msg << data[i];
+                }
+
+                msg << length;
+                return msg;
+        }
+
+        friend message<T>& operator >> (message<T>& msg, std::string& data) {
+                // Read the length of the string first
+                size_t length;
+                msg >> length;
+
+                // Clear the target string and resize to the expected length
+                data.clear();
+                data.resize(length);
+
+                // Read characters of the string from the buffer
+                for (size_t i = 0; i < length; ++i) {
+                    char c;
+                    msg >> c;
+                    data[i] = c;
+                }
+
+                return msg;
+        }
         // template <typename DataType>
         // friend message<T> &operator<<(message<T> &msg, const vector<DataType> &data)
         // {

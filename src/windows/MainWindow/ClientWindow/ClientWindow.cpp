@@ -1,5 +1,7 @@
 #include "ClientWindow.hpp"
 #include "../../constant.hpp"
+#include "../getHost_Info.hpp"
+
 
 ClientWindow::ClientWindow(const std::string& host)
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
@@ -74,6 +76,18 @@ ClientWindow::ClientWindow(const std::string& host)
 
     this->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
     this->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
+
+    SendMetadata();
+}
+
+void ClientWindow::SendMetadata() {
+    net::message<RemoteMessage> msg;
+    msg.header.id = RemoteMessage::MetaData;
+    std::string IP_Addr = GetIPAddress();
+    std::string Mac_Addr = GetMACAddress();
+    std::string OS_ver = GetCurrentWindowName();
+    msg << IP_Addr << Mac_Addr << OS_ver;
+    Send(msg);
 }
 
 void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
@@ -81,22 +95,29 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
     if (IsConnected())
     {
         size_t sizeOfQueue = m_connectionEvent->getMessageQueueIn().count();
-        clientTextWindow->DisplayMessage(wxString::Format(wxT("Queue size: %zu"), sizeOfQueue));
+        // clientTextWindow->DisplayMessage(wxString::Format(wxT("Queue size: %zu"), sizeOfQueue));
         while (!Incoming().empty())
         {
             auto msg = Incoming().pop_front().msg;
-            switch (msg.header.id)
-            {
-            case RemoteMessage::SERVER_ACCEPT:
+            switch (msg.header.id) {
+                
+            case RemoteMessage::SERVER_ACCEPT: {
                 isWaitingForConnection = false;
                 wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
+                std::string IP_Addr = GetIPAddress();
+                std::string Mac_Addr = GetMACAddress();
+                std::string OS_ver = GetCurrentWindowName();
+                msg >> OS_ver >> Mac_Addr >> IP_Addr;
+                clientTextWindow->DisplayMessage(wxString::Format(wxT("IP : %s \n Mac : %s \n Os : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
                 break;
-            case RemoteMessage::SERVER_DENY:
+            }
+            case RemoteMessage::SERVER_DENY: {
                 // Disconnect();
                 wxMessageBox(wxT("Disconnected from the server."), wxT("Disconnected"), wxICON_INFORMATION | wxOK);
                 break;
+            }
 
-            case RemoteMessage::SERVER_UPDATE:
+            case RemoteMessage::SERVER_UPDATE: {
                 isWaitingForConnection = false;
 
                 // OnReceiveImage(msg);
@@ -111,7 +132,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 // Tăng biến đếm
                 imagesSentThisSecond++;
 
-                clientTextWindow->DisplayMessage(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()));
+                // clientTextWindow->DisplayMessage(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()));
                 // wxMessageBox(wxT("Image convert successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
                 // wxMessageBox(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()), wxT("Message"), wxICON_INFORMATION | wxOK);
 
@@ -128,6 +149,8 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 }
 
                 break;
+            }
+
             }
         }
     }
@@ -172,7 +195,7 @@ void ClientWindow::OnReceiveImage(net::message<RemoteMessage>& msg)
 void ClientWindow::OnSecondTimer(wxTimerEvent& event)
 {
     // In thông tin thống kê và đặt biến đếm về 0
-    clientTextWindow->DisplayMessage(wxString::Format(wxT("Images received this second: %d\n"), imagesSentThisSecond));
+    // clientTextWindow->DisplayMessage(wxString::Format(wxT("Images received this second: %d\n"), imagesSentThisSecond));
     imagesSentThisSecond = 0;
     event.Skip();
 }
