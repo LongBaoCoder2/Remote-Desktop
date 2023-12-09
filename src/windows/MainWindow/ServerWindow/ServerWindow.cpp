@@ -5,7 +5,7 @@
 #include <iterator>
 #include <chrono>
 #include <windows.h>
-#include "../getHost_Info.hpp"
+#include "../InforNetwork.hpp"
 
 
 ServerWindow::ServerWindow()
@@ -560,7 +560,7 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
         std::string Mac_Addr = GetMACAddress();
         std::string OS_ver = GetCurrentWindowName();
         msg >> OS_ver >> Mac_Addr >> IP_Addr; 
-        textCtrl->AppendText(wxString::Format(wxT("IP : %s \n Mac : %s \n Os : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
+        textCtrl->AppendText(wxString::Format(wxT("Client IP : %s \n Client Mac : %s \n Client Window Name : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
         // textCtrl->AppendText(wxString::Format(wxT("%d\n"), x));
         break;
     }

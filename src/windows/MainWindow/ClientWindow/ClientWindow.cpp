@@ -1,6 +1,6 @@
 #include "ClientWindow.hpp"
 #include "../../constant.hpp"
-#include "../getHost_Info.hpp"
+#include "../InforNetwork.hpp"
 
 
 ClientWindow::ClientWindow(const std::string& host)
@@ -108,7 +108,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 std::string Mac_Addr = GetMACAddress();
                 std::string OS_ver = GetCurrentWindowName();
                 msg >> OS_ver >> Mac_Addr >> IP_Addr;
-                clientTextWindow->DisplayMessage(wxString::Format(wxT("IP : %s \n Mac : %s \n Os : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
+                clientTextWindow->DisplayMessage(wxString::Format(wxT("Server IP : %s \n Server Mac : %s \n Server Window Name : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
                 break;
             }
             case RemoteMessage::SERVER_DENY: {
