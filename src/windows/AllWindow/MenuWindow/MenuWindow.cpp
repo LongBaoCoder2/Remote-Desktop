@@ -30,9 +30,10 @@ MenuWindow::MenuWindow(wxWindow* parent, const wxPoint& pos, const wxSize& size)
 
 
     this->SetSizer(MenuSizer);
-    this->SetSize(wxSize(1344, 900));
+    this->SetSize(CONFIG_UI::NORMAL_WINDOW);
     this->SetBackgroundColour(CONFIG_UI::SECONDARY_LIGHT_COLOR);
 
+    Layout();
     Refresh();
 }
 

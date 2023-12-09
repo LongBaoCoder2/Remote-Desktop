@@ -15,4 +15,9 @@ public:
 
 private:
     wxImage userIcon;
+
+    wxPanel* ListUserPanel::CreateHeaderPanel();
+    wxPanel* ListUserPanel::CreateButtonPanel(wxWindow* parent, const wxString& addButtonLabel, const wxString& connectionButtonLabel);
+    wxPanel* ListUserPanel::CreateSplitPanel();
+    wxPanel* ListUserPanel::CreateUserPanels(const wxBitmap& userIcon);
 };

@@ -15,11 +15,11 @@ UserPanel::UserPanel(wxWindow* parent,
         auto iconPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(60, 60));
         auto iconBitmap = new wxStaticBitmap(iconPanel, wxID_ANY, bitmap);
         auto text = new wxStaticText(this, wxID_ANY, username, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
-        auto button = new Button(this, wxID_ANY, "Connect", wxDefaultPosition, wxSize(210, 40));
+        auto button = new Button(this, wxID_ANY, "Connect", wxDefaultPosition, wxSize(110, 32));
 
-        sizer->Add(iconPanel, 0, wxALIGN_CENTER | wxALL, FromDIP(15));
+        sizer->Add(iconPanel, 0, wxALIGN_CENTER | wxALL, FromDIP(8));
         sizer->Add(text, 1, wxEXPAND | wxALL, FromDIP(8));
-        sizer->Add(button, 0, wxALIGN_CENTER | wxALL, FromDIP(15));
+        sizer->Add(button, 0, wxALIGN_CENTER | wxALL, FromDIP(8));
     }
 
 

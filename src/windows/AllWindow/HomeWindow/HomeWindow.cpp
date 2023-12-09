@@ -37,13 +37,12 @@ HomeWindow::HomeWindow(wxWindow* parent, NavigationBar* navBar, const wxPoint& p
     TitleSizer->Add(HomeButton, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, FromDIP(100));
 
     TitlePanel->SetSizerAndFit(TitleSizer);
-    TitlePanel->Center();
 
     size_t CenterPanelX = (TitlePanel->GetSize().y - this->GetSize().y) / 2;
     HomeSizer->Add(TitlePanel, 1, wxALIGN_CENTER | wxTOP, FromDIP(CenterPanelX));
 
     this->SetSizer(HomeSizer);
-    this->SetSize(wxSize(1344, 900));
+    this->SetSize(wxSize(CONFIG_UI::NORMAL_WINDOW));
     this->SetBackgroundColour(CONFIG_UI::SECONDARY_LIGHT_COLOR);
 }
 

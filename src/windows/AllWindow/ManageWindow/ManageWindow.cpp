@@ -3,8 +3,6 @@
 ManageWindow::ManageWindow(wxWindow* parent, const wxPoint& pos, const wxSize& size)
     : wxPanel(parent, wxID_ANY, pos, size)
 {
-    this->SetSize(wxSize(1344, 900));
-    this->SetBackgroundColour(CONFIG_UI::SECONDARY_LIGHT_COLOR);
     auto MainSizer = new wxBoxSizer(wxVERTICAL);
 
     auto TitlePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
@@ -41,16 +39,17 @@ ManageWindow::ManageWindow(wxWindow* parent, const wxPoint& pos, const wxSize& s
 
     TitleSizer->Add(AppTitle, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, FromDIP(5));
     TitleSizer->Add(IPInput, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, FromDIP(5));
-    TitleSizer->Add(ButtonPanel, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, FromDIP(100));
+    TitleSizer->Add(ButtonPanel, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, FromDIP(10));
 
     TitlePanel->SetSizerAndFit(TitleSizer);
     TitlePanel->Center();
 
-    size_t CenterPanelX = (TitlePanel->GetSize().y - this->GetSize().y) / 2;
-    MainSizer->Add(TitlePanel, 1, wxALIGN_CENTER | wxTOP, FromDIP(CenterPanelX));
+    // size_t CenterPanelX = (TitlePanel->GetSize().y - this->GetSize().y) / 2;
+    MainSizer->Add(TitlePanel, 1, wxALIGN_CENTER | wxTOP, FromDIP(10));
 
     this->SetSizer(MainSizer);
-    // this->SetBackgroundColour(CONFIG_UI::SECONDARY_LIGHT_COLOR);
+    this->SetSize(wxSize(1344, 900));
+    this->SetBackgroundColour(CONFIG_UI::PRIMARY_LIGHT_COLOR);
 }
 
 ManageWindow::~ManageWindow()

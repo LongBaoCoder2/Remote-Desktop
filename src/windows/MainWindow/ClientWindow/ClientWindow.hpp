@@ -40,15 +40,15 @@ private:
     void OnUpdateWindow(wxTimerEvent&);
     void OnReceiveImage(net::message<RemoteMessage>& msg);
     void OnSecondTimer(wxTimerEvent& event);
-    void ClientWindow::OnMouseClick(wxMouseEvent& event);
-    void ClientWindow::OnMouseUnClick(wxMouseEvent& event);
-    void ClientWindow::OnKeyDown(wxKeyEvent& event);
-    void ClientWindow::OnKeyUp(wxKeyEvent& event);
-    void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event);
+    void OnMouseClick(wxMouseEvent& event);
+    void OnMouseUnClick(wxMouseEvent& event);
+    void OnKeyDown(wxKeyEvent& event);
+    void OnKeyUp(wxKeyEvent& event);
+    void OnMouseDoubleClick(wxMouseEvent& event);
     // void ClientWindow::OnMouseMove(wxMouseEvent& event);
     // void ClientWindow::OnMouseLeave(wxMouseEvent& event);
     // void ClientWindow::OnMouseEnter(wxMouseEvent& event);
-    void ClientWindow::OnMouseWheel(wxMouseEvent& event);
+    void OnMouseWheel(wxMouseEvent& event);
 
     // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };
