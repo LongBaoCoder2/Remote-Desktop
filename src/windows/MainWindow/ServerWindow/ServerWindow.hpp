@@ -31,7 +31,7 @@ private:
     wxStaticText *text;
     wxRect frameRect;
     wxMemoryDC memDC;
-    wxBitmap screenshot, oldscreenshot;
+    wxBitmap screenshot;
     wxTimer *timer;
     wxTimer* secondTimer;
     wxTimer* QueueTimer;
@@ -50,5 +50,6 @@ private:
     void OnSecondTimer(wxTimerEvent& event);
     void takeScreenshot(int imgWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X), int imgHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y));
     void OnCaptureWindow(wxTimerEvent &);
+    void OnClose(wxCloseEvent& event);
     // void CaptureAndSend();
 };

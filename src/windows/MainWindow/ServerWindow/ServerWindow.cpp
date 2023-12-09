@@ -1,22 +1,26 @@
-#include "ServerWindow.hpp"
+
+#include <algorithm>
+#include <chrono>
+#include <iterator>
+
 #include "../../../utils/FileNameGenerator/FileNameGenerator.hpp"
 #include "../../constant.hpp"
-#include <algorithm>
-#include <iterator>
-#include <chrono>
+#include "ServerWindow.hpp"
 #include <windows.h>
 
-
 ServerWindow::ServerWindow(uint16_t port)
-    : wxFrame(nullptr, wxID_ANY, "Server Window", wxDefaultPosition, wxSize(720, 480)), net::IServer<RemoteMessage>(port), oldscreenshot()
-{
+    : wxFrame(nullptr, wxID_ANY, "Server Window", wxDefaultPosition,
+              wxSize(720, 480)),
+      net::IServer<RemoteMessage>(port) {
     Start();
-    oldscreenshot.Create(1366, 768);
 
+    Bind(wxEVT_CLOSE_WINDOW, &ServerWindow::OnClose, this);
 
-    LogPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366, 768));
-    textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
-        wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
+    // LogPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366,
+    // 768));
+    textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
+                              wxDefaultSize,
+                              wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
 
     // Sắp xếp layout
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -26,17 +30,19 @@ ServerWindow::ServerWindow(uint16_t port)
     // text = new wxStaticText(LogPanel, wxID_ANY, "Server is running");
 
     timer = new wxTimer(this, 2);
-    this->Bind(wxEVT_TIMER, &ServerWindow::OnCaptureWindow, this, timer->GetId());
-    timer->Start(DELAY_MS);
+    this->Bind(wxEVT_TIMER, &ServerWindow::OnCaptureWindow, this,
+               timer->GetId());
+    // timer->Start(DELAY_MS);
 
     // Ở đâu đó trong constructor hoặc khởi tạo timer
     secondTimer = new wxTimer(this, 3);
-    this->Bind(wxEVT_TIMER, &ServerWindow::OnSecondTimer, this, secondTimer->GetId());
-    secondTimer->Start(1000);  // Đặt timer chạy mỗi giây (1000ms)
+    this->Bind(wxEVT_TIMER, &ServerWindow::OnSecondTimer, this,
+               secondTimer->GetId());
+    // secondTimer->Start(1000);  // Đặt timer chạy mỗi giây (1000ms)
 
     // QueueTimer = new wxTimer(this, 5);
-    // this->Bind(wxEVT_TIMER, &ServerWindow::OnUpdateWindow, this, QueueTimer->GetId());
-    // QueueTimer->Start(DELAY_MS);
+    // this->Bind(wxEVT_TIMER, &ServerWindow::OnUpdateWindow, this,
+    // QueueTimer->GetId()); QueueTimer->Start(DELAY_MS);
     // this->SetSizerAndFit(MainSizer);
     this->Center();
 
@@ -44,22 +50,18 @@ ServerWindow::ServerWindow(uint16_t port)
     screenWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X);
     screenHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);
 
-    m_updateMess = std::thread([this]
-        {
-            while(true) {
-                IServer<RemoteMessage>::Update(-1, true);
-            }
+    m_updateMess = std::thread([this] {
+        while (true) {
+            IServer<RemoteMessage>::Update(-1, true);
         }
-    );
-    
+    });
 }
 
 // void ServerWindow::OnUpdateWindow(wxTimerEvent& event) {
 //     IServer<RemoteMessage>::Update(-1, true);
 // }
 
-void ServerWindow::takeScreenshot(int imgWidth, int imgHeight)
-{
+void ServerWindow::takeScreenshot(int imgWidth, int imgHeight) {
     // Capture Screen
     // wxRect frameRect = CapturePanel->GetRect();
     // frameRect = wxRect(wxGetClientDisplayRect());
@@ -88,33 +90,34 @@ void ServerWindow::takeScreenshot(int imgWidth, int imgHeight)
     memDC.SelectObject(wxNullBitmap);
 }
 
-void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
-{
-    if (nCountUser)
-    {
-
+void ServerWindow::OnCaptureWindow(wxTimerEvent& event) {
+    if (nCountUser) {
         // using std::chrono::high_resolution_clock;
         // using std::chrono::duration_cast;
         // using std::chrono::duration;
         // using std::chrono::milliseconds;
 
-
         /* Getting number of milliseconds as an integer. */
 
         auto t1 = std::chrono::high_resolution_clock::now();
-        takeScreenshot(CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth(), CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight());
+        takeScreenshot(CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth(),
+                       CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight());
         // takeScreenshot();
         // takeScreenshot(160, 90);
         auto t2 = std::chrono::high_resolution_clock::now();
-        auto ms_int_12    = std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
+        auto ms_int_12 =
+            std::chrono::duration_cast<std::chrono::milliseconds>(t2 - t1);
 
-        // textCtrl->AppendText(wxString::Format(wxT("Take screenshot takes: %lld ms.\n"), ms_int_12.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Take screenshot takes:
+        // %lld ms.\n"), ms_int_12.count()));
 
         // takeScreenshot();
         wxImage image = screenshot.ConvertToImage();
         auto t3 = std::chrono::high_resolution_clock::now();
-        auto ms_int_23    = std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2);
-        // textCtrl->AppendText(wxString::Format(wxT("Convert image takes: %lld ms.\n"), ms_int_23.count()));
+        auto ms_int_23 =
+            std::chrono::duration_cast<std::chrono::milliseconds>(t3 - t2);
+        // textCtrl->AppendText(wxString::Format(wxT("Convert image takes: %lld
+        // ms.\n"), ms_int_23.count()));
 
         // wxImage image2 = oldscreenshot.ConvertToImage();
 
@@ -127,11 +130,14 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         //         return;
         // }
         wxMemoryOutputStream memStream;
-        // image.Rescale(CONFIG_UI::NORMAL_WINDOW.GetWidth(), CONFIG_UI::NORMAL_WINDOW.GetHeight());
+        // image.Rescale(CONFIG_UI::NORMAL_WINDOW.GetWidth(),
+        // CONFIG_UI::NORMAL_WINDOW.GetHeight());
         image.SaveFile(memStream, wxBITMAP_TYPE_JPEG);
         auto t4 = std::chrono::high_resolution_clock::now();
-        auto ms_int_34    = std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3);
-        // textCtrl->AppendText(wxString::Format(wxT("Save file takes: %lld ms.\n"), ms_int_34.count()));
+        auto ms_int_34 =
+            std::chrono::duration_cast<std::chrono::milliseconds>(t4 - t3);
+        // textCtrl->AppendText(wxString::Format(wxT("Save file takes: %lld
+        // ms.\n"), ms_int_34.count()));
 
         // Lấy dữ liệu nén
         size_t dataSize = memStream.GetSize();
@@ -145,29 +151,36 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
         msg->header.size = dataSize;
         // msg->body.assign(dataBuffer->begin(), dataBuffer->end());
         // msg->body.assign(image.GetData(), image.GetData() + dataSize);
-        const unsigned char *dataBuffer = static_cast<const unsigned char *>(memStream.GetOutputStreamBuffer()->GetBufferStart());
+        const unsigned char* dataBuffer = static_cast<const unsigned char*>(
+            memStream.GetOutputStreamBuffer()->GetBufferStart());
         msg->body.assign(dataBuffer, dataBuffer + dataSize);
 
         auto t5 = std::chrono::high_resolution_clock::now();
-        auto ms_int_45    = std::chrono::duration_cast<std::chrono::milliseconds>(t5 - t4);
-        // textCtrl->AppendText(wxString::Format(wxT("Assign data to msg takes: %lld ms.\n"), ms_int_45.count()));
+        auto ms_int_45 =
+            std::chrono::duration_cast<std::chrono::milliseconds>(t5 - t4);
+        // textCtrl->AppendText(wxString::Format(wxT("Assign data to msg takes:
+        // %lld ms.\n"), ms_int_45.count()));
 
         MessageAllClients(*msg);
         auto t6 = std::chrono::high_resolution_clock::now();
-        auto ms_int_56    = std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t5);
-        // textCtrl->AppendText(wxString::Format(wxT("Send message takes: %lld ms.\n"), ms_int_56.count()));
+        auto ms_int_56 =
+            std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t5);
+        // textCtrl->AppendText(wxString::Format(wxT("Send message takes: %lld
+        // ms.\n"), ms_int_56.count()));
 
-        auto ms_int_61   = std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t1);
-        // textCtrl->AppendText(wxString::Format(wxT("All server operations take: %lld ms.\n"), ms_int_61.count()));
-        // textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu bytes.\n\n\n"), dataSize));
+        auto ms_int_61 =
+            std::chrono::duration_cast<std::chrono::milliseconds>(t6 - t1);
+        // textCtrl->AppendText(wxString::Format(wxT("All server operations
+        // take: %lld ms.\n"), ms_int_61.count()));
+        // textCtrl->AppendText(wxString::Format(wxT("Data sent: %llu
+        // bytes.\n\n\n"), dataSize));
 
         // Gửi message đến tất cả clients
         // std::thread sendThread([this, msg]() {
         // });
-        // sendThread.detach(); 
+        // sendThread.detach();
 
         // oldscreenshot = screenshot;
-        
 
         // Tăng biến đếm
         ++imagesSentThisSecond;
@@ -192,40 +205,35 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
 // }
 
 // Khi timer đếm giây chạy
-void ServerWindow::OnSecondTimer(wxTimerEvent& event)
-{
+void ServerWindow::OnSecondTimer(wxTimerEvent& event) {
     // In thông tin thống kê và đặt biến đếm về 0
-    textCtrl->AppendText(wxString::Format(wxT("Images sent this second: %d\n\n"), imagesSentThisSecond));
+    textCtrl->AppendText(wxString::Format(
+        wxT("Images sent this second: %d\n\n"), imagesSentThisSecond));
     imagesSentThisSecond = 0;
 }
 
-ServerWindow::~ServerWindow()
-{
-}
-
-bool ServerWindow::OnClientConnect(std::shared_ptr<net::session<RemoteMessage>> client)
-{
+bool ServerWindow::OnClientConnect(
+    std::shared_ptr<net::session<RemoteMessage>> client) {
     // At this time, we will accept all
     // Remember: We need authentication later
 
     nCountUser++;
     OnClientValidated(client);
+    textCtrl->AppendText(
+        wxString::Format(wxT("A client has connected to server!\n")));
 
-    if (nCountUser == 1)
-    {
+    if (nCountUser == 1) {
         if (wxThread::IsMain()) {
             timer->Start(DELAY_MS);
+        } else {
+            wxTheApp->CallAfter([this]() { timer->Start(DELAY_MS); });
         }
-        else {
-            wxTheApp->CallAfter([this]() {timer->Start(DELAY_MS);});
-        }
-
     }
     return true;
 }
 
-void ServerWindow::OnClientValidated(std::shared_ptr<net::session<RemoteMessage>> client)
-{
+void ServerWindow::OnClientValidated(
+    std::shared_ptr<net::session<RemoteMessage>> client) {
     // Client passed validation check, so send them a message informing
     // them they can continue to communicate
     net::message<RemoteMessage> msg;
@@ -233,38 +241,37 @@ void ServerWindow::OnClientValidated(std::shared_ptr<net::session<RemoteMessage>
     client->Send(msg);
 }
 
-void ServerWindow::OnClientDisconnect(std::shared_ptr<net::session<RemoteMessage>> client)
-{
-    if (client)
-    {
+void ServerWindow::OnClientDisconnect(
+    std::shared_ptr<net::session<RemoteMessage>> client) {
+    if (client) {
         nCountUser--;
 
-        if (nCountUser == 0)
-        {
+        if (nCountUser == 0) {
             timer->Stop();
         }
     }
 }
 
-void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client, net::message<RemoteMessage>& msg)
-{
+void ServerWindow::OnMessage(
+    std::shared_ptr<net::session<RemoteMessage>> client,
+    net::message<RemoteMessage>& msg) {
     switch (msg.header.id) {
-
         // case RemoteMessage::MouseClick: {
         //     int x, y;
         //     int button;
         //     msg >> button >> y >> x;
         //     // Giả lập click chuột
-            
+
         //     switch (button) {
         //         case wxMOUSE_BTN_LEFT:
-        //             textCtrl->AppendText(wxString::Format(wxT("Left Click activate in (%d, %d).\n"), x, y));
-        //             break;
+        //             textCtrl->AppendText(wxString::Format(wxT("Left Click
+        //             activate in (%d, %d).\n"), x, y)); break;
         //         case wxMOUSE_BTN_RIGHT:
-        //             textCtrl->AppendText(wxString::Format(wxT("Right Click activate in (%d, %d).\n"), x, y));
-        //             break;
+        //             textCtrl->AppendText(wxString::Format(wxT("Right Click
+        //             activate in (%d, %d).\n"), x, y)); break;
         //         case wxMOUSE_BTN_MIDDLE:
-        //             textCtrl->AppendText(wxString::Format(wxT("Middle Click activate in (%d, %d).\n"), x, y));
+        //             textCtrl->AppendText(wxString::Format(wxT("Middle Click
+        //             activate in (%d, %d).\n"), x, y));
         //         default:
         //             // Handle other button values if necessary
         //             break;
@@ -277,18 +284,20 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
             fx = x * (65535.0f / (screenWidth - 1));
             fy = y * (65535.0f / (screenHeight - 1));
 
-
-            //textCtrl->AppendText(wxString::Format(wxT("(%d, %d).\n"), screenWidth, screenHeight));
+            // textCtrl->AppendText(wxString::Format(wxT("(%d, %d).\n"),
+            // screenWidth, screenHeight));
             INPUT Input = {0};
-            Input.type      = INPUT_MOUSE;
-            Input.mi.dwFlags  = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+            Input.type = INPUT_MOUSE;
+            Input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
             Input.mi.dx = fx;
             Input.mi.dy = fy;
             SendInput(1, &Input, sizeof(INPUT));
 
             switch (button) {
                 case wxMOUSE_BTN_LEFT:
-                    //textCtrl->AppendText(wxString::Format(wxT("Left Click activate in (%f, %f).\n"), fx, fy));
+                    // textCtrl->AppendText(wxString::Format(wxT("Left Click
+                    // activate in
+                    // (%f, %f).\n"), fx, fy));
                     ZeroMemory(&Input, sizeof(INPUT));
                     Input.type = INPUT_MOUSE;
                     Input.mi.dwFlags = MOUSEEVENTF_LEFTDOWN;
@@ -322,10 +331,9 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
             fx = x * (65535.0f / (screenWidth - 1));
             fy = y * (65535.0f / (screenHeight - 1));
 
-
             INPUT Input = {0};
-            Input.type      = INPUT_MOUSE;
-            Input.mi.dwFlags  = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
+            Input.type = INPUT_MOUSE;
+            Input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
             Input.mi.dx = fx;
             Input.mi.dy = fy;
             SendInput(1, &Input, sizeof(INPUT));
@@ -360,7 +368,7 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
         }
 
         case RemoteMessage::MouseMove: {
-            msg >> y >> x; // Extract coordinates
+            msg >> y >> x;  // Extract coordinates
 
             fx = x * (65535.0f / (screenWidth - 1));
             fy = y * (65535.0f / (screenHeight - 1));
@@ -375,8 +383,7 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
         }
 
         case RemoteMessage::DoubleClick: {
-            msg >> button >> y >> x; // Extract coordinates and button
-
+            msg >> button >> y >> x;  // Extract coordinates and button
 
             fx = x * (65535.0f / (screenWidth - 1));
             fy = y * (65535.0f / (screenHeight - 1));
@@ -390,7 +397,7 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
         }
 
         case RemoteMessage::MouseWheel: {
-            msg >> delta >> y >> x; // Extract coordinates and wheel delta
+            msg >> delta >> y >> x;  // Extract coordinates and wheel delta
 
             fx = x * (65535.0f / (screenWidth - 1));
             fy = y * (65535.0f / (screenHeight - 1));
@@ -403,15 +410,14 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
             break;
         }
 
-
         case RemoteMessage::KeyPress: {
             uint32_t rawKeyCode;
             // bool is_down;
-            msg >> rawKeyCode; // Trích xuất mã phím và trạng thái
+            msg >> rawKeyCode;  // Trích xuất mã phím và trạng thái
 
             INPUT input = {0};
             input.type = INPUT_KEYBOARD;
-            input.ki.wVk = static_cast<WORD>(rawKeyCode); // Mã phím
+            input.ki.wVk = static_cast<WORD>(rawKeyCode);  // Mã phím
 
             SendInput(1, &input, sizeof(INPUT));
             break;
@@ -419,11 +425,11 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
 
         case RemoteMessage::KeyRelease: {
             uint32_t rawKeyCode;
-            msg >> rawKeyCode; // Trích xuất mã phím và trạng thái
+            msg >> rawKeyCode;  // Trích xuất mã phím và trạng thái
 
             INPUT input = {0};
             input.type = INPUT_KEYBOARD;
-            input.ki.wVk = static_cast<WORD>(rawKeyCode); // Mã phím
+            input.ki.wVk = static_cast<WORD>(rawKeyCode);  // Mã phím
 
             input.ki.dwFlags = KEYEVENTF_KEYUP;
 
@@ -434,7 +440,26 @@ void ServerWindow::OnMessage(std::shared_ptr<net::session<RemoteMessage>> client
         default: {
             textCtrl->AppendText("Fix bug di!!!\n");
         }
-           
     }
 }
 
+void ServerWindow::OnClose(wxCloseEvent& event) {
+    // Xử lý khi cửa sổ được đóng
+    // Hoặc hỏi người dùng trước khi đóng cửa sổ
+    int answer = wxMessageBox(
+        "Are you sure to close this Window?\nClosing the window also ends "
+        "current session.",
+        "Close Window", wxYES_NO | wxICON_QUESTION, this);
+
+    if (answer == wxYES) {
+        net::IServer<RemoteMessage>::Stop();
+        event.Skip();  // Đóng cửa sổ
+    } else {
+        event.Veto();  // Không đóng cửa sổ
+    }
+}
+
+ServerWindow::~ServerWindow() {
+    // textCtrl->Destroy();
+    net::IServer<RemoteMessage>::Stop();
+}
