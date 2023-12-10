@@ -16,7 +16,7 @@ public:
     virtual ~ClientWindow();
 
 private:
-    const int DELAY_MS = 100;
+    const int DELAY_MS = 10;
     bool CAPTURING = false;
     bool isWaitingForConnection = true;
 

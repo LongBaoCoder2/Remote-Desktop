@@ -81,7 +81,7 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
     if (nCountUser)
     {
         /* Getting number of milliseconds as an integer. */
-        takeScreenshot(CONFIG_UI::MEDIUM_WINDOW.GetWidth(), CONFIG_UI::MEDIUM_WINDOW.GetHeight());
+        takeScreenshot(CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth(), CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight());
 
         wxImage image = screenshot.ConvertToImage();
         // Đặt mức chất lượng cho ảnh (giá trị từ 0 đến 100)
@@ -124,9 +124,6 @@ bool ServerWindow::OnClientConnect(
         if (wxThread::IsMain()) {
             timer->Start(DELAY_MS);
         } else {
-            wxTheApp->CallAfter([this]() { timer->Start(DELAY_MS); });
-        }
-        else {
             wxTheApp->CallAfter([this]() { timer->Start(DELAY_MS); });
         }
 

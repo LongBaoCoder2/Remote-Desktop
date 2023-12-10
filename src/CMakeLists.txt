@@ -43,29 +43,29 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/MainWindow/MenuWindow/*.cpp
     windows/MainWindow/SettingsWindow/*.cpp
 )
-# file(GLOB_RECURSE HEADER_FILES 
-#     models/*.hpp
-#     windows/Application.h 
-#     windows/LoginWindow/LoginFrame.h 
-#     windows/CaptureWindow/*.h
-#     windows/MainWindow/*.hpp
-#     networks/*.h
-#     windows/*.hpp
-#     utils/FileNameGenerator/*.hpp
-#     windows/BasicTextWindow/*.hpp
-#     windows/MainWindow/ClientWindow/*.hpp
-#     windows/MainWindow/ServerWindow/*.hpp
-#     windows/LoginWindow/NavigationEvent.hpp
-#     networks/client/*.h
-#     networks/server/*.h
-#     utils/*.hpp
-# )
+file(GLOB_RECURSE HEADER_FILES 
+    models/*.hpp
+    windows/Application.h 
+    windows/LoginWindow/LoginFrame.h 
+    windows/CaptureWindow/*.h
+    windows/MainWindow/*.hpp
+    networks/*.h
+    windows/*.hpp
+    utils/FileNameGenerator/*.hpp
+    windows/BasicTextWindow/*.hpp
+    windows/MainWindow/ClientWindow/*.hpp
+    windows/MainWindow/ServerWindow/*.hpp
+    windows/LoginWindow/NavigationEvent.hpp
+    networks/client/*.h
+    networks/server/*.h
+    utils/*.hpp
+)
 add_definitions(-D_WIN32_WINNT=0x0601)
 
-set(OpenCV_DIR C:/ProgramData/opencv/build)
+# set(OpenCV_DIR C:/ProgramData/opencv/build)
 
-find_package(OpenCV REQUIRED)
-include_directories(${OpenCV_INCLUDE_DIRS})
+# find_package(OpenCV REQUIRED)
+# include_directories(${OpenCV_INCLUDE_DIRS})
 
 include(${wxWidgets_USE_FILE})
 include_directories(../thirdparty/asio)

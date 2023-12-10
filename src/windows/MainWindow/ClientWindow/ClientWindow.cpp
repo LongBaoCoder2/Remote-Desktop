@@ -67,23 +67,23 @@ ClientWindow::ClientWindow(const std::string& host)
     this->Center();
 
     // Binding mouse down events
-    this->Bind(wxEVT_LEFT_DOWN, &ClientWindow::OnMouseClick, this);
-    this->Bind(wxEVT_MIDDLE_DOWN, &ClientWindow::OnMouseClick, this);
-    this->Bind(wxEVT_RIGHT_DOWN, &ClientWindow::OnMouseClick, this);
+    CapturePanel->Bind(wxEVT_LEFT_DOWN, &ClientWindow::OnMouseClick, this);
+    CapturePanel->Bind(wxEVT_MIDDLE_DOWN, &ClientWindow::OnMouseClick, this);
+    CapturePanel->Bind(wxEVT_RIGHT_DOWN, &ClientWindow::OnMouseClick, this);
     // CapturePanel->Bind(wxEVT_AUX1_DOWN, &ClientWindow::OnMouseClick, this);
     // CapturePanel->Bind(wxEVT_AUX2_DOWN, &ClientWindow::OnMouseClick, this);
 
     // Binding mouse up events
-    this->Bind(wxEVT_LEFT_UP, &ClientWindow::OnMouseUnClick, this);
-    this->Bind(wxEVT_MIDDLE_UP, &ClientWindow::OnMouseUnClick, this);
-    this->Bind(wxEVT_RIGHT_UP, &ClientWindow::OnMouseUnClick, this);
+    CapturePanel->Bind(wxEVT_LEFT_UP, &ClientWindow::OnMouseUnClick, this);
+    CapturePanel->Bind(wxEVT_MIDDLE_UP, &ClientWindow::OnMouseUnClick, this);
+    CapturePanel->Bind(wxEVT_RIGHT_UP, &ClientWindow::OnMouseUnClick, this);
     // CapturePanel->Bind(wxEVT_AUX1_UP, &ClientWindow::OnMouseUnClick, this);
     // CapturePanel->Bind(wxEVT_AUX2_UP, &ClientWindow::OnMouseUnClick, this);
 
     // Binding double-click events
-    this->Bind(wxEVT_LEFT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
-    this->Bind(wxEVT_MIDDLE_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
-    this->Bind(wxEVT_RIGHT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    CapturePanel->Bind(wxEVT_LEFT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    CapturePanel->Bind(wxEVT_MIDDLE_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    CapturePanel->Bind(wxEVT_RIGHT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
     // CapturePanel->Bind(wxEVT_AUX1_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
     // CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
 
@@ -91,27 +91,29 @@ ClientWindow::ClientWindow(const std::string& host)
     // CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this);
     // CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
     // CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
-    this->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
+    CapturePanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
 
 
-    this->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
-    this->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
+    CapturePanel->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
+    CapturePanel->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
 }
 
 void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 {
     if (IsConnected())
     {
-        size_t sizeOfQueue = m_connectionEvent->getMessageQueueIn().count();
-        clientTextWindow->DisplayMessage(wxString::Format(wxT("Queue size: %zu"), sizeOfQueue));
+        // size_t sizeOfQueue = m_connectionEvent->getMessageQueueIn().count();
+        // clientTextWindow->DisplayMessage(wxString::Format(wxT("Queue size: %zu"), sizeOfQueue));
         while (!Incoming().empty())
         {
             auto msg = Incoming().pop_front().msg;
             switch (msg.header.id) {
                 case RemoteMessage::SERVER_ACCEPT:
+                    if (isWaitingForConnection) {
+                        wxMessageBox(wxT("Connection successful."),
+                                    wxT("Connected"), wxICON_INFORMATION | wxOK);
+                    }
                     isWaitingForConnection = false;
-                    wxMessageBox(wxT("Connection successful."),
-                                 wxT("Connected"), wxICON_INFORMATION | wxOK);
                     break;
                 case RemoteMessage::SERVER_DENY:
                     // Disconnect();
@@ -319,6 +321,6 @@ ClientWindow::~ClientWindow() {
     timer->Stop();
     secondTimer->Stop();
     ClearPanel();
-    clientTextWindow->Destroy();
+    // clientTextWindow->Destroy();
     net::IClient<RemoteMessage>::Disconnect();
 }
