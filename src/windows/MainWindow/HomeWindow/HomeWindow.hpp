@@ -4,7 +4,7 @@
 // #include "../../components/RoundedText.hpp"
 #include "../../constant.hpp"
 #include "../../components/Button.hpp"
-#include "../../MainWindow/NavigationBar/NavigationBar.hpp"
+#include "../../components/NavigationBar/NavigationBar.hpp"
 
 class NavigationBar;
 

@@ -4,7 +4,7 @@
 #include <vector>
 #include "NavigationButtons.hpp"
 #include "../../constant.hpp"
-#include "../MainFrame.hpp"
+#include "../../MainWindow/MainFrame.hpp"
 #include "WindowID.hpp"
 
 class NavigationButtons; // Need to refactor

@@ -3,7 +3,6 @@
 #include <wx/wx.h>
 #include <wx/mstream.h>
 #include <wx/overlay.h>
-#include "../../../utils/Logger/WindowLogger.hpp"
 #include "ClientTextWindow.hpp"
 
 
@@ -12,12 +11,12 @@
 class ClientWindow : public net::IClient<RemoteMessage>, public wxFrame
 {
 public:
-    ClientWindow(const std::string& host, uint16_t port);
+    ClientWindow(const std::string& host);
 
     virtual ~ClientWindow();
 
 private:
-    const int DELAY_MS = 10;
+    const int DELAY_MS = 100;
     bool CAPTURING = false;
     bool isWaitingForConnection = true;
 

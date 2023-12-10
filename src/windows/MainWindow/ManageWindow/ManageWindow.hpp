@@ -4,8 +4,8 @@
 #include <memory>
 #include "../../constant.hpp"
 #include "../../components/Button.hpp"
-#include "../../MainWindow/ClientWindow/ClientWindow.hpp"
-#include "../../MainWindow/ServerWindow/ServerWindow.hpp"
+#include "../ClientWindow/ClientWindow.hpp"
+#include "../ServerWindow/ServerWindow.hpp"
 
 class ManageWindow : public wxPanel
 {
