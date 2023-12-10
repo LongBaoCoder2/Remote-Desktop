@@ -5,7 +5,8 @@
 #include "../../components/Button.hpp"
 #include "ListUserPanel.hpp"
 #include "../../../models/IModel.hpp"
-
+#include "../CaptureWindow/ClientWindow/ClientWindow.hpp"
+#include "../CaptureWindow/ServerWindow/ServerWindow.hpp"
 class MenuWindow : public wxPanel
 {
 public:
@@ -15,10 +16,17 @@ public:
 private:
     std::shared_ptr<IModel> model;
 
+    ClientWindow* clientWindow = nullptr;
+    ServerWindow* serverWindow = nullptr;
+    wxTextCtrl* IPInput;
+
+private:
     void CreateUserPanel();
     void CreateAdminPanel();
 
-    void OnStartListening();
+    // User
+    void OnStartListening(wxMouseEvent&);
 
-    wxTextCtrl* IPInput;
+    // Admin
+    void OnConnectToServer(std::string& host);
 };

@@ -8,7 +8,7 @@
 class UserPanel : public wxPanel
 {
 public:
-    UserPanel(wxWindow* parent, wxImage iconUser, std::string username);
+    UserPanel(wxWindow* parent, wxImage iconUser, std::string username, std::string ipAddress);
 
     ~UserPanel();
 

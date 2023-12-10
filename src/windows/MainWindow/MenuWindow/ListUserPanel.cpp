@@ -1,10 +1,18 @@
 #include "ListUserPanel.hpp"
 
 ListUserPanel::ListUserPanel(wxWindow* parent,
+    Admin* admin,
     const wxPoint& pos,
     const wxSize& size)
     : wxPanel(parent, wxID_ANY, pos, size)
 {
+    this->pAdmin = admin;
+
+    // Dump data
+    this->pAdmin->AppendUser(std::make_shared<User>("Nguyet Quynh", "127.0.0.1"));
+    this->pAdmin->AppendUser(std::make_shared<User>("User 1", "197.168.0.2"));
+
+
     userIcon.LoadFile("assets/user_2.png", wxBITMAP_TYPE_PNG);
     if (!userIcon.IsOk()) {
         wxMessageBox("[Error Image]: Can't load user icon.", "Error Image");
@@ -41,26 +49,28 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
     const auto margin = FromDIP(15);
     auto Sizer = new wxGridBagSizer(margin, margin);
     // Simulated user data
-    std::vector<std::string> userList = { "User 1", "User 2", "User 3", "User 4", "User 5", "User 6", "User 7" };
-
     int row = 0;
     int col = 0;
     const int maxUsersPerRow = 4;
+    if (pAdmin) {
+        size_t noUser = pAdmin->GetUserCount();
 
-    for (const auto& username : userList) {
-        auto userPanel = new UserPanel(_UserPanels, userIcon, username);
+        for (size_t i = 0; i < noUser; i++) {
+            auto user = pAdmin->GetUserByIndex(i);
 
-        Sizer->Add(userPanel, wxGBPosition(row, col), { 1, 1 }, wxEXPAND);
+            auto userPanel = new UserPanel(_UserPanels, userIcon, user->GetID(), user->GetIPAddress());
 
-        col++;
-        if (col >= maxUsersPerRow) {
-            col = 0;
-            row++;
+            Sizer->Add(userPanel, wxGBPosition(row, col), { 1, 1 }, wxEXPAND);
+
+            col++;
+            if (col >= maxUsersPerRow) {
+                col = 0;
+                row++;
+            }
         }
     }
 
     _UserPanels->SetSizerAndFit(Sizer);
-
 
     MainSizer->Add(HeaderPanel, 0, wxEXPAND | wxBOTTOM, FromDIP(10));
     MainSizer->Add(splitPanel, 0, wxEXPAND | wxBOTTOM, FromDIP(20));

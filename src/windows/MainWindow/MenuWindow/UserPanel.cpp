@@ -2,8 +2,9 @@
 
 UserPanel::UserPanel(wxWindow* parent,
     wxImage iconUser,
-    std::string username)
-    : wxPanel(parent), iconUser(iconUser), username(username)
+    std::string username,
+    std::string ipAddress)
+    : wxPanel(parent), iconUser(iconUser), username(username), IpAddress(ipAddress)
 {
     Bind(wxEVT_PAINT, &UserPanel::OnPaint, this, -1);
 

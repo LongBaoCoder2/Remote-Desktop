@@ -15,6 +15,11 @@ std::shared_ptr<User> Admin::GetUserByIndex(int index)
     return std::move(ListUserAccess[index]);
 }
 
+size_t Admin::GetUserCount()
+{
+    return ListUserAccess.size();
+}
+
 std::shared_ptr<User> Admin::GetUserByIP(const std::string& IPAddress)
 {
     for (const auto& user : ListUserAccess)

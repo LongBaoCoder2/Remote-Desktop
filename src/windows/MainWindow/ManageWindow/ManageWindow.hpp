@@ -19,8 +19,8 @@ private:
 private:
     // std::unique_ptr<ClientWindow> clientWindow;
     // std::unique_ptr<ServerWindow> serverWindow;
-    ClientWindow* clientWindow;
-    ServerWindow* serverWindow;
+    ClientWindow* clientWindow = nullptr;
+    ServerWindow* serverWindow = nullptr;
 
     wxTextCtrl* IPInput;
 };

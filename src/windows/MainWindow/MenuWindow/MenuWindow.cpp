@@ -16,6 +16,8 @@ MenuWindow::MenuWindow(wxWindow* parent, std::shared_ptr<IModel>& _model, const 
 
 void MenuWindow::CreateUserPanel()
 {
+    this->SetBackgroundColour(CONFIG_UI::PRIMARY_LIGHT_COLOR);
+
     auto MainSizer = new wxBoxSizer(wxVERTICAL);
 
     auto TitlePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
@@ -23,49 +25,38 @@ void MenuWindow::CreateUserPanel()
 
     auto AppTitle = new wxStaticText(TitlePanel,
         wxID_ANY,
-        "Remote Desktop App",
+        "Let's connect to client",
         wxDefaultPosition,
         wxDefaultSize);
     AppTitle->SetFont(wxFontInfo(36).FaceName("Georgia").Bold());
-
-    IPInput = new wxTextCtrl(TitlePanel, wxID_ANY, wxT("127.0.0.1"), wxDefaultPosition, wxSize(370, 40));
 
     auto ButtonPanel = new wxPanel(TitlePanel, wxID_ANY);
     auto ButtonSizer = new wxBoxSizer(wxHORIZONTAL);
     auto ServerConnectButton = new Button(ButtonPanel,
         wxID_ANY,
-        "Server",
+        "Starting Listening",
         wxDefaultPosition,
         wxSize(274, 44));
-    // ServerConnectButton->Bind(wxEVT_LEFT_DOWN, &ManageWindow::OnServerConnectButton, this);
-
-    auto ClientConnectButton = new Button(ButtonPanel,
-        wxID_ANY,
-        "Client",
-        wxDefaultPosition,
-        wxSize(274, 44));
-    // ClientConnectButton->Bind(wxEVT_LEFT_DOWN, &ManageWindow::OnClientConnectButton, this);
+    ServerConnectButton->Bind(wxEVT_LEFT_DOWN, &MenuWindow::OnStartListening, this);
 
     ButtonSizer->Add(ServerConnectButton, 0, wxALL, FromDIP(15));
-    ButtonSizer->Add(ClientConnectButton, 0, wxALL, FromDIP(15));
     ButtonPanel->SetSizer(ButtonSizer);
 
     TitleSizer->Add(AppTitle, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, FromDIP(5));
-    TitleSizer->Add(IPInput, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, FromDIP(5));
     TitleSizer->Add(ButtonPanel, 0, wxALIGN_CENTER_HORIZONTAL | wxALL, FromDIP(10));
 
     TitlePanel->SetSizerAndFit(TitleSizer);
     TitlePanel->Center();
 
-    // size_t CenterPanelX = (TitlePanel->GetSize().y - this->GetSize().y) / 2;
-    MainSizer->Add(TitlePanel, 1, wxALIGN_CENTER | wxTOP, FromDIP(10));
-
     auto SizeOfWindow = CONFIG_UI::NORMAL_WINDOW;
     SizeOfWindow.x -= CONFIG_UI::NAVIGATION_SIZE.x;
 
+    size_t CenterPanelX = (SizeOfWindow.y - TitlePanel->GetSize().y) / 3;
+    MainSizer->Add(TitlePanel, 1, wxALIGN_CENTER | wxTOP, FromDIP(CenterPanelX));
+
+
     this->SetSizer(MainSizer);
     this->SetSize(SizeOfWindow);
-    this->SetBackgroundColour(CONFIG_UI::PRIMARY_LIGHT_COLOR);
 }
 
 void MenuWindow::CreateAdminPanel()
@@ -83,8 +74,7 @@ void MenuWindow::CreateAdminPanel()
     TitleSizer->Add(TitleApp, 0, wxALL, FromDIP(17));
     TitlePanel->SetSizer(TitleSizer);
 
-    auto UserList = new ListUserPanel(this);
-
+    auto UserList = new ListUserPanel(this, static_cast<Admin*>(model.get()));
 
     MenuSizer->Add(TitlePanel, 0, wxEXPAND | wxBOTTOM, FromDIP(20));
     MenuSizer->Add(UserList, 1, wxALIGN_CENTER | wxALL, FromDIP(30));
@@ -99,6 +89,25 @@ void MenuWindow::CreateAdminPanel()
     Layout();
     Refresh();
 }
+
+void MenuWindow::OnStartListening(wxMouseEvent& event)
+{
+    // serverWindow = std::make_unique<ServerWindow>(CONFIG_APP::PORT);
+    if (serverWindow) {
+        serverWindow->Destroy();
+    }
+
+    serverWindow = new ServerWindow();
+    serverWindow->Show();
+}
+void MenuWindow::OnConnectToServer(std::string& host)
+{
+    clientWindow = new ClientWindow();
+    clientWindow->ConnectToHost(host);
+    clientWindow->Show();
+}
+
+
 
 MenuWindow::~MenuWindow()
 {
