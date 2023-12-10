@@ -8,6 +8,8 @@ MenuWindow::MenuWindow(wxWindow* parent, std::shared_ptr<IModel>& _model, const 
 
     if (this->model->GetTypeOwned() == Owned::ADMIN) {
         CreateAdminPanel();
+
+        this->Bind(ConnectToUserEvent, &MenuWindow::OnConnectToServer, this);
     }
     else {
         CreateUserPanel();
@@ -100,13 +102,21 @@ void MenuWindow::OnStartListening(wxMouseEvent& event)
     serverWindow = new ServerWindow();
     serverWindow->Show();
 }
-void MenuWindow::OnConnectToServer(std::string& host)
+void MenuWindow::ConnectToServer(std::string& host)
 {
     clientWindow = new ClientWindow();
     clientWindow->ConnectToHost(host);
     clientWindow->Show();
 }
 
+void MenuWindow::OnConnectToServer(wxCommandEvent& event)
+{
+    std::string* IpAddress = (std::string*)event.GetClientData();
+    if (IpAddress) {
+        ConnectToServer(*IpAddress);
+        delete IpAddress;
+    }
+}
 
 
 MenuWindow::~MenuWindow()

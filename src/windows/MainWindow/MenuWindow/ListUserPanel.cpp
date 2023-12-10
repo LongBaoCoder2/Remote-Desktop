@@ -9,8 +9,9 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
     this->pAdmin = admin;
 
     // Dump data
-    this->pAdmin->AppendUser(std::make_shared<User>("Nguyet Quynh", "127.0.0.1"));
+    this->pAdmin->AppendUser(std::make_shared<User>("User 2", "127.0.0.1"));
     this->pAdmin->AppendUser(std::make_shared<User>("User 1", "197.168.0.2"));
+    this->pAdmin->AppendUser(std::make_shared<User>("User 3", "127.2.1.2"));
 
 
     userIcon.LoadFile("assets/user_2.png", wxBITMAP_TYPE_PNG);

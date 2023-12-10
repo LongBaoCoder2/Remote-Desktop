@@ -27,6 +27,8 @@ private:
     // User
     void OnStartListening(wxMouseEvent&);
 
+    void OnConnectToServer(wxCommandEvent& event);
+
     // Admin
-    void OnConnectToServer(std::string& host);
+    void ConnectToServer(std::string& host);
 };

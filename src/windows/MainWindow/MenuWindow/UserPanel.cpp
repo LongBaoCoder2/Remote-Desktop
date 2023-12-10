@@ -1,5 +1,7 @@
 #include "UserPanel.hpp"
 
+wxDEFINE_EVENT(ConnectToUserEvent, wxCommandEvent);
+
 UserPanel::UserPanel(wxWindow* parent,
     wxImage iconUser,
     std::string username,
@@ -16,10 +18,13 @@ UserPanel::UserPanel(wxWindow* parent,
         auto iconPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, UserPanelSize);
         auto iconBitmap = new wxStaticBitmap(iconPanel, wxID_ANY, bitmap);
         auto text = new wxStaticText(this, wxID_ANY, username, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
+        auto ipText = new wxStaticText(this, wxID_ANY, IpAddress, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
         auto button = new Button(this, wxID_ANY, "Connect", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
+        button->Bind(wxEVT_LEFT_DOWN, &UserPanel::OnClick, this);
 
         sizer->Add(iconPanel, 0, wxALIGN_CENTER | wxALL, FromDIP(8));
         sizer->Add(text, 1, wxEXPAND | wxALL, FromDIP(8));
+        sizer->Add(ipText, 1, wxEXPAND | wxALL, FromDIP(8));
         sizer->Add(button, 0, wxALIGN_CENTER | wxALL, FromDIP(8));
     }
 
@@ -43,6 +48,14 @@ void UserPanel::OnPaint(wxPaintEvent& event) {
 
         delete gc;
     }
+}
+
+void UserPanel::OnClick(wxMouseEvent& event)
+{
+    wxCommandEvent connectEvent(ConnectToUserEvent);
+    connectEvent.SetClientData(new std::string(IpAddress));
+
+    wxPostEvent(GetParent(), connectEvent);
 }
 
 UserPanel::~UserPanel() {
