@@ -4,6 +4,14 @@
 #include <wx/wx.h>
 #include <wx/mstream.h>
 
+#include <algorithm>
+#include <chrono>
+#include <iterator>
+
+#include "../../../../utils/FileNameGenerator/FileNameGenerator.hpp"
+#include "../../../constant.hpp"
+#include <windows.h>
+
 class ServerWindow : public net::IServer<RemoteMessage>, public wxFrame
 {
 public:

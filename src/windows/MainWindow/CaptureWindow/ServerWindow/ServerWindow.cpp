@@ -1,12 +1,6 @@
 
-#include <algorithm>
-#include <chrono>
-#include <iterator>
 
-#include "../../../utils/FileNameGenerator/FileNameGenerator.hpp"
-#include "../../constant.hpp"
 #include "ServerWindow.hpp"
-#include <windows.h>
 
 
 ServerWindow::ServerWindow()
@@ -17,8 +11,8 @@ ServerWindow::ServerWindow()
     // LogPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366,
     // 768));
     textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-                              wxDefaultSize,
-                              wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
+        wxDefaultSize,
+        wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
 
     // Sắp xếp layout
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -28,7 +22,7 @@ ServerWindow::ServerWindow()
 
     timer = new wxTimer(this, 2);
     this->Bind(wxEVT_TIMER, &ServerWindow::OnCaptureWindow, this,
-               timer->GetId());
+        timer->GetId());
     // timer->Start(DELAY_MS);
 
     this->Center();
@@ -123,7 +117,8 @@ bool ServerWindow::OnClientConnect(
     if (nCountUser == 1) {
         if (wxThread::IsMain()) {
             timer->Start(DELAY_MS);
-        } else {
+        }
+        else {
             wxTheApp->CallAfter([this]() { timer->Start(DELAY_MS); });
         }
 
@@ -159,8 +154,8 @@ void ServerWindow::OnMessage(
     case RemoteMessage::MouseClick: {
         msg >> button >> y >> x;
 
-        fx = x * (65535.0f / (screenWidth - 1));
-        fy = y * (65535.0f / (screenHeight - 1));
+        fx = x * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth() - 1));
+        fy = y * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight() - 1));
 
 
         //textCtrl->AppendText(wxString::Format(wxT("(%d, %d).\n"), screenWidth, screenHeight));
@@ -204,8 +199,8 @@ void ServerWindow::OnMessage(
     case RemoteMessage::MouseUnClick: {
         msg >> button >> y >> x;
 
-        fx = x * (65535.0f / (screenWidth - 1));
-        fy = y * (65535.0f / (screenHeight - 1));
+        fx = x * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth() - 1));
+        fy = y * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight() - 1));
 
 
         INPUT Input = { 0 };
@@ -247,8 +242,8 @@ void ServerWindow::OnMessage(
     case RemoteMessage::MouseMove: {
         msg >> y >> x; // Extract coordinates
 
-        fx = x * (65535.0f / (screenWidth - 1));
-        fy = y * (65535.0f / (screenHeight - 1));
+        fx = x * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth() - 1));
+        fy = y * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight() - 1));
         // Simulate mouse move
         INPUT Input = { 0 };
         Input.type = INPUT_MOUSE;
@@ -263,8 +258,8 @@ void ServerWindow::OnMessage(
         msg >> button >> y >> x; // Extract coordinates and button
 
 
-        fx = x * (65535.0f / (screenWidth - 1));
-        fy = y * (65535.0f / (screenHeight - 1));
+        fx = x * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth() - 1));
+        fy = y * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight() - 1));
         // Simulate double click
         INPUT Input[2] = {};
         Input[0].type = Input[1].type = INPUT_MOUSE;
@@ -277,8 +272,8 @@ void ServerWindow::OnMessage(
     case RemoteMessage::MouseWheel: {
         msg >> delta >> y >> x; // Extract coordinates and wheel delta
 
-        fx = x * (65535.0f / (screenWidth - 1));
-        fy = y * (65535.0f / (screenHeight - 1));
+        fx = x * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth() - 1));
+        fy = y * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight() - 1));
         // Simulate mouse wheel scroll
         INPUT Input = { 0 };
         Input.type = INPUT_MOUSE;
@@ -293,7 +288,7 @@ void ServerWindow::OnMessage(
         uint32_t rawKeyCode;
         msg >> rawKeyCode;  // Trích xuất mã phím và trạng thái
 
-        INPUT input = {0};
+        INPUT input = { 0 };
         input.type = INPUT_KEYBOARD;
         input.ki.wVk = static_cast<WORD>(rawKeyCode);  // Mã phím
 
@@ -305,7 +300,7 @@ void ServerWindow::OnMessage(
         uint32_t rawKeyCode;
         msg >> rawKeyCode;  // Trích xuất mã phím và trạng thái
 
-        INPUT input = {0};
+        INPUT input = { 0 };
         input.type = INPUT_KEYBOARD;
         input.ki.wVk = static_cast<WORD>(rawKeyCode);  // Mã phím
 
@@ -330,7 +325,8 @@ void ServerWindow::OnClose(wxCloseEvent& event) {
     if (answer == wxYES) {
         net::IServer<RemoteMessage>::Stop();
         event.Skip();  // Đóng cửa sổ
-    } else {
+    }
+    else {
         event.Veto();  // Không đóng cửa sổ
     }
 }

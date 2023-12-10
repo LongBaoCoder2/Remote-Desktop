@@ -4,21 +4,24 @@
 #include <wx/mstream.h>
 #include <wx/overlay.h>
 #include "ClientTextWindow.hpp"
+#include "../../../constant.hpp"
 
 
-#define DEV
 
 class ClientWindow : public net::IClient<RemoteMessage>, public wxFrame
 {
 public:
-    ClientWindow(const std::string& host);
+    ClientWindow();
 
     virtual ~ClientWindow();
 
+    void ConnectToHost(std::string& host);
 private:
     const int DELAY_MS = 10;
     bool CAPTURING = false;
     bool isWaitingForConnection = true;
+    std::string host;
+
 
     wxPanel* CapturePanel = nullptr;
     wxPanel* MouseKeyPanel = nullptr;

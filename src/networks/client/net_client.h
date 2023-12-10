@@ -72,7 +72,6 @@ namespace net {
       // Tell the connection object to connect to server
       m_connectionEvent->ConnectToServer(endpoints);
 
-
       // Start Context Thread
       thrContext = std::thread([this]() { m_context.run(); });
     }

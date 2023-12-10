@@ -1,34 +1,38 @@
-#include "../../constant.hpp"
 #include "ClientWindow.hpp"
 
-ClientWindow::ClientWindow(const std::string& host)
+ClientWindow::ClientWindow()
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
 {
+}
+
+void ClientWindow::ConnectToHost(std::string& host)
+{
+    this->host = host;
 
     if (!ConnectToServer(host))
     {
         // LOG
         wxMessageBox(wxT("Failed to connect to Server."), wxT("Error"),
-                     wxICON_ERROR | wxOK);
+            wxICON_ERROR | wxOK);
     }
     // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
 
     Bind(wxEVT_CLOSE_WINDOW, &ClientWindow::OnClose, this);
 
     CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition,
-                               CONFIG_UI::CLIENT_WINDOW_SIZE);
+        CONFIG_UI::CLIENT_WINDOW_SIZE);
     CapturePanel->SetBackgroundColour(wxColor(38, 37, 54));
 
     // toolbar
     toolbar = CreateToolBar(wxTB_HORIZONTAL | wxTB_TEXT);
     // Thêm nút vào thanh công cụ với thuộc tính wxTB_RIGHT
     toolbar->AddTool(CONFIG_APP::ID_TOOL_DISCONNECT, "Disconnect",
-                     wxBitmap("assets/disconnect.png", wxBITMAP_TYPE_PNG),
-                     "End current session", wxITEM_NORMAL);
+        wxBitmap("assets/disconnect.png", wxBITMAP_TYPE_PNG),
+        "End current session", wxITEM_NORMAL);
 
     // Kết nối sự kiện nhấn nút trên thanh công cụ với hàm xử lý tương ứng
     this->Bind(wxEVT_TOOL, &ClientWindow::OnDisconnectClick, this,
-               CONFIG_APP::ID_TOOL_DISCONNECT);
+        CONFIG_APP::ID_TOOL_DISCONNECT);
 
     toolbar->Realize();
 
@@ -40,8 +44,8 @@ ClientWindow::ClientWindow(const std::string& host)
         wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
 
     textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-                              wxDefaultSize,
-                              wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
+        wxDefaultSize,
+        wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
 
     // Tạo một wxBoxSizer với hướng ngang
     wxBoxSizer* MainSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -54,13 +58,13 @@ ClientWindow::ClientWindow(const std::string& host)
 
     timer = new wxTimer(this, 1);
     this->Bind(wxEVT_TIMER, &ClientWindow::OnUpdateWindow, this,
-               timer->GetId());
+        timer->GetId());
     timer->Start(DELAY_MS);
 
     // Ở đâu đó trong constructor hoặc khởi tạo timer
     secondTimer = new wxTimer(this, 4);
     this->Bind(wxEVT_TIMER, &ClientWindow::OnSecondTimer, this,
-               secondTimer->GetId());
+        secondTimer->GetId());
     secondTimer->Start(1000);  // Đặt timer chạy mỗi giây (1000ms)
 
     this->SetSizerAndFit(MainSizer);
@@ -108,55 +112,56 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
         {
             auto msg = Incoming().pop_front().msg;
             switch (msg.header.id) {
-                case RemoteMessage::SERVER_ACCEPT:
-                    if (isWaitingForConnection) {
-                        wxMessageBox(wxT("Connection successful."),
-                                    wxT("Connected"), wxICON_INFORMATION | wxOK);
-                    }
-                    isWaitingForConnection = false;
-                    break;
-                case RemoteMessage::SERVER_DENY:
-                    // Disconnect();
-                    wxMessageBox(wxT("Disconnected from the server."),
-                                 wxT("Disconnected"),
-                                 wxICON_INFORMATION | wxOK);
-                    break;
+            case RemoteMessage::SERVER_ACCEPT:
+                if (isWaitingForConnection) {
+                    wxMessageBox(wxT("Connection successful."),
+                        wxT("Connected"), wxICON_INFORMATION | wxOK);
+                }
+                isWaitingForConnection = false;
+                break;
+            case RemoteMessage::SERVER_DENY:
+                // Disconnect();
+                wxMessageBox(wxT("Disconnected from the server."),
+                    wxT("Disconnected"),
+                    wxICON_INFORMATION | wxOK);
+                break;
 
-                case RemoteMessage::SERVER_UPDATE:
-                    isWaitingForConnection = false;
+            case RemoteMessage::SERVER_UPDATE:
+                isWaitingForConnection = false;
 
-                    // OnReceiveImage(msg);
+                // OnReceiveImage(msg);
 
-                    // Tạo một memory stream từ dữ liệu nhận được
-                    wxMemoryInputStream memStream(msg.body.data(),
-                                                  msg.body.size());
+                // Tạo một memory stream từ dữ liệu nhận được
+                wxMemoryInputStream memStream(msg.body.data(),
+                    msg.body.size());
 
-                    // Tải hình ảnh từ memory stream
-                    wxImage image;
-                    image.LoadFile(memStream, wxBITMAP_TYPE_JPEG);
+                // Tải hình ảnh từ memory stream
+                wxImage image;
+                image.LoadFile(memStream, wxBITMAP_TYPE_JPEG);
 
-                    // Tăng biến đếm
-                    imagesSentThisSecond++;
+                // Tăng biến đếm
+                imagesSentThisSecond++;
 
-                    clientTextWindow->DisplayMessage(wxString::Format(
-                        wxT("Data received: %llu bytes.\n"), msg.body.size()));
-                    // wxMessageBox(wxT("Image convert successful."),
+                clientTextWindow->DisplayMessage(wxString::Format(
+                    wxT("Data received: %llu bytes.\n"), msg.body.size()));
+                // wxMessageBox(wxT("Image convert successful."),
+                // wxT("Connected"), wxICON_INFORMATION | wxOK);
+                // wxMessageBox(wxString::Format(wxT("Data received: %llu
+                // bytes.\n"), msg.body.size()), wxT("Message"),
+                // wxICON_INFORMATION | wxOK);
+
+                // Chuyển đổi wxImage thành wxBitmap để hiển thị
+                if (image.IsOk()) {
+                    screenshot = wxBitmap(image);
+                    // wxMessageBox(wxT("Image sent successful."),
                     // wxT("Connected"), wxICON_INFORMATION | wxOK);
-                    // wxMessageBox(wxString::Format(wxT("Data received: %llu
-                    // bytes.\n"), msg.body.size()), wxT("Message"),
-                    // wxICON_INFORMATION | wxOK);
+                }
+                else {
+                    wxMessageBox(wxT("Failed to load the image."),
+                        wxT("Error"), wxICON_ERROR | wxOK);
+                }
 
-                    // Chuyển đổi wxImage thành wxBitmap để hiển thị
-                    if (image.IsOk()) {
-                        screenshot = wxBitmap(image);
-                        // wxMessageBox(wxT("Image sent successful."),
-                        // wxT("Connected"), wxICON_INFORMATION | wxOK);
-                    } else {
-                        wxMessageBox(wxT("Failed to load the image."),
-                                     wxT("Error"), wxICON_ERROR | wxOK);
-                    }
-
-                    break;
+                break;
             }
         }
     }
@@ -171,6 +176,9 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
     UpdatePanel();
     event.Skip();
 }
+
+
+
 
 void ClientWindow::UpdatePanel() {
     // clientDC.Clear();
@@ -293,8 +301,8 @@ void ClientWindow::OnKeyUp(wxKeyEvent& event) {
 
 void ClientWindow::OnDisconnectClick(wxCommandEvent& event) {
     wxMessageDialog dialog(this,
-                           "Are you sure you want to close the connection?",
-                           "Confirm", wxYES_NO | wxICON_QUESTION);
+        "Are you sure you want to close the connection?",
+        "Confirm", wxYES_NO | wxICON_QUESTION);
 
     int result = dialog.ShowModal();
 
@@ -305,7 +313,8 @@ void ClientWindow::OnDisconnectClick(wxCommandEvent& event) {
         // Thực hiện hành động khi đồng ý đóng kết nối
         // wxMessageBox("YES", "Confirmation", wxYES_NO | wxICON_QUESTION,
         // this);
-    } else if (result == wxID_NO) {
+    }
+    else if (result == wxID_NO) {
         // Người dùng chọn Huỷ
         // Thực hiện hành động khi huỷ đóng kết nối hoặc không làm gì cả
     }
