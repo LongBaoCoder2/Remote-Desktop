@@ -17,13 +17,20 @@ namespace CONFIG_UI
     const wxSize CLIENT_WINDOW_SIZE = wxSize(1280, 720);
 
     // Size of control
-    const wxSize NAVIGATION_SIZE = wxSize(256, 900);
-    const wxSize PRIMARY_BUTTON_SIZE = wxSize(220, 42);
+    const wxSize NAVIGATION_SIZE = wxSize(screenWidth / 6.5, screenHeight / 5 * 4);
+    const wxSize PRIMARY_BUTTON_SIZE = wxSize(screenWidth / 8.75, 40);
 
     // Configuration of color
     const wxColour PRIMARY_LIGHT_COLOR = wxColour(237, 238, 241);
     const wxColour SECONDARY_LIGHT_COLOR = wxColour(255, 255, 255);
 
+    // Configuration of User Panel Size
+    const wxSize PRIMARY_USER_PANEL_SIZE = wxSize(screenWidth / 33, screenWidth / 33);
+    const wxSize SECONDARY_USER_PANEL_SIZE = wxSize(40, 40);
+
+    // Configuration of Font size
+    const int PRIMARY_FONT_SIZE = 18;
+    const int SECONDARY_FONT_SIZE = 10;
 
     const wxColour PRIMARY_DARK_COLOR = wxColour(15, 23, 36);
 }

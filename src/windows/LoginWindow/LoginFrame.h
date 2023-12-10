@@ -4,6 +4,7 @@
 #include "../components/Button.hpp"
 #include "../MainWindow/MainFrame.hpp"
 #include "../../models/ModelFactory.hpp"
+#include "../constant.hpp"
 
 wxDECLARE_EVENT(UserLoginEvent, wxCommandEvent);
 wxDECLARE_EVENT(AdminLoginEvent, wxCommandEvent);

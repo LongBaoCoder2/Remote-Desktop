@@ -7,7 +7,7 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
 {
     userIcon.LoadFile("assets/user_2.png", wxBITMAP_TYPE_PNG);
     if (!userIcon.IsOk()) {
-        wxMessageBox("[Error 2]: Can't load user icon.", "Error Image");
+        wxMessageBox("[Error Image]: Can't load user icon.", "Error Image");
     }
 
     auto MainSizer = new wxBoxSizer(wxVERTICAL);

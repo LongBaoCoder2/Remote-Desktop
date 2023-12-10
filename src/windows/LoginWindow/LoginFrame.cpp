@@ -7,7 +7,6 @@ wxDEFINE_EVENT(AdminLoginEvent, wxCommandEvent);
 LoginFrame::LoginFrame(const wxString& title, const wxPoint& pos, const wxSize& size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size)
 {
-
     this->setupLoginForm();
     this->setupImageForm();
 
@@ -21,17 +20,20 @@ void LoginFrame::setupLoginForm()
 {
     // MainSizer consist of LeftPanel and RightPanel
     MainSizer = new wxBoxSizer(wxHORIZONTAL);
-    MainSizer->SetMinSize(wxSize(1240, 720));
+    MainSizer->SetMinSize(CONFIG_UI::NORMAL_WINDOW);
 
-    // LeftPanel is FormPanel
+    auto SizePanel = CONFIG_UI::NORMAL_WINDOW;
+    SizePanel.x /= 2;
+
+    // LeftPanel is FormPanel    
     LeftPanel = new wxPanel(this, wxID_ANY);
-    LeftPanel->SetBackgroundColour(wxColour(255, 255, 255));
-    LeftPanel->SetSize(wxSize(620, 720));
+    LeftPanel->SetBackgroundColour(CONFIG_UI::SECONDARY_LIGHT_COLOR);
+    LeftPanel->SetSize(SizePanel);
 
     // RightPanel for decoration and information
     RightPanel = new wxPanel(this, wxID_ANY);
-    RightPanel->SetBackgroundColour(wxColour(250, 250, 250));
-    RightPanel->SetSize(wxSize(620, 720));
+    RightPanel->SetBackgroundColour(CONFIG_UI::PRIMARY_LIGHT_COLOR);
+    RightPanel->SetSize(SizePanel);
 
     // Add Two Panel into MainSizer
     MainSizer->Add(LeftPanel, 1, wxEXPAND, 0);
@@ -101,7 +103,7 @@ void LoginFrame::setupImageForm()
 
     if (logoImage.IsOk())
     {
-        wxBitmap logoBitmap(logoImage.Rescale(700, 700));
+        wxBitmap logoBitmap(logoImage.Rescale(RightPanel->GetSize().x, RightPanel->GetSize().y));
         staticBitmap = new wxStaticBitmap(RightPanel, wxID_ANY, logoBitmap, wxDefaultPosition, wxDefaultSize);
     }
 }

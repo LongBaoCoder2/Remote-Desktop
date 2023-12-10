@@ -47,8 +47,11 @@ ManageWindow::ManageWindow(wxWindow* parent, const wxPoint& pos, const wxSize& s
     // size_t CenterPanelX = (TitlePanel->GetSize().y - this->GetSize().y) / 2;
     MainSizer->Add(TitlePanel, 1, wxALIGN_CENTER | wxTOP, FromDIP(10));
 
+    auto SizeOfWindow = CONFIG_UI::NORMAL_WINDOW;
+    SizeOfWindow.x -= CONFIG_UI::NAVIGATION_SIZE.x;
+
     this->SetSizer(MainSizer);
-    this->SetSize(wxSize(1344, 900));
+    this->SetSize(SizeOfWindow);
     this->SetBackgroundColour(CONFIG_UI::PRIMARY_LIGHT_COLOR);
 }
 

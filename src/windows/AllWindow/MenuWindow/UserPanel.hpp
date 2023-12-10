@@ -3,6 +3,7 @@
 #include <wx/wx.h>
 #include <wx/statbmp.h>
 #include "../../components/Button.hpp"
+#include "../../constant.hpp"
 
 class UserPanel : public wxPanel
 {

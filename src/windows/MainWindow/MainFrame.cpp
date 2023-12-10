@@ -44,6 +44,11 @@ void MainFrame::CreateMainWindow()
 
     this->currentWindow = new HomeWindow(WindowPanel, Navbar, wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW - CONFIG_UI::NAVIGATION_SIZE);
     GetAllWindow()[Window_ID::HOME_WINDOW] = this->currentWindow;
+
+
+    // GetAllWindow()[Window_ID::MENU_WINDOW] = new MenuWindow(WindowPanel, wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW - CONFIG_UI::NAVIGATION_SIZE);;
+
+
     WindowSizer->Add(this->currentWindow, 1, wxEXPAND);
 
     WindowPanel->SetSizerAndFit(WindowSizer);
@@ -98,22 +103,6 @@ void MainFrame::CreateManageWindow()
     this->currentWindow->Show();
     Layout();
 }
-
-// void MainFrame::CreateSettingWindow()
-// {
-//     // Hide the current window
-//     this->currentWindow->Hide();
-
-//     const bool hasSettingWindow = GetAllWindow().find(Window_ID::SETTING_WINDOW) != GetAllWindow().end();
-//     if (!hasSettingWindow) {
-//         GetAllWindow()[Window_ID::SETTING_WINDOW] = new SettingWindow(WindowPanel, wxDefaultPosition, WindowPanel->GetSize());
-//         WindowSizer->Add(GetAllWindow()[Window_ID::SETTING_WINDOW], 1, wxEXPAND);
-//     }
-
-//     this->currentWindow = GetAllWindow()[Window_ID::SETTING_WINDOW];
-//     this->currentWindow->Show();
-//     Layout();
-// }
 
 void MainFrame::CreateSettingWindow()
 {

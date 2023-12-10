@@ -9,13 +9,13 @@ UserPanel::UserPanel(wxWindow* parent,
 
     auto* sizer = new wxBoxSizer(wxVERTICAL);
     if (iconUser.IsOk()) {
-        wxBitmap bitmap = iconUser.Rescale(60, 60);
+        auto UserPanelSize = CONFIG_UI::PRIMARY_USER_PANEL_SIZE;
+        wxBitmap bitmap = iconUser.Rescale(UserPanelSize.x, UserPanelSize.y);
 
-
-        auto iconPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(60, 60));
+        auto iconPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, UserPanelSize);
         auto iconBitmap = new wxStaticBitmap(iconPanel, wxID_ANY, bitmap);
         auto text = new wxStaticText(this, wxID_ANY, username, wxDefaultPosition, wxDefaultSize, wxALIGN_CENTER);
-        auto button = new Button(this, wxID_ANY, "Connect", wxDefaultPosition, wxSize(110, 32));
+        auto button = new Button(this, wxID_ANY, "Connect", wxDefaultPosition, CONFIG_UI::PRIMARY_BUTTON_SIZE);
 
         sizer->Add(iconPanel, 0, wxALIGN_CENTER | wxALL, FromDIP(8));
         sizer->Add(text, 1, wxEXPAND | wxALL, FromDIP(8));

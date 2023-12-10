@@ -5,7 +5,7 @@
 bool Application::OnInit()
 {
     wxInitAllImageHandlers();
-    LoginWindow = new LoginFrame(wxT("Login"), wxDefaultPosition, wxDefaultSize);
+    LoginWindow = new LoginFrame(wxT("Login"), wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW);
     LoginWindow->Show(true);
 
     Connect(wxID_ANY, UserLoginEvent, wxCommandEventHandler(Application::OnUserLogin));

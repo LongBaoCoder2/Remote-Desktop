@@ -28,9 +28,11 @@ MenuWindow::MenuWindow(wxWindow* parent, const wxPoint& pos, const wxSize& size)
     MenuSizer->Add(TitlePanel, 0, wxEXPAND | wxBOTTOM, FromDIP(20));
     MenuSizer->Add(UserList, 1, wxALIGN_CENTER | wxALL, FromDIP(30));
 
+    auto SizeOfWindow = CONFIG_UI::NORMAL_WINDOW;
+    SizeOfWindow.x -= CONFIG_UI::NAVIGATION_SIZE.x;
 
     this->SetSizer(MenuSizer);
-    this->SetSize(CONFIG_UI::NORMAL_WINDOW);
+    this->SetSize(SizeOfWindow);
     this->SetBackgroundColour(CONFIG_UI::SECONDARY_LIGHT_COLOR);
 
     Layout();
