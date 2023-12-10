@@ -7,6 +7,7 @@
 #include "../../../models/IModel.hpp"
 #include "../CaptureWindow/ClientWindow/ClientWindow.hpp"
 #include "../CaptureWindow/ServerWindow/ServerWindow.hpp"
+
 class MenuWindow : public wxPanel
 {
 public:
@@ -31,4 +32,5 @@ private:
 
     // Admin
     void ConnectToServer(std::string& host);
+
 };

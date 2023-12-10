@@ -42,6 +42,7 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/MainWindow/HomeWindow/*.cpp
     windows/MainWindow/ManageWindow/*.cpp
     windows/MainWindow/MenuWindow/*.cpp
+    windows/MainWindow/MenuWindow/UserAddDialog.cpp
     windows/MainWindow/SettingsWindow/*.cpp
 )
 

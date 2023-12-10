@@ -119,6 +119,8 @@ void MenuWindow::OnConnectToServer(wxCommandEvent& event)
 }
 
 
+
+
 MenuWindow::~MenuWindow()
 {
 
