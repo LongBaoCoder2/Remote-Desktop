@@ -25,14 +25,14 @@ namespace net
             return body.size();
         }
 
-        friend std::ostream &operator<<(std::ostream &os, const message<T> &msg)
+        friend std::ostream& operator<<(std::ostream& os, const message<T>& msg)
         {
             os << "ID:" << int(msg.header.id) << " Size:" << msg.header.size;
             return os;
         }
 
         template <typename DataType>
-        friend message<T> &operator<<(message<T> &msg, const DataType &data)
+        friend message<T>& operator<<(message<T>& msg, const DataType& data)
         {
             size_t i = msg.body.size();
 
@@ -46,7 +46,7 @@ namespace net
         }
 
         template <typename DataType>
-        friend message<T> &operator>>(message<T> &msg, DataType &data)
+        friend message<T>& operator>>(message<T>& msg, DataType& data)
         {
             size_t i = msg.body.size() - sizeof(DataType);
 
@@ -99,7 +99,7 @@ namespace net
         message<T> msg;
 
         // Again, a friendly string maker
-        friend std::ostream &operator<<(std::ostream &os, const owned_message<T> &msg)
+        friend std::ostream& operator<<(std::ostream& os, const owned_message<T>& msg)
         {
             os << msg.msg;
             return os;

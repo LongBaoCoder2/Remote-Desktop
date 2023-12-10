@@ -62,7 +62,7 @@ namespace net
         bool empty()
         {
             // std::scoped_lock lock(muxQueue);
-            std::scoped_lock  lock(muxQueue);
+            std::scoped_lock lock(muxQueue);
             return deqQueue.empty();
         }
         size_t count()
@@ -79,7 +79,7 @@ namespace net
         }
         void wait()
         {
-            while (empty())
+            while (deqQueue.empty())
             {
                 std::unique_lock<std::mutex> ul(muxBlocking);
                 /*
@@ -90,7 +90,7 @@ namespace net
                     then send the signal. Since the mutex ensures exclusive access, the wait won't miss the signal.
                 */
                 cvBlocking.wait(ul, [this]
-                    { return !empty(); }); // lambda function is kinda the double check, to prevent spurious wake-up
+                    { return !deqQueue.empty(); }); // lambda function is kinda the double check, to prevent spurious wake-up
             }
         }
 

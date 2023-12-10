@@ -4,8 +4,8 @@
 #include <memory>
 #include "../../constant.hpp"
 #include "../../components/Button.hpp"
-#include "../../MainWindow/ClientWindow/ClientWindow.hpp"
-#include "../../MainWindow/ServerWindow/ServerWindow.hpp"
+#include "../ClientWindow/ClientWindow.hpp"
+#include "../ServerWindow/ServerWindow.hpp"
 
 class ManageWindow : public wxPanel
 {
@@ -18,8 +18,10 @@ private:
     void OnClientConnectButton(wxMouseEvent& event);
 
 private:
-    std::unique_ptr<ClientWindow> clientWindow;
-    std::unique_ptr<ServerWindow> serverWindow;
+    // std::unique_ptr<ClientWindow> clientWindow;
+    // std::unique_ptr<ServerWindow> serverWindow;
+    ClientWindow* clientWindow;
+    ServerWindow* serverWindow;
 
     wxTextCtrl* IPInput;
 };

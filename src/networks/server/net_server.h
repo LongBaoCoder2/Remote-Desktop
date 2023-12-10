@@ -5,6 +5,7 @@
 #include "../net_session.h"
 #include "../net_tsqueue.h"
 
+#include "../../windows/constant.hpp"
 // WARNING: ALL TEMPLATE FUNCTION DEFINITIONS MUST BE IN SAME HPP FILE
 // https://stackoverflow.com/a/495056
 
@@ -14,7 +15,7 @@ namespace net
   class IServer
   {
   public:
-    IServer(uint16_t port);
+    IServer();
     virtual ~IServer();
 
     bool Start();
@@ -33,17 +34,25 @@ namespace net
 
   protected:
     tsqueue<owned_message<T>> m_qMessagesIn;
-    std::deque<std::shared_ptr<session<T>>> m_deqConnections;
+
+    std::shared_ptr<session<T>> m_ConnectionImage;
+    std::shared_ptr<session<T>> m_ConnectionEvent;
 
     asio::io_context m_asioContext;
     std::thread m_threadContext;
-    asio::ip::tcp::acceptor m_asioAcceptor;
+
+    asio::ip::tcp::acceptor m_AcceptorImage;
+    asio::ip::tcp::acceptor m_AcceptorEvent;
+
     uint32_t nIDCounter = 10000;
   };
   template <typename T>
-  IServer<T>::IServer(uint16_t port)
-    : m_asioAcceptor(m_asioContext,
-      asio::ip::tcp::endpoint(asio::ip::tcp::v4(), port)) {}
+  IServer<T>::IServer()
+    : m_AcceptorImage(m_asioContext,
+      asio::ip::tcp::endpoint(asio::ip::tcp::v4(), CONFIG_APP::IMAGE_PORT)),
+    m_AcceptorEvent(m_asioContext,
+      asio::ip::tcp::endpoint(asio::ip::tcp::v4(), CONFIG_APP::EVENT_PORT))
+  {}
 
   template <typename T>
   IServer<T>::~IServer()
@@ -73,7 +82,7 @@ namespace net
   template <typename T>
   void IServer<T>::WaitForClientConnection()
   {
-    m_asioAcceptor.async_accept([this](std::error_code ec,
+    m_AcceptorImage.async_accept([this](std::error_code ec,
       asio::ip::tcp::socket socket)
       {
         // If not raise error
@@ -88,13 +97,54 @@ namespace net
           // Authentication
           if (OnClientConnect(newConnection))
           {
+            // Here it must be check whether any Client has connected to Server.
+
             // Authenticate successfully
-            m_deqConnections.push_back(std::move(newConnection));
+            // m_deqConnections.push_back(std::move(newConnection));
+            m_ConnectionImage = std::move(newConnection);
 
             // This will make the asio context unable to 'idle' and
             // work continuously, causing the asio context to not stop
-            m_deqConnections.back()->ConnectToClient(nIDCounter++);
+            // m_deqConnections.back()->ConnectToClient(nIDCounter++);
+            m_ConnectionImage->ConnectToClient(nIDCounter++); // Need another meaningful message
+          }
+          else
+          {
+            // When user fails authentication, newConnection will go out of scope
+            // and get destroyed automatically
+          }
+        }
+        else
+        {
+        }
+        WaitForClientConnection();
+      });
 
+    m_AcceptorEvent.async_accept([this](std::error_code ec,
+      asio::ip::tcp::socket socket)
+      {
+        // If not raise error
+        if (!ec)
+        {
+
+          // Make session
+          std::shared_ptr<session<T>> newConnection =
+            std::make_shared<session<T>>(session<T>::owner::server, m_asioContext,
+              std::move(socket), m_qMessagesIn);
+
+          // Authentication
+          if (OnClientConnect(newConnection))
+          {
+            // Here it must be check whether any Client has connected to Server.
+
+            // Authenticate successfully
+            // m_deqConnections.push_back(std::move(newConnection));
+            m_ConnectionEvent = std::move(newConnection);
+
+            // This will make the asio context unable to 'idle' and
+            // work continuously, causing the asio context to not stop
+            // m_deqConnections.back()->ConnectToClient(nIDCounter++);
+            m_ConnectionEvent->ConnectToClient(nIDCounter++); // Need another meaningful message
           }
           else
           {
@@ -150,41 +200,43 @@ namespace net
 
       // std::remove will shift all elements that need to be removed
       // and std::erase will remove all it
-      m_deqConnections.erase(
-        std::remove(m_deqConnections.begin(), m_deqConnections.end(), client),
-        m_deqConnections.end());
+      // m_deqConnections.erase(
+      //   std::remove(m_deqConnections.begin(), m_deqConnections.end(), client),
+      //   m_deqConnections.end());
     }
   }
 
   template <typename T>
   void IServer<T>::MessageAllClients(const message<T>& msg, std::shared_ptr<session<T>> pIgnoreClients)
   {
-    bool hasInvalidClient = false;
-    pIgnoreClients = nullptr;
-    for (auto& client : m_deqConnections)
-    {
-      if (client && client->IsConnected())
-      {
-        if (client != pIgnoreClients)
-        {
-          client->Send(msg);
-        }
-      }
-      else
-      {
-        hasInvalidClient = true;
+    // bool hasInvalidClient = false;
+    // pIgnoreClients = nullptr;
+    // for (auto& client : m_deqConnections)
+    // {
+    //   if (client && client->IsConnected())
+    //   {
+    //     if (client != pIgnoreClients)
+    //     {
+    //       client->Send(msg);
+    //     }
+    //   }
+    //   else
+    //   {
+    //     hasInvalidClient = true;
 
-        OnClientDisconnect(client);
-        client.reset();
-      }
-    }
+    //     OnClientDisconnect(client);
+    //     client.reset();
+    //   }
+    // }
 
-    if (hasInvalidClient)
-    {
-      m_deqConnections.erase(
-        std::remove(m_deqConnections.begin(), m_deqConnections.end(), nullptr),
-        m_deqConnections.end());
-    }
+    // if (hasInvalidClient)
+    // {
+    //   m_deqConnections.erase(
+    //     std::remove(m_deqConnections.begin(), m_deqConnections.end(), nullptr),
+    //     m_deqConnections.end());
+    // }
+
+    MessageClient(m_ConnectionImage, msg);
   }
 
 } // namespace net

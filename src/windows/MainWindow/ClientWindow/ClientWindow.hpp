@@ -3,7 +3,6 @@
 #include <wx/wx.h>
 #include <wx/mstream.h>
 #include <wx/overlay.h>
-#include "../../../utils/Logger/WindowLogger.hpp"
 #include "ClientTextWindow.hpp"
 
 
@@ -12,7 +11,7 @@
 class ClientWindow : public net::IClient<RemoteMessage>, public wxFrame
 {
 public:
-    ClientWindow(const std::string& host, uint16_t port);
+    ClientWindow(const std::string& host);
 
     virtual ~ClientWindow();
 
@@ -30,6 +29,8 @@ private:
     wxTimer* secondTimer;
     wxScreenDC screenDC;
     wxBitmap screenshot;
+
+    wxToolBar* toolbar;
 
     ClientTextWindow* clientTextWindow = nullptr;
 
@@ -49,6 +50,8 @@ private:
     // void ClientWindow::OnMouseLeave(wxMouseEvent& event);
     // void ClientWindow::OnMouseEnter(wxMouseEvent& event);
     void OnMouseWheel(wxMouseEvent& event);
+    void OnDisconnectClick(wxCommandEvent& event);
+    void OnClose(wxCloseEvent& event);
 
     // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };

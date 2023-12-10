@@ -28,24 +28,19 @@ set(SOURCE_DIR "")
 file(GLOB_RECURSE SOURCE_FILES 
     main.cpp 
     models/*.cpp
-    windows/Application.cpp 
-    windows/LoginWindow/LoginFrame.cpp 
-    windows/CaptureWindow/*.cpp
-    networks/*.cpp
-    networks/client/*.cpp
-    networks/server/*.cpp
-    windows/MainWindow/NavigationBar/NavigationBar.cpp
-    windows/MainWindow/NavigationBar/NavigationButtons.cpp
-    windows/MainWindow/*.cpp
     networks/*.cpp
     utils/FileNameGenerator/*.cpp
+
+    windows/Application.cpp 
     windows/BasicTextWindow/*.cpp
-    windows/MainWindow/ClientWindow/ClientWindow.cpp
-    windows/MainWindow/ServerWindow/ServerWindow.cpp
-    windows/AllWindow/*/*.cpp
-    windows/AllWindow/MenuWindow/ListUserPanel.cpp
-    windows/AllWindow/MenuWindow/UserPanel.cpp
-    utils/*.cpp
+    windows/components/NavigationBar/*.cpp
+    windows/LoginWindow/LoginFrame.cpp 
+    windows/MainWindow/*.cpp
+    windows/MainWindow/ClientWindow/*.cpp
+    windows/MainWindow/ServerWindow/*.cpp
+    windows/MainWindow/HomeWindow/*.cpp
+    windows/MainWindow/ManageWindow/*.cpp
+    windows/MainWindow/MenuWindow/*.cpp
     windows/MainWindow/SettingsWindow/*.cpp
 )
 file(GLOB_RECURSE HEADER_FILES 
@@ -64,14 +59,19 @@ file(GLOB_RECURSE HEADER_FILES
     networks/client/*.h
     networks/server/*.h
     utils/*.hpp
-    windows/MainWindow/SettingsWindow/*.hpp
 )
-
 add_definitions(-D_WIN32_WINNT=0x0601)
 
+# set(OpenCV_DIR C:/ProgramData/opencv/build)
+
+# find_package(OpenCV REQUIRED)
+# include_directories(${OpenCV_INCLUDE_DIRS})
 
 include(${wxWidgets_USE_FILE})
 include_directories(../thirdparty/asio)
+
+link_directories(${LINK_WEBP})
+
 
 if(APPLE)
     # create bundle on apple compiles
@@ -83,7 +83,9 @@ else()
     # the WIN32 is needed for Windows in order for it to look for WinMain
     # instead of the main function. This is ignored on other systems,
     # so it works on all platforms
-    add_executable(main WIN32 ${SOURCE_FILES} ${HEADER_FILES} main.exe.manifest)
+    add_executable(main WIN32 ${SOURCE_FILES} main.exe.manifest)
 endif()
 
 target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})
+
+

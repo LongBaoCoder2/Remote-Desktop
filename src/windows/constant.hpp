@@ -1,5 +1,7 @@
 #pragma once
 
+
+#include <wx/wx.h>
 #include <wx/gdicmn.h>
 #include <wx/colour.h>
 #include <string>
@@ -40,5 +42,9 @@ namespace CONFIG_APP
     const wxString NAME_APP = "Remote Desktop";
 
     const std::string USER_ICON_PATH = "assets/user_icon.png";
-    const uint16_t PORT = 8282;
+    const int ID_TOOL_DISCONNECT = 1001;
+
+    const uint16_t IMAGE_PORT = 8282;
+    const uint16_t EVENT_PORT = 8285;
+    const uint16_t PORT = 8288;
 };
