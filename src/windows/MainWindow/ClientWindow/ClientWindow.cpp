@@ -16,7 +16,7 @@ ClientWindow::ClientWindow(const std::string& host)
     Bind(wxEVT_CLOSE_WINDOW, &ClientWindow::OnClose, this);
 
     CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition,
-                               CONFIG_UI::CLIENT_WINDOW_SIZE);
+                               CONFIG_UI::CLIENT_WINDOW_SIZE, wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB);
     CapturePanel->SetBackgroundColour(wxColor(38, 37, 54));
 
     // toolbar
