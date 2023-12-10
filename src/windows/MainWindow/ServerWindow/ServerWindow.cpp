@@ -14,6 +14,8 @@ ServerWindow::ServerWindow()
 {
     Start();
 
+    Bind(wxEVT_CLOSE_WINDOW, &ServerWindow::OnClose, this);
+
     // LogPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366,
     // 768));
     textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
@@ -37,11 +39,14 @@ ServerWindow::ServerWindow()
     screenWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X);
     screenHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y);
 
+    m_qMessagesIn.shouldStop = false;
     m_updateMess = std::thread([this]
         {
-            while (true) {
+            while (m_qMessagesIn.shouldStop == false) {
+                textCtrl->AppendText("Running.\n");
                 IServer<RemoteMessage>::Update(-1, true);
             }
+            // std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_MS));
         }
     );
 }
@@ -328,14 +333,27 @@ void ServerWindow::OnClose(wxCloseEvent& event) {
         "Close Window", wxYES_NO | wxICON_QUESTION, this);
 
     if (answer == wxYES) {
-        net::IServer<RemoteMessage>::Stop();
-        event.Skip();  // Đóng cửa sổ
+        closeServer();
+        Destroy();
+        // event.Skip();  // Đóng cửa sổ
     } else {
         event.Veto();  // Không đóng cửa sổ
     }
 }
 
+void ServerWindow::closeServer() {
+    if (m_updateMess.joinable()) {
+        net::message<RemoteMessage> msg;
+        msg.header.id = RemoteMessage::SERVER_DISCONNECT;
+        MessageAllClients(msg);
+        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        m_qMessagesIn.stopWait(); // Đặt biến kiểm soát thành false để thoát khỏi vòng lặp
+        m_updateMess.join(); // Đợi cho luồng kết thúc
+        net::IServer<RemoteMessage>::Stop();
+        timer->Stop();
+    }
+}
+
 ServerWindow::~ServerWindow() {
-    // textCtrl->Destroy();
-    net::IServer<RemoteMessage>::Stop();
+    closeServer();    
 }

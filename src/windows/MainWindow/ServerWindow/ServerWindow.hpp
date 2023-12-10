@@ -3,6 +3,7 @@
 #include "ServerNetwork.hpp"
 #include <wx/wx.h>
 #include <wx/mstream.h>
+#include <atomic>
 
 class ServerWindow : public net::IServer<RemoteMessage>, public wxFrame
 {
@@ -20,6 +21,8 @@ private:
     void takeScreenshot(int imgWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X), int imgHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y));
     void OnCaptureWindow(wxTimerEvent&);
     void OnClose(wxCloseEvent& event);
+    void closeServer();
+    
 
 private:
     wxStaticText* text;
@@ -30,6 +33,7 @@ private:
     wxPanel* LogPanel;
     wxScreenDC screenDC;
     wxTextCtrl* textCtrl;
+    std::atomic<bool> m_isRunning; // Biến kiểm soát việc lặp
 
 private:
     const int DELAY_MS = 10;

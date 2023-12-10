@@ -121,6 +121,10 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                                  wxT("Disconnected"),
                                  wxICON_INFORMATION | wxOK);
                     break;
+                case RemoteMessage::SERVER_DISCONNECT:
+                    wxMessageBox("You have been disconnected from server", "Notification", wxOK | wxICON_INFORMATION, this);
+                    Close();
+                    break;
 
                 case RemoteMessage::SERVER_UPDATE:
                     isWaitingForConnection = false;

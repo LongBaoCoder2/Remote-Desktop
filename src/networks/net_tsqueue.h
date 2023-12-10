@@ -79,7 +79,7 @@ namespace net
         }
         void wait()
         {
-            while (deqQueue.empty())
+            while (deqQueue.empty() && !shouldStop)
             {
                 std::unique_lock<std::mutex> ul(muxBlocking);
                 /*
@@ -89,12 +89,25 @@ namespace net
                     enter the waiting state. If the producer adds a message, it will lock the mutex, add the message, and
                     then send the signal. Since the mutex ensures exclusive access, the wait won't miss the signal.
                 */
-                cvBlocking.wait(ul, [this]
-                    { return !deqQueue.empty(); }); // lambda function is kinda the double check, to prevent spurious wake-up
+                cvBlocking.wait_for(ul, std::chrono::milliseconds(100), [this]
+                    { return !deqQueue.empty() || shouldStop; }); // lambda function is kinda the double check, to prevent spurious wake-up
             }
         }
+        void stopWait() {
+            {
+                std::lock_guard<std::mutex> lock(muxBlocking);
+                // Set the condition to stop
+                shouldStop = true;
+            }
+            // Notify the waiting thread
+            stopCondition.notify_one();
+        }
+
+    public:
+        bool shouldStop;
 
     protected:
+        std::condition_variable stopCondition;
         std::mutex muxQueue;
         std::deque<T> deqQueue;
         std::condition_variable cvBlocking;
