@@ -159,8 +159,8 @@ void ServerWindow::OnMessage(
     case RemoteMessage::MouseClick: {
         msg >> button >> y >> x;
 
-        fx = x * (65535.0f / (screenWidth - 1));
-        fy = y * (65535.0f / (screenHeight - 1));
+        fx = x * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth() - 1));
+        fy = y * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight() - 1));
 
 
         //textCtrl->AppendText(wxString::Format(wxT("(%d, %d).\n"), screenWidth, screenHeight));
@@ -204,8 +204,8 @@ void ServerWindow::OnMessage(
     case RemoteMessage::MouseUnClick: {
         msg >> button >> y >> x;
 
-        fx = x * (65535.0f / (screenWidth - 1));
-        fy = y * (65535.0f / (screenHeight - 1));
+        fx = x * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth() - 1));
+        fy = y * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight() - 1));
 
 
         INPUT Input = { 0 };
@@ -247,8 +247,8 @@ void ServerWindow::OnMessage(
     case RemoteMessage::MouseMove: {
         msg >> y >> x; // Extract coordinates
 
-        fx = x * (65535.0f / (screenWidth - 1));
-        fy = y * (65535.0f / (screenHeight - 1));
+        fx = x * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth() - 1));
+        fy = y * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight() - 1));
         // Simulate mouse move
         INPUT Input = { 0 };
         Input.type = INPUT_MOUSE;
@@ -263,8 +263,8 @@ void ServerWindow::OnMessage(
         msg >> button >> y >> x; // Extract coordinates and button
 
 
-        fx = x * (65535.0f / (screenWidth - 1));
-        fy = y * (65535.0f / (screenHeight - 1));
+        fx = x * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth() - 1));
+        fy = y * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight() - 1));
         // Simulate double click
         INPUT Input[2] = {};
         Input[0].type = Input[1].type = INPUT_MOUSE;
@@ -277,8 +277,8 @@ void ServerWindow::OnMessage(
     case RemoteMessage::MouseWheel: {
         msg >> delta >> y >> x; // Extract coordinates and wheel delta
 
-        fx = x * (65535.0f / (screenWidth - 1));
-        fy = y * (65535.0f / (screenHeight - 1));
+        fx = x * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth() - 1));
+        fy = y * (65535.0f / (CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight() - 1));
         // Simulate mouse wheel scroll
         INPUT Input = { 0 };
         Input.type = INPUT_MOUSE;
