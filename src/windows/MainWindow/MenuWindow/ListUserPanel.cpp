@@ -51,15 +51,17 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
 
     _UserPanels = new wxPanel(this);
     const auto margin = FromDIP(15);
-    Sizer = new wxGridSizer(4, margin, margin);
+    Sizer = new wxFlexGridSizer(4, margin, margin);
 
     UpdateListUserInfo();
 
     _UserPanels->SetSizerAndFit(Sizer);
 
+
+
     MainSizer->Add(HeaderPanel, 0, wxEXPAND | wxBOTTOM, FromDIP(10));
     MainSizer->Add(splitPanel, 0, wxEXPAND | wxBOTTOM, FromDIP(20));
-    MainSizer->Add(_UserPanels, 1, wxALIGN_CENTER | wxLEFT | wxRIGHT, FromDIP(20));
+    MainSizer->Add(_UserPanels, 1, wxLEFT | wxRIGHT, FromDIP(25));
 
     this->SetSizerAndFit(MainSizer);
 }
@@ -103,6 +105,7 @@ void ListUserPanel::OnAddNewUser(AddNewUserEvent& event)
     this->pAdmin->AppendUser(std::move(user));
 
     _UserPanels->Layout();
+    _UserPanels->SetSizerAndFit(Sizer);
 }
 
 ListUserPanel::~ListUserPanel()

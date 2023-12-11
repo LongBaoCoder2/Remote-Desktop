@@ -1,7 +1,7 @@
 #pragma once
 
 #include <wx/wx.h>
-#include <wx/gbsizer.h>
+#include <wx/sizer.h>
 #include "../../components/Button.hpp"
 #include "UserPanel.hpp"
 #include "../../../models/ModelFactory.hpp"
@@ -26,7 +26,7 @@ private:
     Admin* pAdmin = nullptr;
 
     wxPanel* _UserPanels;
-    wxGridSizer* Sizer;
+    wxFlexGridSizer* Sizer;
     wxImage userIcon;
     UserAddDialog* dialog;
 };
