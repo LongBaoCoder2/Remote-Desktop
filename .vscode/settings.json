@@ -101,7 +101,8 @@
     "cinttypes": "cpp",
     "complex": "cpp",
     "random": "cpp",
-    "typeindex": "cpp"
+    "typeindex": "cpp",
+    "*.rh": "cpp"
   },
   "cmake.configureOnOpen": false
 }

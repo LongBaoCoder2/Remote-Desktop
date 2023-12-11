@@ -9,10 +9,10 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
     this->pAdmin = admin;
 
     // Dump data
-    this->pAdmin->AppendUser(std::make_shared<User>("User 2", "127.0.0.1"));
-    this->pAdmin->AppendUser(std::make_shared<User>("User 1", "197.168.0.2"));
-    this->pAdmin->AppendUser(std::make_shared<User>("User 3", "127.2.1.2"));
-
+    // this->pAdmin->AppendUser(std::make_shared<User>("User 2", "127.0.0.1"));
+    // this->pAdmin->AppendUser(std::make_shared<User>("User 1", "197.168.0.2"));
+    // this->pAdmin->AppendUser(std::make_shared<User>("User 3", "127.2.1.2"));
+    this->Bind(wxEVT_ADD_NEW_USER, &ListUserPanel::OnAddNewUser, this);
 
     userIcon.LoadFile("assets/user_2.png", wxBITMAP_TYPE_PNG);
     if (!userIcon.IsOk()) {
@@ -49,12 +49,24 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
     auto splitPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1200, 2));
     splitPanel->SetBackgroundColour(*wxBLACK);
 
-    auto _UserPanels = new wxPanel(this);
+    _UserPanels = new wxPanel(this);
     const auto margin = FromDIP(15);
-    auto Sizer = new wxGridBagSizer(margin, margin);
+    Sizer = new wxGridSizer(4, margin, margin);
+
+    UpdateListUserInfo();
+
+    _UserPanels->SetSizerAndFit(Sizer);
+
+    MainSizer->Add(HeaderPanel, 0, wxEXPAND | wxBOTTOM, FromDIP(10));
+    MainSizer->Add(splitPanel, 0, wxEXPAND | wxBOTTOM, FromDIP(20));
+    MainSizer->Add(_UserPanels, 1, wxALIGN_CENTER | wxLEFT | wxRIGHT, FromDIP(20));
+
+    this->SetSizerAndFit(MainSizer);
+}
+
+void ListUserPanel::UpdateListUserInfo()
+{
     // Simulated user data
-    int row = 0;
-    int col = 0;
     const int maxUsersPerRow = 4;
     if (pAdmin) {
         size_t noUser = pAdmin->GetUserCount();
@@ -64,34 +76,36 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
 
             auto userPanel = new UserPanel(_UserPanels, userIcon, user->GetID(), user->GetIPAddress());
 
-            Sizer->Add(userPanel, wxGBPosition(row, col), { 1, 1 }, wxEXPAND);
-
-            col++;
-            if (col >= maxUsersPerRow) {
-                col = 0;
-                row++;
-            }
+            Sizer->Add(userPanel, 1, wxALL);
         }
     }
-
-    _UserPanels->SetSizerAndFit(Sizer);
-
-    MainSizer->Add(HeaderPanel, 0, wxEXPAND | wxBOTTOM, FromDIP(10));
-    MainSizer->Add(splitPanel, 0, wxEXPAND | wxBOTTOM, FromDIP(20));
-    MainSizer->Add(_UserPanels, 1, wxALIGN_CENTER | wxALL, FromDIP(10));
-
-    this->SetSizerAndFit(MainSizer);
 }
 
 void ListUserPanel::OnAddUser(wxMouseEvent& event)
 {
-    dialog = new UserAddDialog(nullptr);
+    dialog = new UserAddDialog(this);
 
     dialog->Show();
 }
 
+void ListUserPanel::OnAddNewUser(AddNewUserEvent& event)
+{
+    std::string IPAddress = event.GetUserIPAddress();
+    std::string ID = event.GetUserID();
+
+    auto user = std::make_shared<User>(ID, IPAddress);
+    auto userPanel = new UserPanel(_UserPanels, userIcon, user->GetID(), user->GetIPAddress());
+
+    int maxUsersPerRow = 4;
+    // Sizer->Add(userPanel, wxGBPosition(row, col), { 1, 1 }, wxEXPAND);
+    Sizer->Add(userPanel, 1, wxALL);
+
+    this->pAdmin->AppendUser(std::move(user));
+
+    _UserPanels->Layout();
+}
 
 ListUserPanel::~ListUserPanel()
 {
-
+    delete dialog;
 }

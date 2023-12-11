@@ -18,12 +18,15 @@ public:
     ~ListUserPanel();
 
 private:
-    // void UpdateListUserInfo();
+    void UpdateListUserInfo();
     void OnAddUser(wxMouseEvent& event);
 
+    void OnAddNewUser(AddNewUserEvent& event);
 private:
     Admin* pAdmin = nullptr;
 
+    wxPanel* _UserPanels;
+    wxGridSizer* Sizer;
     wxImage userIcon;
     UserAddDialog* dialog;
 };

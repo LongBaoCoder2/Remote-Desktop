@@ -4,6 +4,33 @@
 #include "../../components/Button.hpp"
 #include <wx/gbsizer.h>
 
+class AddNewUserEvent;
+
+wxDECLARE_EVENT(wxEVT_ADD_NEW_USER, AddNewUserEvent);
+
+
+class AddNewUserEvent : public wxCommandEvent
+{
+public:
+    AddNewUserEvent(wxEventType commandType = wxEVT_ADD_NEW_USER, int id = 0);
+
+    AddNewUserEvent(const AddNewUserEvent& event);
+
+    wxEvent* Clone() const override;
+
+    std::string GetUserID() const;
+    void SetUserID(std::string ID);
+
+    std::string GetUserIPAddress() const;
+    void SetUserIPAddress(std::string IPAddress);
+
+private:
+    std::string ID;
+    std::string IPAddress;
+};
+
+
+
 class UserAddDialog : public wxDialog
 {
 public:
