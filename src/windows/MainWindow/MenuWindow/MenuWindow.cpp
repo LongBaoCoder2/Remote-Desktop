@@ -95,18 +95,26 @@ void MenuWindow::CreateAdminPanel()
 void MenuWindow::OnStartListening(wxMouseEvent& event)
 {
     // serverWindow = std::make_unique<ServerWindow>(CONFIG_APP::PORT);
-    if (serverWindow) {
-        serverWindow->Destroy();
-    }
+    auto button = dynamic_cast<Button*>(event.GetEventObject());
+    if (button && !button->GetDisable()) {
+        if (serverWindow) delete serverWindow;
 
-    serverWindow = new ServerWindow();
-    serverWindow->Show();
+        serverWindow = new ServerWindow();
+        serverWindow->Show();
+    }
 }
+
 void MenuWindow::ConnectToServer(std::string& host)
 {
-    clientWindow = new ClientWindow();
-    clientWindow->ConnectToHost(host);
-    clientWindow->Show();
+    auto button = dynamic_cast<Button*>(event.GetEventObject());
+    if (button && !button->GetDisable()) {
+        if (clientWindow) delete clientWindow;
+
+        clientWindow = new ClientWindow();
+        clientWindow->ConnectToHost(host);
+        clientWindow->Show();
+    }
+
 }
 
 void MenuWindow::OnConnectToServer(wxCommandEvent& event)
@@ -119,6 +127,21 @@ void MenuWindow::OnConnectToServer(wxCommandEvent& event)
 }
 
 
+void MenuWindow::OnDisableButton(wxCommandEvent& event)
+{
+    auto button = dynamic_cast<Button*>(event.GetEventObject());
+    if (button) {
+        button->SetDisable(true);
+    }
+}
+
+void MenuWindow::OnEnableButton(wxCommandEvent& event)
+{
+    auto button = dynamic_cast<Button*>(event.GetEventObject());
+    if (button) {
+        button->SetDisable(false);
+    }
+}
 
 
 MenuWindow::~MenuWindow()

@@ -34,6 +34,8 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
     AddUserButton->Bind(wxEVT_LEFT_DOWN, &ListUserPanel::OnAddUser, this);
 
     auto ConnectionButton = new Button(AddUserButtonPanel, wxID_ANY, "Connection to user", wxDefaultPosition, wxSize(140, 40));
+    ConnectionButton->Bind(wxEVT_LEFT_DOWN, &ListUserPanel::OnOpenConnect, this);
+
 
     AddUserButtonSizer->AddStretchSpacer(); // Add a spacer before the buttons
     AddUserButtonSizer->Add(AddUserButton, 0, wxRIGHT, FromDIP(20));
@@ -85,7 +87,14 @@ void ListUserPanel::UpdateListUserInfo()
 
 void ListUserPanel::OnAddUser(wxMouseEvent& event)
 {
-    dialog = new UserAddDialog(this);
+    if (dialog && dialog->IsShown())
+        return;
+    else if (dialog) {
+        delete dialog;
+        dialog = nullptr;
+    }
+
+    dialog = new UserAddDialog(this, true, wxID_ANY, "Add new user");
 
     dialog->Show();
 }
@@ -106,6 +115,20 @@ void ListUserPanel::OnAddNewUser(AddNewUserEvent& event)
 
     _UserPanels->Layout();
     _UserPanels->SetSizerAndFit(Sizer);
+}
+
+void ListUserPanel::OnOpenConnect(wxMouseEvent& event)
+{
+    if (dialog && dialog->IsShown())
+        return;
+    else if (dialog) {
+        delete dialog;
+        dialog = nullptr;
+    }
+
+    dialog = new UserAddDialog(this, false, wxID_ANY, "Connect to user");
+
+    dialog->Show();
 }
 
 ListUserPanel::~ListUserPanel()

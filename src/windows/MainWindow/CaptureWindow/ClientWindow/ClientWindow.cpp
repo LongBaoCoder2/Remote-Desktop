@@ -1,5 +1,8 @@
 #include "ClientWindow.hpp"
 
+wxDEFINE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
+wxDEFINE_EVENT(wxEVT_CLIENT_DISCONNECTED, wxCommandEvent);
+
 ClientWindow::ClientWindow()
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
 {

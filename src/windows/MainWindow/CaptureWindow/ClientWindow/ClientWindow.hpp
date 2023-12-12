@@ -1,12 +1,12 @@
 #pragma once
+
 #include "ClientNetwork.hpp"
 #include <wx/wx.h>
 #include <wx/mstream.h>
 #include <wx/overlay.h>
-#include "ClientTextWindow.hpp"
-#include "../../../constant.hpp"
 
-
+wxDECLARE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
+wxDECLARE_EVENT(wxEVT_CLIENT_DISCONNECTED, wxCommandEvent);
 
 class ClientWindow : public net::IClient<RemoteMessage>, public wxFrame
 {

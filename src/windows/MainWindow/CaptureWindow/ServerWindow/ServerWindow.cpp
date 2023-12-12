@@ -1,6 +1,7 @@
-
-
 #include "ServerWindow.hpp"
+
+wxDEFINE_EVENT(wxEVT_SERVER_CONNECTED, wxCommandEvent);
+wxDEFINE_EVENT(wxEVT_SERVER_DISCONNECTED, wxCommandEvent);
 
 
 ServerWindow::ServerWindow()

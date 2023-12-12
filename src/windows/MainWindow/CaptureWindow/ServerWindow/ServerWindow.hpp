@@ -1,16 +1,12 @@
 #pragma once
 
 #include "ServerNetwork.hpp"
+
 #include <wx/wx.h>
 #include <wx/mstream.h>
 
-#include <algorithm>
-#include <chrono>
-#include <iterator>
-
-#include "../../../../utils/FileNameGenerator/FileNameGenerator.hpp"
-#include "../../../constant.hpp"
-#include <windows.h>
+wxDECLARE_EVENT(wxEVT_SERVER_CONNECTED, wxCommandEvent);
+wxDECLARE_EVENT(wxEVT_SERVER_DISCONNECTED, wxCommandEvent);
 
 class ServerWindow : public net::IServer<RemoteMessage>, public wxFrame
 {

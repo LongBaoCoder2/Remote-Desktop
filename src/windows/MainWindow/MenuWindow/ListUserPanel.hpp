@@ -7,7 +7,6 @@
 #include "../../../models/ModelFactory.hpp"
 #include "UserAddDialog.hpp"
 
-
 class ListUserPanel : public wxPanel
 {
 public:
@@ -20,13 +19,16 @@ public:
 private:
     void UpdateListUserInfo();
     void OnAddUser(wxMouseEvent& event);
+    void OnOpenConnect(wxMouseEvent& event);
+
 
     void OnAddNewUser(AddNewUserEvent& event);
+
 private:
     Admin* pAdmin = nullptr;
 
     wxPanel* _UserPanels;
     wxFlexGridSizer* Sizer;
     wxImage userIcon;
-    UserAddDialog* dialog;
+    UserAddDialog* dialog = nullptr;
 };

@@ -1,6 +1,5 @@
 #include "UserPanel.hpp"
 
-wxDEFINE_EVENT(ConnectToUserEvent, wxCommandEvent);
 
 UserPanel::UserPanel(wxWindow* parent,
     wxImage iconUser,

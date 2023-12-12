@@ -4,8 +4,7 @@
 #include <wx/statbmp.h>
 #include "../../components/Button.hpp"
 #include "../../constant.hpp"
-
-wxDECLARE_EVENT(ConnectToUserEvent, wxCommandEvent);
+#include "../../Event/ConnectEvent.hpp"
 
 class UserPanel : public wxPanel
 {
