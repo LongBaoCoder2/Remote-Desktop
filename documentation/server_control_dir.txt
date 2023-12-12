@@ -1,0 +1,13 @@
+.
+├── mail_parser.py
+├── mail_provider_handle
+│   ├── POP3_service.py
+│   ├── env.py
+│   └── SMTP_service.py
+├── requirements.txt
+├── mail_handler.py
+├── main.py
+└── old_handle
+    ├── mac_address_server.py
+    ├── app_process_server.py
+    └── shutdown_logout_server.py
