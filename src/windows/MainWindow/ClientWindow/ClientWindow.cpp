@@ -281,14 +281,12 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
 HHOOK keyboardHook = NULL;
 
 LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+    
     if (nCode >= 0) {
         KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
-
-        if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+        DWORD vkCode = kbdStruct->vkCode; // Retrieve virtual key code
+        if(vkCode == VK_LWIN || vkCode == VK_RWIN)
             return 1;
-        } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
-            return 1;
-        }
     }
 
     // Call the next hook in the chain
