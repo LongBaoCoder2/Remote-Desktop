@@ -288,7 +288,7 @@ LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
             } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
                 m.header.id = RemoteMessage::KeyRelease;
             }
-            m << static_cast<uint32_t>(lParam);
+            m << 91;
             instance->Send(m);
             return 1;
         }
