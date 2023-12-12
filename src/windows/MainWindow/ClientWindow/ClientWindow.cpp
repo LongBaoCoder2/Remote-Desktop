@@ -1,5 +1,10 @@
 #include "../../constant.hpp"
 #include "ClientWindow.hpp"
+#include <windows.h>
+
+LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
+void SetKeyboardHook();
+void RemoveKeyboardHook(); 
 
 ClientWindow::ClientWindow(const std::string& host)
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
@@ -96,6 +101,8 @@ ClientWindow::ClientWindow(const std::string& host)
 
     CapturePanel->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
     CapturePanel->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
+
+    SetKeyboardHook();
 }
 
 void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
@@ -270,6 +277,36 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
     Send(m);
     event.Skip();  // Để sự kiện được xử lý tiếp
 }
+
+HHOOK keyboardHook = NULL;
+
+LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+    if (nCode >= 0) {
+        KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+
+        if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+            return 1;
+        } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+            return 1;
+        }
+    }
+
+    // Call the next hook in the chain
+    return CallNextHookEx(NULL, nCode, wParam, lParam);
+}
+
+void SetKeyboardHook() {
+    keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, NULL, 0);
+    // Ensure the hook is properly set and messages are dispatched using GetMessage or similar
+}
+
+void RemoveKeyboardHook() {
+    if (keyboardHook != NULL) {
+        UnhookWindowsHookEx(keyboardHook);
+        keyboardHook = NULL;
+    }
+}
+
 
 void ClientWindow::OnKeyDown(wxKeyEvent& event) {
     // Tạo message bàn phím
