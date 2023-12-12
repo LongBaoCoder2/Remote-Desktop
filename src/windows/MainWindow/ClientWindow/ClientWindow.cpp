@@ -2,14 +2,12 @@
 #include "ClientWindow.hpp"
 #include <windows.h>
 
-LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
-void SetKeyboardHook();
-void RemoveKeyboardHook(); 
+ClientWindow* ClientWindow::instance = nullptr;
 
 ClientWindow::ClientWindow(const std::string& host)
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
 {
-
+    instance = this;
     if (!ConnectToServer(host))
     {
         // LOG
@@ -278,27 +276,32 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
     event.Skip();  // Để sự kiện được xử lý tiếp
 }
 
-HHOOK keyboardHook = NULL;
-
-LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
-    
+LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode >= 0) {
         KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
-        DWORD vkCode = kbdStruct->vkCode; // Retrieve virtual key code
-        if(vkCode == VK_LWIN || vkCode == VK_RWIN)
+        DWORD vkCode = kbdStruct->vkCode; 
+
+        if(vkCode == VK_LWIN || vkCode == VK_RWIN) {
+            net::message<RemoteMessage> m;
+            if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+                m.header.id = RemoteMessage::KeyPress;
+            } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+                m.header.id = RemoteMessage::KeyRelease;
+            }
+            m << static_cast<uint32_t>(lParam);
+            instance->Send(m);
             return 1;
+        }
     }
 
-    // Call the next hook in the chain
     return CallNextHookEx(NULL, nCode, wParam, lParam);
 }
 
-void SetKeyboardHook() {
+void ClientWindow::SetKeyboardHook() {
     keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, NULL, 0);
-    // Ensure the hook is properly set and messages are dispatched using GetMessage or similar
 }
 
-void RemoveKeyboardHook() {
+void ClientWindow::RemoveKeyboardHook() {
     if (keyboardHook != NULL) {
         UnhookWindowsHookEx(keyboardHook);
         keyboardHook = NULL;
@@ -362,4 +365,6 @@ ClientWindow::~ClientWindow() {
     ClearPanel();
     // clientTextWindow->Destroy();
     net::IClient<RemoteMessage>::Disconnect();
+    RemoveKeyboardHook();
+    instance = nullptr;
 }

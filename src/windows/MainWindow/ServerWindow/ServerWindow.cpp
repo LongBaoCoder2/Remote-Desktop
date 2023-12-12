@@ -298,6 +298,8 @@ void ServerWindow::OnMessage(
         uint32_t rawKeyCode;
         msg >> rawKeyCode;  // Trích xuất mã phím và trạng thái
 
+        // textCtrl->AppendText("Got some key.\n");
+        textCtrl->AppendText(wxString::Format(wxT("Got some key: %d"), rawKeyCode));
         INPUT input = {0};
         input.type = INPUT_KEYBOARD;
         input.ki.wVk = static_cast<WORD>(rawKeyCode);  // Mã phím

@@ -53,5 +53,12 @@ private:
     void OnDisconnectClick(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
 
+
+    void RemoveKeyboardHook();
+    void SetKeyboardHook();
+    static LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam); 
+    static ClientWindow* instance; // Static pointer to the current instance
+
+    HHOOK keyboardHook;
     // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };
