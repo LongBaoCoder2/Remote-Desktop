@@ -24,14 +24,14 @@ ManageWindow::ManageWindow(wxWindow* parent, const wxPoint& pos, const wxSize& s
         "Server",
         wxDefaultPosition,
         wxSize(274, 44));
-    ServerConnectButton->Bind(wxEVT_LEFT_DOWN, &ManageWindow::OnServerConnectButton, this);
+    // ServerConnectButton->Bind(wxEVT_LEFT_DOWN, &ManageWindow::OnServerConnectButton, this);
 
     auto ClientConnectButton = new Button(ButtonPanel,
         wxID_ANY,
         "Client",
         wxDefaultPosition,
         wxSize(274, 44));
-    ClientConnectButton->Bind(wxEVT_LEFT_DOWN, &ManageWindow::OnClientConnectButton, this);
+    // ClientConnectButton->Bind(wxEVT_LEFT_DOWN, &ManageWindow::OnClientConnectButton, this);
 
     ButtonSizer->Add(ServerConnectButton, 0, wxALL, FromDIP(15));
     ButtonSizer->Add(ClientConnectButton, 0, wxALL, FromDIP(15));
@@ -63,14 +63,38 @@ ManageWindow::~ManageWindow()
 void ManageWindow::OnServerConnectButton(wxMouseEvent& event)
 {
     // serverWindow = std::make_unique<ServerWindow>(CONFIG_APP::PORT);
-    serverWindow = new ServerWindow();
-    serverWindow->Show();
+    auto button = dynamic_cast<Button*>(event.GetEventObject());
+    if (button && !button->GetDisable()) {
+        serverWindow = new ServerWindow();
+        serverWindow->Show();
+    }
 }
+
+void OnDisableButton(wxCommandEvent& event)
+{
+    auto button = dynamic_cast<Button*>(event.GetEventObject());
+    if (button) {
+        button->SetDisable(true);
+    }
+}
+
+void OnEnableButton(wxCommandEvent& event)
+{
+    auto button = dynamic_cast<Button*>(event.GetEventObject());
+    if (button) {
+        button->SetDisable(false);
+    }
+}
+
 
 void ManageWindow::OnClientConnectButton(wxMouseEvent& event)
 {
-    std::string ipAddress = IPInput->GetValue().ToStdString();
-    // clientWindow = std::make_unique<ClientWindow>(ipAddress, CONFIG_APP::PORT);
-    clientWindow = new ClientWindow(ipAddress);
-    clientWindow->Show();
+    auto button = dynamic_cast<Button*>(event.GetEventObject());
+    if (button && !button->GetDisable()) {
+        std::string ipAddress = IPInput->GetValue().ToStdString();
+        // clientWindow = std::make_unique<ClientWindow>(ipAddress, CONFIG_APP::PORT);
+        clientWindow = new ClientWindow();
+        clientWindow->ConnectToHost(ipAddress);
+        clientWindow->Show();
+    }
 }

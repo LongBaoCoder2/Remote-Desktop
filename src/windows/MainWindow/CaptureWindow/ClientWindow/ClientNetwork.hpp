@@ -1,6 +1,9 @@
 #pragma once
 
-#include "../../../networks/net.h"
+#include "../../../../networks/net.h"
+#include "ClientTextWindow.hpp"
+#include "../../../constant.hpp"
+
 
 enum class RemoteMessage : uint32_t
 {

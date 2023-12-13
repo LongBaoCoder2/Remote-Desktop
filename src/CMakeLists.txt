@@ -36,30 +36,15 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/components/NavigationBar/*.cpp
     windows/LoginWindow/LoginFrame.cpp 
     windows/MainWindow/*.cpp
-    windows/MainWindow/ClientWindow/*.cpp
-    windows/MainWindow/ServerWindow/*.cpp
+    windows/MainWindow/CaptureWindow/ClientWindow/*.cpp
+    windows/MainWindow/CaptureWindow/ServerWindow/*.cpp
+    windows/MainWindow/CaptureWindow/*.hpp
     windows/MainWindow/HomeWindow/*.cpp
     windows/MainWindow/ManageWindow/*.cpp
     windows/MainWindow/MenuWindow/*.cpp
     windows/MainWindow/SettingsWindow/*.cpp
 )
-file(GLOB_RECURSE HEADER_FILES 
-    models/*.hpp
-    windows/Application.h 
-    windows/LoginWindow/LoginFrame.h 
-    windows/CaptureWindow/*.h
-    windows/MainWindow/*.hpp
-    networks/*.h
-    windows/*.hpp
-    utils/FileNameGenerator/*.hpp
-    windows/BasicTextWindow/*.hpp
-    windows/MainWindow/ClientWindow/*.hpp
-    windows/MainWindow/ServerWindow/*.hpp
-    windows/LoginWindow/NavigationEvent.hpp
-    networks/client/*.h
-    networks/server/*.h
-    utils/*.hpp
-)
+
 add_definitions(-D_WIN32_WINNT=0x0601)
 
 # set(OpenCV_DIR C:/ProgramData/opencv/build)

@@ -4,9 +4,7 @@
 #include <map>
 #include <memory>
 
-#include "ClientWindow/ClientWindow.hpp"
 #include "../components/NavigationBar/NavigationBar.hpp"
-#include "ServerWindow/ServerWindow.hpp"
 #include "../constant.hpp"
 
 #include "SettingsWindow/SettingsFrame.hpp"
@@ -29,6 +27,7 @@ public:
 
   std::map<Window_ID, wxWindow*>& GetAllWindow();
 
+public:
   // Navigation Window
   void CreateMenuWindow();
   void CreateHomeWindow();
@@ -41,7 +40,7 @@ private:
   void CreateMainWindow();
 
 private:
-  std::unique_ptr <IModel> Model;
+  std::shared_ptr <IModel> Model;
 
   // Settings Frame
   SettingsFrame* settingsFrame = nullptr;

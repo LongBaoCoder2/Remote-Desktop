@@ -19,6 +19,8 @@ public:
 
     std::shared_ptr<User> GetUserByIndex(int index);
 
+    size_t GetUserCount();
+
     std::shared_ptr<User> GetUserByIP(const std::string& IPAddress);
 
     bool AppendUser(std::shared_ptr<User> user);

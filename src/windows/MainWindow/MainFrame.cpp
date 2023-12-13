@@ -68,7 +68,7 @@ void MainFrame::CreateMenuWindow()
 
     const bool hasMenuWindow = GetAllWindow().find(Window_ID::MENU_WINDOW) != GetAllWindow().end();
     if (!hasMenuWindow) {
-        GetAllWindow()[Window_ID::MENU_WINDOW] = new MenuWindow(WindowPanel, wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW - CONFIG_UI::NAVIGATION_SIZE);
+        GetAllWindow()[Window_ID::MENU_WINDOW] = new MenuWindow(WindowPanel, Model, wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW - CONFIG_UI::NAVIGATION_SIZE);
         WindowSizer->Add(GetAllWindow()[Window_ID::MENU_WINDOW], 1, wxEXPAND);
     }
     this->currentWindow = GetAllWindow()[Window_ID::MENU_WINDOW];

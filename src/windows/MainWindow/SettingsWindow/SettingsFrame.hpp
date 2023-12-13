@@ -23,6 +23,8 @@ private:
         CUSTOM_INVITATION,
         ADVANCED
     };
+
+private:
     wxPanel* detailView;
     wxListBox* sidebar;
     wxBoxSizer* sizer;

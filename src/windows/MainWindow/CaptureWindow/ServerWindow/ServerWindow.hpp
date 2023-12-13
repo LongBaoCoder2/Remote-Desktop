@@ -1,9 +1,13 @@
 #pragma once
 
 #include "ServerNetwork.hpp"
+
 #include <wx/wx.h>
 #include <wx/mstream.h>
 #include <atomic>
+
+wxDECLARE_EVENT(wxEVT_SERVER_CONNECTED, wxCommandEvent);
+wxDECLARE_EVENT(wxEVT_SERVER_DISCONNECTED, wxCommandEvent);
 
 class ServerWindow : public net::IServer<RemoteMessage>, public wxFrame
 {

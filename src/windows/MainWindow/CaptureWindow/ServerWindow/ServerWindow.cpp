@@ -1,12 +1,7 @@
-
-#include <algorithm>
-#include <chrono>
-#include <iterator>
-
-#include "../../../utils/FileNameGenerator/FileNameGenerator.hpp"
-#include "../../constant.hpp"
 #include "ServerWindow.hpp"
-#include <windows.h>
+
+wxDEFINE_EVENT(wxEVT_SERVER_CONNECTED, wxCommandEvent);
+wxDEFINE_EVENT(wxEVT_SERVER_DISCONNECTED, wxCommandEvent);
 
 
 ServerWindow::ServerWindow()
@@ -19,8 +14,8 @@ ServerWindow::ServerWindow()
     // LogPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1366,
     // 768));
     textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-                              wxDefaultSize,
-                              wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
+        wxDefaultSize,
+        wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
 
     // Sắp xếp layout
     wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
@@ -30,7 +25,7 @@ ServerWindow::ServerWindow()
 
     timer = new wxTimer(this, 2);
     this->Bind(wxEVT_TIMER, &ServerWindow::OnCaptureWindow, this,
-               timer->GetId());
+        timer->GetId());
     // timer->Start(DELAY_MS);
 
     this->Center();
@@ -128,7 +123,8 @@ bool ServerWindow::OnClientConnect(
     if (nCountUser == 1) {
         if (wxThread::IsMain()) {
             timer->Start(DELAY_MS);
-        } else {
+        }
+        else {
             wxTheApp->CallAfter([this]() { timer->Start(DELAY_MS); });
         }
 
@@ -298,7 +294,7 @@ void ServerWindow::OnMessage(
         uint32_t rawKeyCode;
         msg >> rawKeyCode;  // Trích xuất mã phím và trạng thái
 
-        INPUT input = {0};
+        INPUT input = { 0 };
         input.type = INPUT_KEYBOARD;
         input.ki.wVk = static_cast<WORD>(rawKeyCode);  // Mã phím
 
@@ -310,7 +306,7 @@ void ServerWindow::OnMessage(
         uint32_t rawKeyCode;
         msg >> rawKeyCode;  // Trích xuất mã phím và trạng thái
 
-        INPUT input = {0};
+        INPUT input = { 0 };
         input.type = INPUT_KEYBOARD;
         input.ki.wVk = static_cast<WORD>(rawKeyCode);  // Mã phím
 

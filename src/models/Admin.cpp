@@ -12,7 +12,12 @@ Owned Admin::GetTypeOwned() const
 
 std::shared_ptr<User> Admin::GetUserByIndex(int index)
 {
-    return std::move(ListUserAccess[index]);
+    return ListUserAccess[index];
+}
+
+size_t Admin::GetUserCount()
+{
+    return ListUserAccess.size();
 }
 
 std::shared_ptr<User> Admin::GetUserByIP(const std::string& IPAddress)
@@ -20,7 +25,7 @@ std::shared_ptr<User> Admin::GetUserByIP(const std::string& IPAddress)
     for (const auto& user : ListUserAccess)
     {
         if ((*user).GetIPAddress() == IPAddress)
-            return std::move(user);
+            return user;
     }
 
     return nullptr;

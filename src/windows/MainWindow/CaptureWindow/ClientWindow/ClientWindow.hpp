@@ -1,24 +1,27 @@
 #pragma once
+
 #include "ClientNetwork.hpp"
 #include <wx/wx.h>
 #include <wx/mstream.h>
 #include <wx/overlay.h>
-#include "ClientTextWindow.hpp"
 
-
-#define DEV
+wxDECLARE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
+wxDECLARE_EVENT(wxEVT_CLIENT_DISCONNECTED, wxCommandEvent);
 
 class ClientWindow : public net::IClient<RemoteMessage>, public wxFrame
 {
 public:
-    ClientWindow(const std::string& host);
+    ClientWindow();
 
     virtual ~ClientWindow();
 
+    void ConnectToHost(std::string& host);
 private:
     const int DELAY_MS = 10;
     bool CAPTURING = false;
     bool isWaitingForConnection = true;
+    std::string host;
+
 
     wxPanel* CapturePanel = nullptr;
     wxPanel* MouseKeyPanel = nullptr;

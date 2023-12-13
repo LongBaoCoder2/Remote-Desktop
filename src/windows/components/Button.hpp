@@ -32,7 +32,7 @@ public:
 
         if (gc)
         {
-            if (this->isHovered || this->isSelected)
+            if (this->isDisable || this->isHovered || this->isSelected)
             {
                 this->DrawOnContext(*gc, this->hoveredColor);
             }
@@ -100,11 +100,23 @@ public:
         return this->isSelected;
     }
 
+    void SetDisable(bool isDisable)
+    {
+        this->isDisable = isDisable;
+        this->Refresh();
+    }
+
+    bool GetDisable()
+    {
+        return this->isDisable;
+    }
+
     std::string text;
 
 private:
     bool isHovered = false;
     bool isSelected = false;
+    bool isDisable = false;
     wxColour backgroundColor = wxColour(17, 25, 38);
     wxColour hoveredColor = wxColour(52, 58, 70);
 };

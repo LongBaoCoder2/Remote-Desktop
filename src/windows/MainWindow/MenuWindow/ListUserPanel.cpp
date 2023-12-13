@@ -1,10 +1,19 @@
 #include "ListUserPanel.hpp"
 
 ListUserPanel::ListUserPanel(wxWindow* parent,
+    Admin* admin,
     const wxPoint& pos,
     const wxSize& size)
     : wxPanel(parent, wxID_ANY, pos, size)
 {
+    this->pAdmin = admin;
+
+    // Dump data
+    // this->pAdmin->AppendUser(std::make_shared<User>("User 2", "127.0.0.1"));
+    // this->pAdmin->AppendUser(std::make_shared<User>("User 1", "197.168.0.2"));
+    // this->pAdmin->AppendUser(std::make_shared<User>("User 3", "127.2.1.2"));
+    this->Bind(wxEVT_ADD_NEW_USER, &ListUserPanel::OnAddNewUser, this);
+
     userIcon.LoadFile("assets/user_2.png", wxBITMAP_TYPE_PNG);
     if (!userIcon.IsOk()) {
         wxMessageBox("[Error Image]: Can't load user icon.", "Error Image");
@@ -20,8 +29,13 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
 
     auto AddUserButtonPanel = new wxPanel(HeaderPanel);
     auto AddUserButtonSizer = new wxBoxSizer(wxHORIZONTAL);
+
     auto AddUserButton = new Button(AddUserButtonPanel, wxID_ANY, "Add new user", wxDefaultPosition, wxSize(120, 40));
+    AddUserButton->Bind(wxEVT_LEFT_DOWN, &ListUserPanel::OnAddUser, this);
+
     auto ConnectionButton = new Button(AddUserButtonPanel, wxID_ANY, "Connection to user", wxDefaultPosition, wxSize(140, 40));
+    ConnectionButton->Bind(wxEVT_LEFT_DOWN, &ListUserPanel::OnOpenConnect, this);
+
 
     AddUserButtonSizer->AddStretchSpacer(); // Add a spacer before the buttons
     AddUserButtonSizer->Add(AddUserButton, 0, wxRIGHT, FromDIP(20));
@@ -37,40 +51,87 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
     auto splitPanel = new wxPanel(this, wxID_ANY, wxDefaultPosition, wxSize(1200, 2));
     splitPanel->SetBackgroundColour(*wxBLACK);
 
-    auto _UserPanels = new wxPanel(this);
+    _UserPanels = new wxPanel(this);
     const auto margin = FromDIP(15);
-    auto Sizer = new wxGridBagSizer(margin, margin);
-    // Simulated user data
-    std::vector<std::string> userList = { "User 1", "User 2", "User 3", "User 4", "User 5", "User 6", "User 7" };
+    Sizer = new wxFlexGridSizer(4, margin, margin);
 
-    int row = 0;
-    int col = 0;
-    const int maxUsersPerRow = 4;
-
-    for (const auto& username : userList) {
-        auto userPanel = new UserPanel(_UserPanels, userIcon, username);
-
-        Sizer->Add(userPanel, wxGBPosition(row, col), { 1, 1 }, wxEXPAND);
-
-        col++;
-        if (col >= maxUsersPerRow) {
-            col = 0;
-            row++;
-        }
-    }
+    UpdateListUserInfo();
 
     _UserPanels->SetSizerAndFit(Sizer);
 
 
+
     MainSizer->Add(HeaderPanel, 0, wxEXPAND | wxBOTTOM, FromDIP(10));
     MainSizer->Add(splitPanel, 0, wxEXPAND | wxBOTTOM, FromDIP(20));
-    MainSizer->Add(_UserPanels, 1, wxALIGN_CENTER | wxALL, FromDIP(10));
+    MainSizer->Add(_UserPanels, 1, wxLEFT | wxRIGHT, FromDIP(25));
 
     this->SetSizerAndFit(MainSizer);
 }
 
+void ListUserPanel::UpdateListUserInfo()
+{
+    // Simulated user data
+    const int maxUsersPerRow = 4;
+    if (pAdmin) {
+        size_t noUser = pAdmin->GetUserCount();
+
+        for (size_t i = 0; i < noUser; i++) {
+            auto user = pAdmin->GetUserByIndex(i);
+
+            auto userPanel = new UserPanel(_UserPanels, userIcon, user->GetID(), user->GetIPAddress());
+
+            Sizer->Add(userPanel, 1, wxALL);
+        }
+    }
+}
+
+void ListUserPanel::OnAddUser(wxMouseEvent& event)
+{
+    if (dialog && dialog->IsShown())
+        return;
+    else if (dialog) {
+        delete dialog;
+        dialog = nullptr;
+    }
+
+    dialog = new UserAddDialog(this, true, wxID_ANY, "Add new user");
+
+    dialog->Show();
+}
+
+void ListUserPanel::OnAddNewUser(AddNewUserEvent& event)
+{
+    std::string IPAddress = event.GetUserIPAddress();
+    std::string ID = event.GetUserID();
+
+    auto user = std::make_shared<User>(ID, IPAddress);
+    auto userPanel = new UserPanel(_UserPanels, userIcon, user->GetID(), user->GetIPAddress());
+
+    int maxUsersPerRow = 4;
+    // Sizer->Add(userPanel, wxGBPosition(row, col), { 1, 1 }, wxEXPAND);
+    Sizer->Add(userPanel, 1, wxALL);
+
+    this->pAdmin->AppendUser(std::move(user));
+
+    _UserPanels->Layout();
+    _UserPanels->SetSizerAndFit(Sizer);
+}
+
+void ListUserPanel::OnOpenConnect(wxMouseEvent& event)
+{
+    if (dialog && dialog->IsShown())
+        return;
+    else if (dialog) {
+        delete dialog;
+        dialog = nullptr;
+    }
+
+    dialog = new UserAddDialog(this, false, wxID_ANY, "Connect to user");
+
+    dialog->Show();
+}
 
 ListUserPanel::~ListUserPanel()
 {
-
+    delete dialog;
 }
