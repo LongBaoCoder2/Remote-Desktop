@@ -8,7 +8,7 @@ wxString CreateScreenshotFileName() {
     wxString time = now.Format("%H-%M-%S");
     
     // Tạo tên file sử dụng ngày và giờ hiện tại
-    wxString fileName = wxString::Format("assets\\Screenshots\\%s %s screenshot.png", date, time);
+    wxString fileName = wxString::Format("Screenshots\\%s %s screenshot.png", date, time);
     
     return fileName;
 }

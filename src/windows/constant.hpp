@@ -43,6 +43,10 @@ namespace CONFIG_APP
 
     const std::string USER_ICON_PATH = "assets/user_icon.png";
     const int ID_TOOL_DISCONNECT = 1001;
+    const int ID_TOOL_CAPTURE = 1002;
+    const int ID_TOOL_KEYLOG = 1003;
+    const int ID_TOOL_HOOK = 1004;
+    const int ID_TOOL_UNHOOK = 1005;
 
     const uint16_t IMAGE_PORT = 8282;
     const uint16_t EVENT_PORT = 8285;

@@ -37,6 +37,7 @@ private:
     wxToolBar* toolbar;
 
     ClientTextWindow* clientTextWindow = nullptr;
+    KeylogWindow* keylogWindow = nullptr;
 
     int imagesSentThisSecond = 0;
 
@@ -50,13 +51,18 @@ private:
     void OnKeyDown(wxKeyEvent& event);
     void OnKeyUp(wxKeyEvent& event);
     void OnMouseDoubleClick(wxMouseEvent& event);
-    // void ClientWindow::OnMouseMove(wxMouseEvent& event);
-    // void ClientWindow::OnMouseLeave(wxMouseEvent& event);
-    // void ClientWindow::OnMouseEnter(wxMouseEvent& event);
+    void OnMouseMove(wxMouseEvent& event);
+    void OnMouseLeave(wxMouseEvent& event);
+    void OnMouseEnter(wxMouseEvent& event);
     void OnMouseWheel(wxMouseEvent& event);
     void OnDisconnectClick(wxCommandEvent& event);
+    void OnCaptureClick(wxCommandEvent& event);
+    void OnKeylogClick(wxCommandEvent& event);
+    void OnHookClick(wxCommandEvent& event);
+    void OnUnhookClick(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
     void SendMetadata();
 
+    friend class KeylogWindow;
     // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };

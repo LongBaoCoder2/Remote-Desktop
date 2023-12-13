@@ -50,23 +50,13 @@ ServerWindow::ServerWindow()
 
 void ServerWindow::takeScreenshot(int imgWidth, int imgHeight) {
     // Capture Screen
-    // wxRect frameRect = CapturePanel->GetRect();
-    // frameRect = wxRect(wxGetClientDisplayRect());
-
-    // đây là cái thằng lưu giữ tấm chụp màn hình
-    // wxGetDisplaySize() giúp lấy kích cỡ toàn màn hình
     screenshot.Create(wxGetDisplaySize());
-    // wxBitmap screenshot(frameRect.GetSize());
-
-    // int imgWidth = LogPanel->GetSize().GetWidth();
-    // int imgHeight = LogPanel->GetSize().GetHeight();
 
     // Tính toán tỷ lệ scale
     double scaleX = static_cast<double>(imgWidth) / screenWidth;
     double scaleY = static_cast<double>(imgHeight) / screenHeight;
 
     // biến này đóng vai trò buffer trung gian để thao tác trên screenshot
-    // memDC(screenshot);
     memDC.SelectObject(screenshot);
 
     // Thực hiện phép chuyển đổi để vẽ toàn bộ nội dung màn hình
@@ -81,35 +71,32 @@ void ServerWindow::OnCaptureWindow(wxTimerEvent& event)
 {
     if (nCountUser)
     {
-        /* Getting number of milliseconds as an integer. */
         takeScreenshot(CONFIG_UI::CLIENT_WINDOW_SIZE.GetWidth(), CONFIG_UI::CLIENT_WINDOW_SIZE.GetHeight());
 
-        wxImage image = screenshot.ConvertToImage();
-        // Đặt mức chất lượng cho ảnh (giá trị từ 0 đến 100)
-        // image.SetOption(wxIMAGE_OPTION_QUALITY, 10);
-
-        wxMemoryOutputStream memStream;
-        // image.Rescale(CONFIG_UI::NORMAL_WINDOW.GetWidth(),
-        // CONFIG_UI::NORMAL_WINDOW.GetHeight());
-        image.SaveFile(memStream, wxBITMAP_TYPE_JPEG);
-
-        // Lấy dữ liệu nén
-        size_t dataSize = memStream.GetSize();
-
-
-        // Đóng gói vào message
-        auto msg = std::make_shared<net::message<RemoteMessage>>();
-        msg->header.id = RemoteMessage::SERVER_UPDATE;
-        msg->header.size = dataSize;
-
-        const unsigned char* dataBuffer = static_cast<const unsigned char*>(memStream.GetOutputStreamBuffer()->GetBufferStart());
-        msg->body.assign(dataBuffer, dataBuffer + dataSize);
-
-        MessageAllClients(*msg);
+        sendScreenshot(RemoteMessage::SERVER_UPDATE);
     }
 }
 
+void ServerWindow::sendScreenshot(RemoteMessage messageType) {
+    wxImage image = screenshot.ConvertToImage();
 
+    wxMemoryOutputStream memStream;
+    image.SaveFile(memStream, wxBITMAP_TYPE_PNG);
+
+    // Lấy dữ liệu nén
+    size_t dataSize = memStream.GetSize();
+
+
+    // Đóng gói vào message
+    auto msg = std::make_shared<net::message<RemoteMessage>>();
+    msg->header.id = messageType;
+    msg->header.size = dataSize;
+
+    const unsigned char* dataBuffer = static_cast<const unsigned char*>(memStream.GetOutputStreamBuffer()->GetBufferStart());
+    msg->body.assign(dataBuffer, dataBuffer + dataSize);
+
+    MessageAllClients(*msg);
+}
 
 bool ServerWindow::OnClientConnect(
     std::shared_ptr<net::session<RemoteMessage>> client) {
@@ -328,6 +315,11 @@ void ServerWindow::OnMessage(
         textCtrl->AppendText(wxString::Format(wxT("Client IP : %s \n Client Mac : %s \n Client Window Name : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
         // textCtrl->AppendText(wxString::Format(wxT("%d\n"), x));
         break;
+    }
+    
+    case RemoteMessage::CaptureRequest: {
+        takeScreenshot();
+        sendScreenshot(RemoteMessage::CaptureSend);
     }
     }
 }

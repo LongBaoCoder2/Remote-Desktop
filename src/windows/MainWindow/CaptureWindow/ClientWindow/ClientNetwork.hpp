@@ -2,6 +2,7 @@
 
 #include "../../../../networks/net.h"
 #include "ClientTextWindow.hpp"
+#include "KeylogWindow.hpp"
 #include "../../../constant.hpp"
 
 
@@ -21,5 +22,7 @@ enum class RemoteMessage : uint32_t
     MouseLeave,
     MouseEnter,
     MouseWheel,
-    MetaData
+    MetaData,
+    CaptureRequest,
+    CaptureSend
 };

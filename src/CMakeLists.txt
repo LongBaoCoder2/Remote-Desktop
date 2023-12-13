@@ -31,6 +31,7 @@ file(GLOB_RECURSE SOURCE_FILES
     networks/*.cpp
     utils/FileNameGenerator/*.cpp
     windows/MainWindow/MenuWindow/ListUserPanel.cpp
+    windows/MainWindow/CaptureWindow/ClientWindow/KeylogWindow.cpp
     windows/Application.cpp 
     windows/BasicTextWindow/*.cpp
     windows/components/NavigationBar/*.cpp

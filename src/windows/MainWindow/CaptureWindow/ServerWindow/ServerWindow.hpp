@@ -24,6 +24,7 @@ private:
     void OnClientValidated(std::shared_ptr<net::session<RemoteMessage>> client);
     void takeScreenshot(int imgWidth = wxSystemSettings::GetMetric(wxSYS_SCREEN_X), int imgHeight = wxSystemSettings::GetMetric(wxSYS_SCREEN_Y));
     void OnCaptureWindow(wxTimerEvent&);
+    void sendScreenshot(RemoteMessage messageType);
     void OnClose(wxCloseEvent& event);
     void closeServer();
     

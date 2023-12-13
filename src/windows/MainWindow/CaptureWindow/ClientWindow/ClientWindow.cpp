@@ -1,6 +1,7 @@
 #include "ClientWindow.hpp"
 #include "../../../constant.hpp"
 #include "../../InforNetwork.hpp"
+#include "../../../../utils/FileNameGenerator/FileNameGenerator.hpp"
 
 
 wxDEFINE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
@@ -36,21 +37,47 @@ void ClientWindow::ConnectToHost(std::string& host)
         wxBitmap("assets/disconnect.png", wxBITMAP_TYPE_PNG),
         "End current session", wxITEM_NORMAL);
 
+    toolbar->AddTool(CONFIG_APP::ID_TOOL_CAPTURE, "Save capture",
+        wxBitmap("assets/capture.png", wxBITMAP_TYPE_PNG),
+        "Save current screen capture", wxITEM_NORMAL);
+    
+    toolbar->AddTool(CONFIG_APP::ID_TOOL_KEYLOG, "Key logger",
+        wxBitmap("assets/keylog.png", wxBITMAP_TYPE_PNG),
+        "End current session", wxITEM_NORMAL);
+
+    toolbar->AddTool(CONFIG_APP::ID_TOOL_HOOK, "Hook",
+        wxBitmap("assets/hook.png", wxBITMAP_TYPE_PNG),
+        "Receive special keys", wxITEM_NORMAL);
+    
+    toolbar->AddTool(CONFIG_APP::ID_TOOL_UNHOOK, "Unhook",
+        wxBitmap("assets/unhook.png", wxBITMAP_TYPE_PNG),
+        "Stop receiving special keys", wxITEM_NORMAL);
+
     // Kết nối sự kiện nhấn nút trên thanh công cụ với hàm xử lý tương ứng
     this->Bind(wxEVT_TOOL, &ClientWindow::OnDisconnectClick, this,
         CONFIG_APP::ID_TOOL_DISCONNECT);
+
+    this->Bind(wxEVT_TOOL, &ClientWindow::OnCaptureClick, this,
+        CONFIG_APP::ID_TOOL_CAPTURE);
+    
+    this->Bind(wxEVT_TOOL, &ClientWindow::OnKeylogClick, this,
+        CONFIG_APP::ID_TOOL_KEYLOG);
+
+    this->Bind(wxEVT_TOOL, &ClientWindow::OnHookClick, this,
+        CONFIG_APP::ID_TOOL_HOOK);
+
+    this->Bind(wxEVT_TOOL, &ClientWindow::OnUnhookClick, this,
+        CONFIG_APP::ID_TOOL_UNHOOK);
 
     toolbar->Realize();
 
     clientTextWindow = new ClientTextWindow();
     clientTextWindow->Show();
 
+    keylogWindow = new KeylogWindow(this);
+
     // Tạo một wxTextCtrl để hiển thị văn bản
     textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize,
-        wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
-
-    textCtrl = new wxTextCtrl(this, wxID_ANY, wxEmptyString, wxDefaultPosition,
-        wxDefaultSize,
         wxTE_MULTILINE | wxTE_READONLY | wxHSCROLL);
 
     // Tạo một wxBoxSizer với hướng ngang
@@ -80,27 +107,27 @@ void ClientWindow::ConnectToHost(std::string& host)
     CapturePanel->Bind(wxEVT_LEFT_DOWN, &ClientWindow::OnMouseClick, this);
     CapturePanel->Bind(wxEVT_MIDDLE_DOWN, &ClientWindow::OnMouseClick, this);
     CapturePanel->Bind(wxEVT_RIGHT_DOWN, &ClientWindow::OnMouseClick, this);
-    // CapturePanel->Bind(wxEVT_AUX1_DOWN, &ClientWindow::OnMouseClick, this);
-    // CapturePanel->Bind(wxEVT_AUX2_DOWN, &ClientWindow::OnMouseClick, this);
+    CapturePanel->Bind(wxEVT_AUX1_DOWN, &ClientWindow::OnMouseClick, this);
+    CapturePanel->Bind(wxEVT_AUX2_DOWN, &ClientWindow::OnMouseClick, this);
 
     // Binding mouse up events
     CapturePanel->Bind(wxEVT_LEFT_UP, &ClientWindow::OnMouseUnClick, this);
     CapturePanel->Bind(wxEVT_MIDDLE_UP, &ClientWindow::OnMouseUnClick, this);
     CapturePanel->Bind(wxEVT_RIGHT_UP, &ClientWindow::OnMouseUnClick, this);
-    // CapturePanel->Bind(wxEVT_AUX1_UP, &ClientWindow::OnMouseUnClick, this);
-    // CapturePanel->Bind(wxEVT_AUX2_UP, &ClientWindow::OnMouseUnClick, this);
+    CapturePanel->Bind(wxEVT_AUX1_UP, &ClientWindow::OnMouseUnClick, this);
+    CapturePanel->Bind(wxEVT_AUX2_UP, &ClientWindow::OnMouseUnClick, this);
 
     // Binding double-click events
     CapturePanel->Bind(wxEVT_LEFT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
     CapturePanel->Bind(wxEVT_MIDDLE_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
     CapturePanel->Bind(wxEVT_RIGHT_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
-    // CapturePanel->Bind(wxEVT_AUX1_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
-    // CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    CapturePanel->Bind(wxEVT_AUX1_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
+    CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
 
     // Binding other mouse events
-    // CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this);
-    // CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
-    // CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
+    CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this);
+    CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
+    CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
     CapturePanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
 
 
@@ -132,7 +159,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
             switch (msg.header.id) {
                 case RemoteMessage::SERVER_ACCEPT: {
                     isWaitingForConnection = false;
-                    wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
+                    // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
                     std::string IP_Addr = GetIPAddress();
                     std::string Mac_Addr = GetMACAddress();
                     std::string OS_ver = GetCurrentWindowName();
@@ -162,7 +189,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 
                 // Tải hình ảnh từ memory stream
                 wxImage image;
-                image.LoadFile(memStream, wxBITMAP_TYPE_JPEG);
+                image.LoadFile(memStream, wxBITMAP_TYPE_PNG);
 
                 // Tăng biến đếm
                 imagesSentThisSecond++;
@@ -184,6 +211,21 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 }
 
                 break;
+            }
+
+            case RemoteMessage::CaptureSend: {
+                // Tạo một memory stream từ dữ liệu nhận được
+                wxMemoryInputStream memStream(msg.body.data(),
+                    msg.body.size());
+
+                // Tải hình ảnh từ memory stream
+                wxImage image;
+                image.LoadFile(memStream, wxBITMAP_TYPE_PNG);
+                // Lưu wxImage thành một tệp hình ảnh
+                if (!wxDirExists("Screenshots")) {
+                    wxMkdir("Screenshots");
+                }
+                image.SaveFile(CreateScreenshotFileName(), wxBITMAP_TYPE_PNG);
             }
 
             }
@@ -241,27 +283,27 @@ void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
     event.Skip();
 }
 
-// void ClientWindow::OnMouseMove(wxMouseEvent& event) {
-//     net::message<RemoteMessage> m;
-//     m.header.id = RemoteMessage::MouseMove;
-//     m << event.GetX() << event.GetY();
-//     Send(m);
-//     // event.Skip();
-// }
+void ClientWindow::OnMouseMove(wxMouseEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::MouseMove;
+    m << event.GetX() << event.GetY();
+    Send(m);
+    event.Skip();
+}
 
-// void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
-//     net::message<RemoteMessage> m;
-//     m.header.id = RemoteMessage::MouseLeave;
-//     Send(m);
-//     // event.Skip();
-// }
+void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::MouseLeave;
+    Send(m);
+    event.Skip();
+}
 
-// void ClientWindow::OnMouseEnter(wxMouseEvent& event) {
-//     net::message<RemoteMessage> m;
-//     m.header.id = RemoteMessage::MouseEnter;
-//     Send(m);
-//     // event.Skip();
-// }
+void ClientWindow::OnMouseEnter(wxMouseEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::MouseEnter;
+    Send(m);
+    event.Skip();
+}
 
 void ClientWindow::OnMouseWheel(wxMouseEvent& event) {
     net::message<RemoteMessage> m;
@@ -341,6 +383,25 @@ void ClientWindow::OnDisconnectClick(wxCommandEvent& event) {
         // Người dùng chọn Huỷ
         // Thực hiện hành động khi huỷ đóng kết nối hoặc không làm gì cả
     }
+}
+
+void ClientWindow::OnCaptureClick(wxCommandEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::CaptureRequest;
+    // Gửi message
+    Send(m);
+}
+
+void ClientWindow::OnKeylogClick(wxCommandEvent& event) {
+    keylogWindow->Show();
+}
+
+void ClientWindow::OnHookClick(wxCommandEvent& event) {
+    wxMessageBox(wxT("Hook Clicked"), wxT("Hook"), wxICON_INFORMATION | wxOK);
+}
+
+void ClientWindow::OnUnhookClick(wxCommandEvent& event) {
+    wxMessageBox(wxT("Unhook Clicked"), wxT("Unhook"), wxICON_INFORMATION | wxOK);
 }
 
 void ClientWindow::OnClose(wxCloseEvent& event) {
