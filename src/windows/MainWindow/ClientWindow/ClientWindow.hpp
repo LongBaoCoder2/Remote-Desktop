@@ -46,7 +46,7 @@ private:
     void OnKeyDown(wxKeyEvent& event);
     void OnKeyUp(wxKeyEvent& event);
     void OnMouseDoubleClick(wxMouseEvent& event);
-    // void ClientWindow::OnMouseMove(wxMouseEvent& event);
+    void ClientWindow::OnMouseMove(wxMouseEvent& event);
     // void ClientWindow::OnMouseLeave(wxMouseEvent& event);
     // void ClientWindow::OnMouseEnter(wxMouseEvent& event);
     void OnMouseWheel(wxMouseEvent& event);
