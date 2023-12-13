@@ -7,6 +7,7 @@
 
 wxDECLARE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
 wxDECLARE_EVENT(wxEVT_CLIENT_DISCONNECTED, wxCommandEvent);
+#define DEV
 
 class ClientWindow : public net::IClient<RemoteMessage>, public wxFrame
 {
@@ -55,6 +56,7 @@ private:
     void OnMouseWheel(wxMouseEvent& event);
     void OnDisconnectClick(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
+    void SendMetadata();
 
     // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };

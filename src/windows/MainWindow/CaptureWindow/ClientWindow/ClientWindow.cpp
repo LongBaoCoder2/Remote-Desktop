@@ -1,4 +1,7 @@
 #include "ClientWindow.hpp"
+#include "../../../constant.hpp"
+#include "../../InforNetwork.hpp"
+
 
 wxDEFINE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
 wxDEFINE_EVENT(wxEVT_CLIENT_DISCONNECTED, wxCommandEvent);
@@ -103,6 +106,18 @@ void ClientWindow::ConnectToHost(std::string& host)
 
     CapturePanel->Bind(wxEVT_KEY_DOWN, &ClientWindow::OnKeyDown, this);
     CapturePanel->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
+
+    SendMetadata();
+}
+
+void ClientWindow::SendMetadata() {
+    net::message<RemoteMessage> msg;
+    msg.header.id = RemoteMessage::MetaData;
+    std::string IP_Addr = GetIPAddress();
+    std::string Mac_Addr = GetMACAddress();
+    std::string OS_ver = GetCurrentWindowName();
+    msg << IP_Addr << Mac_Addr << OS_ver;
+    Send(msg);
 }
 
 void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
@@ -115,13 +130,16 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
         {
             auto msg = Incoming().pop_front().msg;
             switch (msg.header.id) {
-                case RemoteMessage::SERVER_ACCEPT:
-                    if (isWaitingForConnection) {
-                        wxMessageBox(wxT("Connection successful."),
-                                    wxT("Connected"), wxICON_INFORMATION | wxOK);
-                    }
+                case RemoteMessage::SERVER_ACCEPT: {
                     isWaitingForConnection = false;
+                    wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
+                    std::string IP_Addr = GetIPAddress();
+                    std::string Mac_Addr = GetMACAddress();
+                    std::string OS_ver = GetCurrentWindowName();
+                    msg >> OS_ver >> Mac_Addr >> IP_Addr;
+                    clientTextWindow->DisplayMessage(wxString::Format(wxT("Server IP : %s \n Server Mac : %s \n Server Window Name : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
                     break;
+                }
                 case RemoteMessage::SERVER_DENY:
                     // Disconnect();
                     wxMessageBox(wxT("Disconnected from the server."),
@@ -133,7 +151,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                     Close();
                     break;
 
-            case RemoteMessage::SERVER_UPDATE:
+            case RemoteMessage::SERVER_UPDATE: {
                 isWaitingForConnection = false;
 
                 // OnReceiveImage(msg);
@@ -149,13 +167,10 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 // Tăng biến đếm
                 imagesSentThisSecond++;
 
-                clientTextWindow->DisplayMessage(wxString::Format(
-                    wxT("Data received: %llu bytes.\n"), msg.body.size()));
-                // wxMessageBox(wxT("Image convert successful."),
-                // wxT("Connected"), wxICON_INFORMATION | wxOK);
-                // wxMessageBox(wxString::Format(wxT("Data received: %llu
-                // bytes.\n"), msg.body.size()), wxT("Message"),
-                // wxICON_INFORMATION | wxOK);
+                // clientTextWindow->DisplayMessage(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()));
+                // wxMessageBox(wxT("Image convert successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
+                // wxMessageBox(wxString::Format(wxT("Data received: %llu bytes.\n"), msg.body.size()), wxT("Message"), wxICON_INFORMATION | wxOK);
+
 
                 // Chuyển đổi wxImage thành wxBitmap để hiển thị
                 if (image.IsOk()) {
@@ -169,6 +184,8 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 }
 
                 break;
+            }
+
             }
         }
     }
@@ -211,8 +228,7 @@ void ClientWindow::OnReceiveImage(net::message<RemoteMessage>& msg) {
 // Khi timer đếm giây chạy
 void ClientWindow::OnSecondTimer(wxTimerEvent& event) {
     // In thông tin thống kê và đặt biến đếm về 0
-    clientTextWindow->DisplayMessage(wxString::Format(
-        wxT("Images received this second: %d\n"), imagesSentThisSecond));
+    // clientTextWindow->DisplayMessage(wxString::Format(wxT("Images received this second: %d\n"), imagesSentThisSecond));
     imagesSentThisSecond = 0;
     event.Skip();
 }

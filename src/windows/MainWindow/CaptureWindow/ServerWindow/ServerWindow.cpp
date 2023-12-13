@@ -1,4 +1,5 @@
 #include "ServerWindow.hpp"
+#include "../../InforNetwork.hpp"
 
 wxDEFINE_EVENT(wxEVT_SERVER_CONNECTED, wxCommandEvent);
 wxDEFINE_EVENT(wxEVT_SERVER_DISCONNECTED, wxCommandEvent);
@@ -138,6 +139,10 @@ void ServerWindow::OnClientValidated(
     // them they can continue to communicate
     net::message<RemoteMessage> msg;
     msg.header.id = RemoteMessage::SERVER_ACCEPT;
+    std::string IP_Addr = GetIPAddress();
+    std::string Mac_Addr = GetMACAddress();
+    std::string OS_ver = GetCurrentWindowName();
+    msg << IP_Addr << Mac_Addr << OS_ver;
     client->Send(msg);
 }
 
@@ -315,7 +320,15 @@ void ServerWindow::OnMessage(
         SendInput(1, &input, sizeof(INPUT));
         break;
     }
-
+    case RemoteMessage::MetaData: {
+        std::string IP_Addr = GetIPAddress();
+        std::string Mac_Addr = GetMACAddress();
+        std::string OS_ver = GetCurrentWindowName();
+        msg >> OS_ver >> Mac_Addr >> IP_Addr; 
+        textCtrl->AppendText(wxString::Format(wxT("Client IP : %s \n Client Mac : %s \n Client Window Name : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
+        // textCtrl->AppendText(wxString::Format(wxT("%d\n"), x));
+        break;
+    }
     }
 }
 

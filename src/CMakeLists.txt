@@ -44,6 +44,7 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/MainWindow/MenuWindow/*.cpp
     windows/MainWindow/SettingsWindow/*.cpp
     windows/event/*.cpp
+    windows/MainWindow/InforNetwork.cpp
 )
 
 file(GLOB_RECURSE HEADER_FILES 
@@ -64,6 +65,7 @@ file(GLOB_RECURSE HEADER_FILES
     networks/server/*.h
     utils/*.hpp
     windows/event/*.hpp
+    windows/MainWindow/InforNetwork.hpp
 )
 
 add_definitions(-D_WIN32_WINNT=0x0601)
