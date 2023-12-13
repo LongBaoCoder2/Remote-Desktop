@@ -97,23 +97,20 @@ void MenuWindow::OnStartListening(wxMouseEvent& event)
     // serverWindow = std::make_unique<ServerWindow>(CONFIG_APP::PORT);
     auto button = dynamic_cast<Button*>(event.GetEventObject());
     if (button && !button->GetDisable()) {
-        if (serverWindow) delete serverWindow;
-
-        serverWindow = new ServerWindow();
-        serverWindow->Show();
+        if (serverWindow && !serverWindow->IsBeingDeleted()) {
+            event.Skip();
+        } else {
+            serverWindow = new ServerWindow();
+            serverWindow->Show();
+        }
     }
 }
 
 void MenuWindow::ConnectToServer(std::string& host)
 {
-    auto button = dynamic_cast<Button*>(event.GetEventObject());
-    if (button && !button->GetDisable()) {
-        if (clientWindow) delete clientWindow;
-
-        clientWindow = new ClientWindow();
-        clientWindow->ConnectToHost(host);
-        clientWindow->Show();
-    }
+    clientWindow = new ClientWindow();
+    clientWindow->ConnectToHost(host);
+    clientWindow->Show();
 
 }
 
@@ -121,8 +118,12 @@ void MenuWindow::OnConnectToServer(wxCommandEvent& event)
 {
     std::string* IpAddress = (std::string*)event.GetClientData();
     if (IpAddress) {
-        ConnectToServer(*IpAddress);
-        delete IpAddress;
+        if (clientWindow && !clientWindow->IsBeingDeleted()) {
+            event.Skip();
+        } else {
+            ConnectToServer(*IpAddress);
+            delete IpAddress;
+        }
     }
 }
 

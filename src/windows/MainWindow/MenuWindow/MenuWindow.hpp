@@ -33,4 +33,8 @@ private:
     // Admin
     void ConnectToServer(std::string& host);
 
+    void OnDisableButton(wxCommandEvent& event);
+
+    void OnEnableButton(wxCommandEvent& event);
+
 };
