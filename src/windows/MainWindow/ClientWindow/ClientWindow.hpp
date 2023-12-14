@@ -46,9 +46,9 @@ private:
     void OnKeyDown(wxKeyEvent& event);
     void OnKeyUp(wxKeyEvent& event);
     void OnMouseDoubleClick(wxMouseEvent& event);
-    void ClientWindow::OnMouseMove(wxMouseEvent& event);
-    // void ClientWindow::OnMouseLeave(wxMouseEvent& event);
-    // void ClientWindow::OnMouseEnter(wxMouseEvent& event);
+    // void ClientWindow::OnMouseMove(wxMouseEvent& event);
+    void OnMouseLeave(wxMouseEvent& event);
+    void OnMouseEnter(wxMouseEvent& event);
     void OnMouseWheel(wxMouseEvent& event);
     void OnDisconnectClick(wxCommandEvent& event);
     void OnClose(wxCloseEvent& event);
@@ -58,6 +58,8 @@ private:
     void SetKeyboardHook();
     static LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam); 
     static ClientWindow* instance; // Static pointer to the current instance
+
+    static bool allowHook;
 
     HHOOK keyboardHook;
     // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);

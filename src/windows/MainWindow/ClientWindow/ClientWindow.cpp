@@ -3,6 +3,7 @@
 #include <windows.h>
 
 ClientWindow* ClientWindow::instance = nullptr;
+bool ClientWindow::allowHook = false;
 
 ClientWindow::ClientWindow(const std::string& host)
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
@@ -227,19 +228,15 @@ void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
 //     // event.Skip();
 // }
 
-// void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
-//     net::message<RemoteMessage> m;
-//     m.header.id = RemoteMessage::MouseLeave;
-//     Send(m);
-//     // event.Skip();
-// }
+void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
+    allowHook = false;
+    event.Skip();
+}
 
-// void ClientWindow::OnMouseEnter(wxMouseEvent& event) {
-//     net::message<RemoteMessage> m;
-//     m.header.id = RemoteMessage::MouseEnter;
-//     Send(m);
-//     // event.Skip();
-// }
+void ClientWindow::OnMouseEnter(wxMouseEvent& event) {
+    allowHook = true;
+    event.Skip();
+}
 
 void ClientWindow::OnMouseWheel(wxMouseEvent& event) {
     net::message<RemoteMessage> m;
@@ -277,7 +274,7 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
 }
 
 LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
-    if (nCode >= 0) {
+    if (nCode >= 0 && allowHook) {
         KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
         DWORD vkCode = kbdStruct->vkCode; 
 
