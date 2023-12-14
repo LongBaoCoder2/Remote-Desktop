@@ -51,9 +51,9 @@ private:
     void OnKeyDown(wxKeyEvent& event);
     void OnKeyUp(wxKeyEvent& event);
     void OnMouseDoubleClick(wxMouseEvent& event);
-    void OnMouseMove(wxMouseEvent& event);
-    void OnMouseLeave(wxMouseEvent& event);
-    void OnMouseEnter(wxMouseEvent& event);
+    // void OnMouseMove(wxMouseEvent& event);
+    // void OnMouseLeave(wxMouseEvent& event);
+    // void OnMouseEnter(wxMouseEvent& event);
     void OnMouseWheel(wxMouseEvent& event);
     void OnDisconnectClick(wxCommandEvent& event);
     void OnCaptureClick(wxCommandEvent& event);

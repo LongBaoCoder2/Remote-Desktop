@@ -8,7 +8,7 @@ wxDEFINE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
 wxDEFINE_EVENT(wxEVT_CLIENT_DISCONNECTED, wxCommandEvent);
 
 ClientWindow* ClientWindow::instance = nullptr;
-bool ClientWindow::allowHook = true;
+bool ClientWindow::allowHook = false;
 
 ClientWindow::ClientWindow()
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
@@ -129,9 +129,9 @@ void ClientWindow::ConnectToHost(std::string& host)
     CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
 
     // Binding other mouse events
-    CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this);
-    CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
-    CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
+    // CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this); 
+    // CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
+    // CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
     CapturePanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
 
 
@@ -288,27 +288,27 @@ void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
     event.Skip();
 }
 
-void ClientWindow::OnMouseMove(wxMouseEvent& event) {
-    net::message<RemoteMessage> m;
-    m.header.id = RemoteMessage::MouseMove;
-    m << event.GetX() << event.GetY();
-    Send(m);
-    event.Skip();
-}
+// void ClientWindow::OnMouseMove(wxMouseEvent& event) {
+//     net::message<RemoteMessage> m;
+//     m.header.id = RemoteMessage::MouseMove;
+//     m << event.GetX() << event.GetY();
+//     Send(m);
+//     event.Skip();
+// }
 
-void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
-    net::message<RemoteMessage> m;
-    m.header.id = RemoteMessage::MouseLeave;
-    Send(m);
-    event.Skip();
-}
+// void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
+//     net::message<RemoteMessage> m;
+//     m.header.id = RemoteMessage::MouseLeave;
+//     Send(m);
+//     event.Skip();
+// }
 
-void ClientWindow::OnMouseEnter(wxMouseEvent& event) {
-    net::message<RemoteMessage> m;
-    m.header.id = RemoteMessage::MouseEnter;
-    Send(m);
-    event.Skip();
-}
+// void ClientWindow::OnMouseEnter(wxMouseEvent& event) {
+//     net::message<RemoteMessage> m;
+//     m.header.id = RemoteMessage::MouseEnter;
+//     Send(m);
+//     event.Skip();
+// }
 
 void ClientWindow::OnMouseWheel(wxMouseEvent& event) {
     net::message<RemoteMessage> m;
@@ -346,9 +346,9 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
 }
 
 void ClientWindow::OnKeyDown(wxKeyEvent& event) {
+    if(event.GetRawKeyCode() ==  WXK_WINDOWS_LEFT ||  event.GetRawKeyCode() == WXK_WINDOWS_RIGHT || event.GetRawKeyCode() == WXK_WINDOWS_MENU)
+        return;
     // Tạo message bàn phím
-
-    // clientTextWindow->DisplayMessage(wxString::Format(wxT("Got it\n")));
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyPress;
     m << static_cast<uint32_t>(event.GetRawKeyCode());  // true for key down
@@ -359,6 +359,8 @@ void ClientWindow::OnKeyDown(wxKeyEvent& event) {
 }
 
 void ClientWindow::OnKeyUp(wxKeyEvent& event) {
+    if(event.GetRawKeyCode() ==  WXK_WINDOWS_LEFT ||  event.GetRawKeyCode() == WXK_WINDOWS_RIGHT || event.GetRawKeyCode() == WXK_WINDOWS_MENU)
+        return;
     // Tạo message bàn phím
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyRelease;
@@ -435,11 +437,11 @@ void ClientWindow::OnKeylogClick(wxCommandEvent& event) {
 }
 
 void ClientWindow::OnHookClick(wxCommandEvent& event) {
-    wxMessageBox(wxT("Hook Clicked"), wxT("Hook"), wxICON_INFORMATION | wxOK);
+    allowHook = true;
 }
 
 void ClientWindow::OnUnhookClick(wxCommandEvent& event) {
-    wxMessageBox(wxT("Unhook Clicked"), wxT("Unhook"), wxICON_INFORMATION | wxOK);
+    allowHook = false;
 }
 
 void ClientWindow::OnClose(wxCloseEvent& event) {
@@ -456,4 +458,5 @@ ClientWindow::~ClientWindow() {
     net::IClient<RemoteMessage>::Disconnect();
     RemoveKeyboardHook();
     instance = nullptr;
+    allowHook = false;
 }
