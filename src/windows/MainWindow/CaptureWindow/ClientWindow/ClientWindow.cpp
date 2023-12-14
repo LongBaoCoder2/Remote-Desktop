@@ -346,7 +346,7 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
 }
 
 void ClientWindow::OnKeyDown(wxKeyEvent& event) {
-    if(event.GetRawKeyCode() ==  WXK_WINDOWS_LEFT ||  event.GetRawKeyCode() == WXK_WINDOWS_RIGHT || event.GetRawKeyCode() == WXK_WINDOWS_MENU)
+    if(static_cast<uint32_t>(event.GetRawKeyCode()) == 91)
         return;
     // Tạo message bàn phím
     net::message<RemoteMessage> m;
@@ -359,7 +359,7 @@ void ClientWindow::OnKeyDown(wxKeyEvent& event) {
 }
 
 void ClientWindow::OnKeyUp(wxKeyEvent& event) {
-    if(event.GetRawKeyCode() ==  WXK_WINDOWS_LEFT ||  event.GetRawKeyCode() == WXK_WINDOWS_RIGHT || event.GetRawKeyCode() == WXK_WINDOWS_MENU)
+    if(static_cast<uint32_t>(event.GetRawKeyCode()) == 91)
         return;
     // Tạo message bàn phím
     net::message<RemoteMessage> m;
