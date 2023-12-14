@@ -228,15 +228,15 @@ void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
 //     // event.Skip();
 // }
 
-void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
-    allowHook = false;
-    event.Skip();
-}
+// void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
+//     allowHook = false;
+//     event.Skip();
+// }
 
-void ClientWindow::OnMouseEnter(wxMouseEvent& event) {
-    allowHook = true;
-    event.Skip();
-}
+// void ClientWindow::OnMouseEnter(wxMouseEvent& event) {
+//     allowHook = true;
+//     event.Skip();
+// }
 
 void ClientWindow::OnMouseWheel(wxMouseEvent& event) {
     net::message<RemoteMessage> m;
