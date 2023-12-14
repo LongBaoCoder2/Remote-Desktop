@@ -7,9 +7,13 @@
 wxDEFINE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
 wxDEFINE_EVENT(wxEVT_CLIENT_DISCONNECTED, wxCommandEvent);
 
+ClientWindow* ClientWindow::instance = nullptr;
+bool ClientWindow::allowHook = true;
+
 ClientWindow::ClientWindow()
     : wxFrame(nullptr, wxID_ANY, "Client Window"), net::IClient<RemoteMessage>()
 {
+    instance = this;
 }
 
 void ClientWindow::ConnectToHost(std::string& host)
@@ -27,7 +31,7 @@ void ClientWindow::ConnectToHost(std::string& host)
     Bind(wxEVT_CLOSE_WINDOW, &ClientWindow::OnClose, this);
 
     CapturePanel = new wxPanel(this, wxID_ANY, wxDefaultPosition,
-                               CONFIG_UI::CLIENT_WINDOW_SIZE, wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB);
+        CONFIG_UI::CLIENT_WINDOW_SIZE, wxTE_PROCESS_ENTER | wxTE_PROCESS_TAB);
     CapturePanel->SetBackgroundColour(wxColor(38, 37, 54));
 
     // toolbar
@@ -40,7 +44,7 @@ void ClientWindow::ConnectToHost(std::string& host)
     toolbar->AddTool(CONFIG_APP::ID_TOOL_CAPTURE, "Save capture",
         wxBitmap("assets/capture.png", wxBITMAP_TYPE_PNG),
         "Save current screen capture", wxITEM_NORMAL);
-    
+
     toolbar->AddTool(CONFIG_APP::ID_TOOL_KEYLOG, "Key logger",
         wxBitmap("assets/keylog.png", wxBITMAP_TYPE_PNG),
         "End current session", wxITEM_NORMAL);
@@ -48,7 +52,7 @@ void ClientWindow::ConnectToHost(std::string& host)
     toolbar->AddTool(CONFIG_APP::ID_TOOL_HOOK, "Hook",
         wxBitmap("assets/hook.png", wxBITMAP_TYPE_PNG),
         "Receive special keys", wxITEM_NORMAL);
-    
+
     toolbar->AddTool(CONFIG_APP::ID_TOOL_UNHOOK, "Unhook",
         wxBitmap("assets/unhook.png", wxBITMAP_TYPE_PNG),
         "Stop receiving special keys", wxITEM_NORMAL);
@@ -59,7 +63,7 @@ void ClientWindow::ConnectToHost(std::string& host)
 
     this->Bind(wxEVT_TOOL, &ClientWindow::OnCaptureClick, this,
         CONFIG_APP::ID_TOOL_CAPTURE);
-    
+
     this->Bind(wxEVT_TOOL, &ClientWindow::OnKeylogClick, this,
         CONFIG_APP::ID_TOOL_KEYLOG);
 
@@ -135,6 +139,7 @@ void ClientWindow::ConnectToHost(std::string& host)
     CapturePanel->Bind(wxEVT_KEY_UP, &ClientWindow::OnKeyUp, this);
 
     SendMetadata();
+    SetKeyboardHook();
 }
 
 void ClientWindow::SendMetadata() {
@@ -157,26 +162,26 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
         {
             auto msg = Incoming().pop_front().msg;
             switch (msg.header.id) {
-                case RemoteMessage::SERVER_ACCEPT: {
-                    isWaitingForConnection = false;
-                    // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
-                    std::string IP_Addr = GetIPAddress();
-                    std::string Mac_Addr = GetMACAddress();
-                    std::string OS_ver = GetCurrentWindowName();
-                    msg >> OS_ver >> Mac_Addr >> IP_Addr;
-                    clientTextWindow->DisplayMessage(wxString::Format(wxT("Server IP : %s \n Server Mac : %s \n Server Window Name : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
-                    break;
-                }
-                case RemoteMessage::SERVER_DENY:
-                    // Disconnect();
-                    wxMessageBox(wxT("Disconnected from the server."),
-                                 wxT("Disconnected"),
-                                 wxICON_INFORMATION | wxOK);
-                    break;
-                case RemoteMessage::SERVER_DISCONNECT:
-                    wxMessageBox("You have been disconnected from server", "Notification", wxOK | wxICON_INFORMATION, this);
-                    Close();
-                    break;
+            case RemoteMessage::SERVER_ACCEPT: {
+                isWaitingForConnection = false;
+                // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
+                std::string IP_Addr = GetIPAddress();
+                std::string Mac_Addr = GetMACAddress();
+                std::string OS_ver = GetCurrentWindowName();
+                msg >> OS_ver >> Mac_Addr >> IP_Addr;
+                clientTextWindow->DisplayMessage(wxString::Format(wxT("Server IP : %s \n Server Mac : %s \n Server Window Name : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
+                break;
+            }
+            case RemoteMessage::SERVER_DENY:
+                // Disconnect();
+                wxMessageBox(wxT("Disconnected from the server."),
+                    wxT("Disconnected"),
+                    wxICON_INFORMATION | wxOK);
+                break;
+            case RemoteMessage::SERVER_DISCONNECT:
+                wxMessageBox("You have been disconnected from server", "Notification", wxOK | wxICON_INFORMATION, this);
+                Close();
+                break;
 
             case RemoteMessage::SERVER_UPDATE: {
                 isWaitingForConnection = false;
@@ -364,6 +369,39 @@ void ClientWindow::OnKeyUp(wxKeyEvent& event) {
     // event.Skip();
 }
 
+LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
+    if (nCode >= 0 && allowHook) {
+        KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
+        DWORD vkCode = kbdStruct->vkCode;
+
+        if (vkCode == VK_LWIN || vkCode == VK_RWIN) {
+            net::message<RemoteMessage> m;
+            if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+                m.header.id = RemoteMessage::KeyPress;
+            }
+            else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+                m.header.id = RemoteMessage::KeyRelease;
+            }
+            m << 91;
+            instance->Send(m);
+            return 1;
+        }
+    }
+
+    return CallNextHookEx(NULL, nCode, wParam, lParam);
+}
+
+void ClientWindow::SetKeyboardHook() {
+    keyboardHook = SetWindowsHookEx(WH_KEYBOARD_LL, KeyboardProc, NULL, 0);
+}
+
+void ClientWindow::RemoveKeyboardHook() {
+    if (keyboardHook != NULL) {
+        UnhookWindowsHookEx(keyboardHook);
+        keyboardHook = NULL;
+    }
+}
+
 void ClientWindow::OnDisconnectClick(wxCommandEvent& event) {
     wxMessageDialog dialog(this,
         "Are you sure you want to close the connection?",
@@ -416,4 +454,6 @@ ClientWindow::~ClientWindow() {
     ClearPanel();
     // clientTextWindow->Destroy();
     net::IClient<RemoteMessage>::Disconnect();
+    RemoveKeyboardHook();
+    instance = nullptr;
 }

@@ -311,12 +311,12 @@ void ServerWindow::OnMessage(
         std::string IP_Addr = GetIPAddress();
         std::string Mac_Addr = GetMACAddress();
         std::string OS_ver = GetCurrentWindowName();
-        msg >> OS_ver >> Mac_Addr >> IP_Addr; 
+        msg >> OS_ver >> Mac_Addr >> IP_Addr;
         textCtrl->AppendText(wxString::Format(wxT("Client IP : %s \n Client Mac : %s \n Client Window Name : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
         // textCtrl->AppendText(wxString::Format(wxT("%d\n"), x));
         break;
     }
-    
+
     case RemoteMessage::CaptureRequest: {
         takeScreenshot();
         sendScreenshot(RemoteMessage::CaptureSend);
@@ -337,7 +337,8 @@ void ServerWindow::OnClose(wxCloseEvent& event) {
         closeServer();
         Destroy();
         // event.Skip();  // Đóng cửa sổ
-    } else {
+    }
+    else {
         event.Veto();  // Không đóng cửa sổ
     }
 }
@@ -356,5 +357,5 @@ void ServerWindow::closeServer() {
 }
 
 ServerWindow::~ServerWindow() {
-    closeServer();    
+    closeServer();
 }
