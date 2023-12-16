@@ -39,7 +39,7 @@ ServerWindow::ServerWindow()
     m_updateMess = std::thread([this]
         {
             while (m_qMessagesIn.shouldStop == false) {
-                textCtrl->AppendText("Running.\n");
+                // textCtrl->AppendText("Running.\n");
                 IServer<RemoteMessage>::Update(-1, true);
             }
             // std::this_thread::sleep_for(std::chrono::milliseconds(DELAY_MS));

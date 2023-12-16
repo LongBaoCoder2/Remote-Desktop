@@ -5,7 +5,12 @@
 bool Application::OnInit()
 {
     wxInitAllImageHandlers();
+    SetAppDisplayName("Remote Desktop Control"); // Đặt tên cho ứng dụng của bạn
+    SetVendorName("HCMUS-BCD"); // Tên công ty của bạn (tùy chọn)
+    // Tạo và thiết lập biểu tượng cho toàn bộ ứng dụng
+    icon = wxIcon("assets/app_icon1.png", wxBITMAP_TYPE_PNG);
     LoginWindow = new LoginFrame(wxT("Login"), wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW);
+    LoginWindow->SetIcon(icon);
     LoginWindow->Show(true);
 
     Connect(wxID_ANY, UserLoginEvent, wxCommandEventHandler(Application::OnUserLogin));
@@ -20,6 +25,7 @@ void Application::NavigateToMainWindow(std::unique_ptr<IModel> Model)
     }
 
     MainWindow = new MainFrame(wxT("Remote Desktop"), wxDefaultPosition, CONFIG_UI::NORMAL_WINDOW, std::move(Model));
+    MainWindow->SetIcon(icon);
     MainWindow->Show(true);
 }
 

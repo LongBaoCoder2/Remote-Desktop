@@ -19,6 +19,7 @@ private:
     LoginFrame* LoginWindow = nullptr;
 
     ModelFactory factory;
+    wxIcon icon;
 
 public:
     virtual bool OnInit();
