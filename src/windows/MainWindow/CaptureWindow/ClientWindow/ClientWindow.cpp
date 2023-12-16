@@ -447,7 +447,8 @@ void ClientWindow::OnUnhookClick(wxCommandEvent& event) {
 void ClientWindow::OnClose(wxCloseEvent& event) {
     net::IClient<RemoteMessage>::Disconnect();
     clientTextWindow->Destroy();
-    event.Skip();
+    this->Destroy();
+    // event.Skip();
 }
 
 ClientWindow::~ClientWindow() {
