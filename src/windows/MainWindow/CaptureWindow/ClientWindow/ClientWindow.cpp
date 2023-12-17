@@ -165,7 +165,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
             auto msg = Incoming().pop_front().msg;
             switch (msg.header.id) {
             case RemoteMessage::SERVER_ACCEPT: {
-                isWaitingForConnection = false;
+                // isWaitingForConnection = false;
                 // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
                 std::string IP_Addr = GetIPAddress();
                 std::string Mac_Addr = GetMACAddress();
@@ -186,7 +186,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 break;
 
             case RemoteMessage::SERVER_UPDATE: {
-                isWaitingForConnection = false;
+                // isWaitingForConnection = false;
 
                 // OnReceiveImage(msg);
 
@@ -241,11 +241,6 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 
     // textCtrl->AppendText("Chua thay connection!\n");
 
-    if (isWaitingForConnection) {
-        // ClearPanel();
-        return;
-    }
-
     UpdatePanel();
     event.Skip();
 }
@@ -290,13 +285,13 @@ void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
     event.Skip();
 }
 
-// void ClientWindow::OnMouseMove(wxMouseEvent& event) {
-//     net::message<RemoteMessage> m;
-//     m.header.id = RemoteMessage::MouseMove;
-//     m << event.GetX() << event.GetY();
-//     Send(m);
-//     event.Skip();
-// }
+void ClientWindow::OnMouseMove(wxMouseEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::MouseMove;
+    m << event.GetX() << event.GetY();
+    Send(m);
+    event.Skip();
+}
 
 // void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
 //     net::message<RemoteMessage> m;
@@ -348,8 +343,9 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
 }
 
 void ClientWindow::OnKeyDown(wxKeyEvent& event) {
-    if(static_cast<uint32_t>(event.GetRawKeyCode()) == 91)
+    if (checkValidKey(static_cast<uint32_t>(event.GetRawKeyCode())) == false) {
         return;
+    }
     // Tạo message bàn phím
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyPress;
@@ -361,8 +357,9 @@ void ClientWindow::OnKeyDown(wxKeyEvent& event) {
 }
 
 void ClientWindow::OnKeyUp(wxKeyEvent& event) {
-    if(static_cast<uint32_t>(event.GetRawKeyCode()) == 91)
+    if (checkValidKey(static_cast<uint32_t>(event.GetRawKeyCode())) == false) {
         return;
+    }
     // Tạo message bàn phím
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyRelease;
@@ -373,13 +370,25 @@ void ClientWindow::OnKeyUp(wxKeyEvent& event) {
     // event.Skip();
 }
 
+bool ClientWindow::checkValidKey(uint32_t keyCode) {
+    if(keyCode == 91)
+        return false;
+    if(keyCode == 92)
+        return false;
+    if(keyCode == 18)
+        return false;
+    if(keyCode == 28)
+        return false;
+    return true;
+}
+
 LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode >= 0 && allowHook) {
         KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
         DWORD vkCode = kbdStruct->vkCode;
 
+        net::message<RemoteMessage> m;
         if (vkCode == VK_LWIN || vkCode == VK_RWIN) {
-            net::message<RemoteMessage> m;
             if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
                 m.header.id = RemoteMessage::KeyPress;
             }
@@ -387,6 +396,25 @@ LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
                 m.header.id = RemoteMessage::KeyRelease;
             }
             m << 91;
+            instance->Send(m);
+            return 1;
+        }
+        else if (vkCode == VK_LMENU || vkCode == VK_RMENU) { // Alt trái
+            if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+                m.header.id = RemoteMessage::KeyPress;
+            } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+                m.header.id = RemoteMessage::KeyRelease;
+            }
+            m << 18;
+            instance->Send(m);
+            return 1;
+        } else if (vkCode == VK_ESCAPE) {
+            if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+                m.header.id = RemoteMessage::KeyPress;
+            } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+                m.header.id = RemoteMessage::KeyRelease;
+            }
+            m << 28;
             instance->Send(m);
             return 1;
         }

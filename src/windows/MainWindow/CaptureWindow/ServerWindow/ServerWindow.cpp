@@ -312,7 +312,7 @@ void ServerWindow::OnMessage(
         std::string Mac_Addr = GetMACAddress();
         std::string OS_ver = GetCurrentWindowName();
         msg >> OS_ver >> Mac_Addr >> IP_Addr;
-        textCtrl->AppendText(wxString::Format(wxT("Client IP : %s \n Client Mac : %s \n Client Window Name : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
+        textCtrl->AppendText(wxString::Format(wxT("Client IP : %s \n Client Mac : %s \n Client Window Name : %s\n"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
         // textCtrl->AppendText(wxString::Format(wxT("%d\n"), x));
         break;
     }

@@ -64,7 +64,7 @@ Một số lưu ý khi kết nối:
 
 \begin{figure}[H]
 	\centering{\includegraphics[scale=1]{ClientDisconnectDialog}}
-	\caption{Thông báo ở máy Client sau khi Server đóng}
+	\caption{Hộp thoại xác nhận ngắt kết nối ở phía Client}
 	\label{fig:ClientDisconnectDialog}
 \end{figure}
 
@@ -76,3 +76,19 @@ Một số lưu ý khi kết nối:
 	\caption{Thông báo ở máy Client sau khi Server đóng}
 	\label{fig:ScreenshotsDirectory}
 \end{figure}
+
+\subsubsection{Gửi tín hiệu điều khiển cho Server}
+Sau khi thiết lập kết nối thành công, Client lúc này sẽ nhận được hình ảnh màn hình hiện tại của Server và bắt đầu điều khiển từ xa. Máy Client có thể điều khiển chuột và bàn phím của máy Server trong suốt quá trình kết nối. Tuy nhiên, sẽ có những phím đặc biệt mà máy Client không gửi được cho Server, vấn đề này sẽ được giải quyết trong \ref{sec:HookUnhookSection}.
+
+\subsubsection{Gửi các tín hiệu phím đặc biệt đến cho Server (nút Hook/Unhook)}\label{sec:HookUnhookSection}
+Trong quá trình gửi các tín hiệu bàn phím, có những phím đặc biệt mà Client không thể gửi được cho Server một cách trọn vẹn vì mọi tín hiệu bàn phím sẽ được hệ điều hành nhận và xử lí đầu tiên, do đó đối với những phím có những chức năng đặc biệt như \textbf{Windows} hoặc tổ hợp phím \textbf{Alt + Tab} thì cần có những công cụ riêng để xử lí. Do đó, nhóm đã tạo chức năng \textbf{Hook/Unhook} ở máy Client với vai trò là bắt những tín hiệu phím đặc biệt như trên và gửi cho phía Server thực hiện hành động nhấn phím đó.
+
+\begin{figure}[H]
+	\centering{\includegraphics[scale=1]{HookUnHookButtons}}
+	\caption{Phím Hook và Unhook trên thanh Toolbar của Client Window}
+	\label{fig:HookUnHookButtons}
+\end{figure}
+
+Để sử dụng chức năng \textbf{Hook}, ta nhấn vào phím ``Hook'' trên thanh Toolbar của cửa sổ ``Client Window''. Sau khi nhấn phím ``Hook'' xong, các phím đặc biệt như ``Windows'', ``Alt'', ``Esc'' sẽ được nhận và gửi cho Server khi ta nhấn các phím các phím đó xuống mà không bị gián đoạn vì hệ điều hành của máy Client xử lí phím đó trước.
+
+Để ngừng sử dụng chức năng \text{Hook}, ta nhấn phím ``Unhook'', dừng việc bắt các sự kiện phím đặc biệt để gửi cho Server, lúc này phía Server sẽ không nhận được những phím đặc biệt đó mà máy của Client vẫn nhận được phím đó bình thường.
