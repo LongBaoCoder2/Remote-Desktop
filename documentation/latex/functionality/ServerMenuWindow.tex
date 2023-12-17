@@ -22,3 +22,21 @@ Nếu có \textbf{Client} kết nối đến \textbf{Server}, khi đó cửa s�
 	\caption{Cửa sổ Server Window khi có kết nối đến từ Client}
 	\label{fig:ServerWindowConnected}
 \end{figure}
+
+\subsubsection{Tắt Server}
+Để tắt Server, ta chỉ cần nhấn vào nút \textbf{X} ở góc phải trên của cửa sổ, khi ta nhấn vào nút này thì một hộp thoại sẽ hiển thị để yêu cầu ta xác nhận về việc có đóng cửa sổ ``Server Window'' và đồng thời tắt Server luôn hay không (Hình \ref{fig:ServerClosingDialog}). 
+
+\begin{figure}[H]
+	\centering{\includegraphics[scale=0.75]{ServerClosingDialog}}
+	\caption{Hộp thoại đóng/tắt Server}
+	\label{fig:ServerClosingDialog}
+\end{figure}
+
+Nếu ta chọn \textbf{No}, Server vẫn tiếp tục hoạt động bình thường còn nếu ta chọn \textbf{Yes}, Server sẽ gửi thông báo đến Client về việc ngắt kết nối và yêu cầu Client ngắt toàn bộ các kết nối đã thiết lập với Server, sau đó Server với tắt hẳn. Sau khi Server gửi yêu cầu ngắt kết nối đến Client thành công, cửa sổ Client sẽ ngắt các kết nối mà nó đã thiết lập với Server và một thông báo sẽ hiện ra ở bên máy của Client như sau (Hình \ref{fig:DisconnectedFromServer}):
+
+\begin{figure}[H]
+	\centering{\includegraphics[scale=1]{DisconnectedFromServer}}
+	\caption{Hộp thoại đóng/tắt Server}
+	\label{fig:DisconnectedFromServer}
+\end{figure}
+

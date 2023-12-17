@@ -10,32 +10,19 @@
 \contentsline {subsubsection}{\numberline {1.4.2}Link mã nguồn}{5}{subsubsection.1.4.2}%
 \contentsline {section}{\numberline {2}Các chức năng của phần mềm}{6}{section.2}%
 \contentsline {subsection}{\numberline {2.1}Giao diện của ứng dụng khi khởi động}{6}{subsection.2.1}%
-\contentsline {subsubsection}{\numberline {2.1.1}Các hàm đã cài đặt}{7}{subsubsection.2.1.1}%
 \contentsline {subsection}{\numberline {2.2}Giao diện của ứng dụng sau khi đăng nhập}{7}{subsection.2.2}%
 \contentsline {subsubsection}{\numberline {2.2.1}Giới thiệu}{7}{subsubsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.3}Màn hình Menu của Server}{7}{subsection.2.3}%
 \contentsline {subsubsection}{\numberline {2.3.1}Mô tả}{7}{subsubsection.2.3.1}%
 \contentsline {subsubsection}{\numberline {2.3.2}Chờ kết nối từ Client (Nút Start Listening)}{8}{subsubsection.2.3.2}%
-\contentsline {subsection}{\numberline {2.4}Màn hình Menu của Client}{9}{subsection.2.4}%
-\contentsline {subsubsection}{\numberline {2.4.1}Mô tả}{9}{subsubsection.2.4.1}%
-\contentsline {subsubsection}{\numberline {2.4.2}Thêm một người dùng mới vào danh sách các kết nối (nút Add new user)}{10}{subsubsection.2.4.2}%
-\contentsline {subsubsection}{\numberline {2.4.3}Kết nối đến Server (nút Connect/Connect to user)}{11}{subsubsection.2.4.3}%
-\contentsline {subsection}{\numberline {2.5}Màn hình Manager}{13}{subsection.2.5}%
-\contentsline {subsection}{\numberline {2.6}Cửa sổ Setting}{13}{subsection.2.6}%
-\contentsline {section}{\numberline {3}Tổ chức thư mục của chương trình}{13}{section.3}%
-\contentsline {section}{\numberline {4}Cú pháp email}{15}{section.4}%
-\contentsline {section}{\numberline {5}Gửi và nhận email}{16}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Nhận mail}{16}{subsection.5.1}%
-\contentsline {subsection}{\numberline {5.2}Gửi mail}{16}{subsection.5.2}%
-\contentsline {section}{\numberline {6}Các hàm xử lý yêu cầu}{17}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Phân tích câu lệnh}{17}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}Module mail$\_$handler}{18}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Process/Application}{19}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Chụp màn hình}{20}{subsection.6.4}%
-\contentsline {subsection}{\numberline {6.5}Webcam}{21}{subsection.6.5}%
-\contentsline {subsection}{\numberline {6.6}Keylogger}{22}{subsection.6.6}%
-\contentsline {subsection}{\numberline {6.7}Registry}{23}{subsection.6.7}%
-\contentsline {subsection}{\numberline {6.8}Directory}{25}{subsection.6.8}%
-\contentsline {subsection}{\numberline {6.9}Shutdown/log out/restart}{26}{subsection.6.9}%
-\contentsline {section}{\numberline {7}Demo}{27}{section.7}%
-\contentsline {section}{Lời cảm ơn}{28}{section*.1}%
+\contentsline {subsubsection}{\numberline {2.3.3}Tắt Server}{9}{subsubsection.2.3.3}%
+\contentsline {subsection}{\numberline {2.4}Màn hình Menu của Client}{10}{subsection.2.4}%
+\contentsline {subsubsection}{\numberline {2.4.1}Mô tả}{10}{subsubsection.2.4.1}%
+\contentsline {subsubsection}{\numberline {2.4.2}Thêm một người dùng mới vào danh sách các kết nối (nút Add new user)}{11}{subsubsection.2.4.2}%
+\contentsline {subsubsection}{\numberline {2.4.3}Kết nối đến Server (nút Connect/Connect to user)}{12}{subsubsection.2.4.3}%
+\contentsline {subsubsection}{\numberline {2.4.4}Ngắt kết nối với Server (nút Disconnect)}{14}{subsubsection.2.4.4}%
+\contentsline {subsubsection}{\numberline {2.4.5}Chụp màn hình Server (nút Save Capture)}{15}{subsubsection.2.4.5}%
+\contentsline {subsection}{\numberline {2.5}Màn hình Manager}{15}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Cửa sổ Setting}{15}{subsection.2.6}%
+\contentsline {section}{\numberline {3}Demo}{15}{section.3}%
+\contentsline {section}{Lời cảm ơn}{16}{section*.1}%
