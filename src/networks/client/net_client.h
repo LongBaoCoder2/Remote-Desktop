@@ -61,6 +61,8 @@ namespace net {
       // Tell the connection object to connect to server
       m_connectionImage->ConnectToServer(endpoints);
 
+      std::this_thread::sleep_for(std::chrono::milliseconds(100));
+
 
       endpoints = resolver.resolve(host, std::to_string(CONFIG_APP::EVENT_PORT));
 

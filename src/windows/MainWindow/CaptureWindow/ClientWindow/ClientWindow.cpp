@@ -165,7 +165,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
             auto msg = Incoming().pop_front().msg;
             switch (msg.header.id) {
             case RemoteMessage::SERVER_ACCEPT: {
-                isWaitingForConnection = false;
+                // isWaitingForConnection = false;
                 // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
                 std::string IP_Addr = GetIPAddress();
                 std::string Mac_Addr = GetMACAddress();
@@ -186,7 +186,7 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 break;
 
             case RemoteMessage::SERVER_UPDATE: {
-                isWaitingForConnection = false;
+                // isWaitingForConnection = false;
 
                 // OnReceiveImage(msg);
 
@@ -240,11 +240,6 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
     }
 
     // textCtrl->AppendText("Chua thay connection!\n");
-
-    if (isWaitingForConnection) {
-        // ClearPanel();
-        return;
-    }
 
     UpdatePanel();
     event.Skip();
