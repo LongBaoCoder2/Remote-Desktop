@@ -1,0 +1,24 @@
+\subsection{Công cụ}
+\subsubsection{wxWidgets}
+wxWidgets là một thư viện mạnh mẽ và linh hoạt cho phát triển giao diện người dùng đa nền tảng bằng ngôn ngữ lập trình C++. Trong đồ án này, wxWidgets được sử dụng để thiết kế giao diện cho ứng dụng, đồng thời hỗ trợ việc xử lí các sự kiện từ phía Client và Server trong quá trình gửi và nhận các thông tin qua socket.
+
+Thư viện này cung cấp các thành phần giao diện đồ hoạ như cửa sổ, nút bấm, hộp thoại và menu, giúp tạo ra giao diện người dùng trực quan và dễ sử dụng. Đặc biệt, wxWidgets cho phép triển khai ứng dụng trên nhiều hệ điều hành khác nhau một cách dễ dàng mà không cần phải viết lại mã nguồn.
+
+Việc sử dụng wxWidgets giúp nhóm tập trung vào việc thiết kế giao diện và chức năng điều khiển từ xa mà không cần quá lo lắng về sự không tương thích giữa các nền tảng hệ điều hành. Thư viện cũng cung cấp tài liệu phong phú và có cộng đồng hỗ trợ đông đảo, giúp việc học và phát triển ứng dụng trở nên dễ dàng hơn.
+\subsubsection{Asio}
+
+Thư viện Asio là một thư viện mã nguồn mở mạnh mẽ cho ngôn ngữ lập trình C++, được sử dụng để thực hiện việc lập trình mạng và giao tiếp qua mạng một cách linh hoạt và hiệu quả.
+
+Asio cung cấp các công cụ và lớp trừu tượng để tạo, quản lý và tương tác với các kết nối mạng, bao gồm cả việc xử lý socket, thiết lập kết nối, gửi và nhận dữ liệu trên mạng. Đặc biệt, nó hỗ trợ cả các giao thức đồng bộ (ví dụ như TCP) và không đồng bộ (ví dụ như UDP), cho phép việc truyền dữ liệu một cách đáng tin cậy và nhanh chóng.
+
+Asio được thiết kế để linh hoạt và dễ sử dụng, với cách tiếp cận dựa trên bất đồng bộ (asynchronous), cho phép thực hiện các hoạt động mạng mà không cần chờ đợi kết quả trả về từ mỗi yêu cầu riêng biệt. Điều này làm cho việc xây dựng ứng dụng mạng với hiệu suất cao trở nên dễ dàng hơn, đặc biệt trong việc xử lý hàng loạt yêu cầu từ nhiều nguồn khác nhau.
+
+Trong đồ án này, nhóm tập trung sử dụng chủ yếu với chức năng thiết lập kết nối TCP của nó. Sự linh hoạt và hiệu suất của Asio trong việc xử lý giao tiếp mạng bất đồng bộ đã hỗ trợ nhóm trong việc xây dựng và quản lý việc truyền dữ liệu đáng tin cậy giữa các thiết bị qua mạng.
+\subsubsection{Windows API}
+Windows API (Application Programming Interface) là bộ công cụ mạnh mẽ của hệ điều hành Windows, cung cấp chức năng và dịch vụ cần thiết cho việc tương tác ứng dụng Windows với hệ thống và phần cứng.
+
+Trong quá trình phát triển ứng dụng Remote Desktop Control, nhóm đã tận dụng tính linh hoạt của Windows API để thực hiện các thao tác điều khiển từ xa. Chúng tôi đã sử dụng Windows API để gửi các yêu cầu tương ứng với các thao tác như nhấn phím, di chuyển con chuột, và thực hiện các thao tác click chuột trên máy tính được điều khiển.
+
+Hơn nữa, thông qua Windows API, chúng tôi đã có thể truy xuất và lấy thông tin cơ bản của máy tính được kết nối, như địa chỉ IP và địa chỉ MAC, giúp quản lý và xác định máy tính từ xa một cách chính xác.
+
+Bằng cách tích hợp các tính năng linh hoạt của Windows API vào ứng dụng Remote Desktop Control, chúng tôi đã tạo ra một trải nghiệm điều khiển từ xa hiệu quả và ổn định, mang lại sự linh hoạt và tiện ích cho người dùng.

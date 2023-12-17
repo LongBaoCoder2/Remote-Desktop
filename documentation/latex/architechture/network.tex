@@ -1,0 +1,56 @@
+\section{Kiến trúc Network: }
+Ở phần này chúng tôi sẽ giới thiệu các thành phần cơ bản của Network. \\
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{latex/architechture/architechture_diagram.png}
+	\caption{Networking Architechture Diagram}
+\end{figure}
+
+Trên đây là mô hình cơ bản của kiến trúc network của chúng tôi và luồng di chuyển của message. Lưu ý: ở đây với mũi tên vẽ liền đại diện cho luồng di chuyển message \textit{ra ngoài}, còn mũi tên nét đứt đại diện cho message được gởi \textit{vào}.
+
+\subsection{Message: }
+\textbf{Message} là dữ liệu cơ bản được truyền đi nhằm thực hiện giao tiếp giữa hai ứng dụng với nhau.
+
+% Cuong viet o cho nay nhe
+
+\subsection{ThreadSafe Queue: }
+
+% Cuong viet o cho nay nhe
+
+
+\underline{Lưu ý}: ThreadSafe Queue được sử dụng cho mọi hàng đợi được tạo ra trong phần Network, vì thế để thuận tiện, kể từ bây giờ chúng tôi sẽ gọi là \textit{Hàng đợi} (\textit{Queue}) và ngầm hiểu đó là đối tượng \textit{ThreadSafe Queue}.
+
+\subsection{Session: }
+\textbf{Session} là thành phần chính của kiến trúc mạng của chúng tôi. Thành phần này được thiết kế như là nơi thực hiện việc giao tiếp trực tiếp với đối tượng bên ngoài thông qua socket. Mỗi session sẽ chỉ tạo với mỗi kết nối được thiết lập giữa \textit{Client} và \textit{Server} và được dùng để giao tiếp giữa chính hai đối tượng đó. Điều này giúp việc quãn lý bộ nhớ và các trạng thái một cách dễ dàng và tự động, giảm độ phức tạp trong việc xử lý gởi nhận trong quá trình giao tiếp.
+
+Session chứa các đối tượng chính như là: 
+\begin{itemize}
+	\item \textbf{Socket} - Endpoint cho kết nối. Trong kiến trúc mạng của chúng tôi, chỉ session mới chứa socket để thực hiện giao tiếp.
+	\item \textbf{IncommingQueue} - Hàng đợi message cho dữ liệu được nhận vào, được thiết kế là một đối tượng std::shared\_ptr và được tham chiếu bởi cả \textit{Session} và đối tượng chứa nó (\textit{Client} hoặc \textit{Server}). Khi \textit{Session} nhận được message từ bên ngoài, đối tượng này sẽ kiểm tra tính hợp lệ của message (theo phong cách đã được định nghĩa), sau đó sẽ được đưa vào xử lý bởi \textit{Client} và \textit{server}. Điều này giúp làm tránh các xung đột và những bất cập trong việc quãn lý khi một server có thể xử lý nhiều \textit{Session}. Khi đó, các đối tượng như \textit{Server} hay \textit{Client} có thể dễ dàng xử lý trong một hàng đợi duy nhất và gởi đi message mới cho đúng \textit{Session}.
+	\item \textbf{OutcommingQueue} - Hàng đợi message cho dữ liệu gởi đi. Khác với \textit{IncommingQueue}, \textit{OutcommingQueue} chỉ được tham chiếu bởi \textit{Session}. Trong khi kết nối được thiết lập, \textit{Session} sẽ luôn kiểm tra \textit{OutcommingQueue} còn dữ liệu không, nếu có sẽ gởi tất cả những dữ liệu bên trong và đợi cho đến khi có message mới được thêm vào.
+\end{itemize}
+
+\subsection{IClient và IServer: }
+\textit{IClient} và \textit{IServer} là hai abstract class tạo ra để quãn lý, phân phối và xử lý các event và message.  \\
+Trong \textit{IClient} và \textit{IServer} đều được thiết kế các hàm để kết nối, chấp nhận kết nối, gởi và nhận các message từ \textit{Session} và quãn lý các \textit{Session} này. \textit{Client} và \textit{Server} chứa một hàng đợi gọi là \textit{IncommingQueue} như hình trên đã thể hiện. Chúng có nhiệm vụ nhận các message từ \textit{Session} và phân phối và xử lý dựa trên HeadID của message mà phân phối cho các handler phù hợp. \\
+Trong cách implementation của mình, chúng tôi chỉ cho các class này tạo ra 2 \textit{Session} mỗi kết nối, một cho việc truyền dữ liệu ảnh từ \textit{Server} sang \textit{Client}, một dành cho việc truyền các event điều khiển từ \textit{Client} sang \textit{Server}. Việc này giúp dữ liệu ở \textit{Session} không bị tràn khi mà kích thước dữ liệu ảnh sẽ khá lớn. 
+
+
+Một vài điểm khác biệt giữa Client và Server ở đây: 
+\begin{itemize}
+	\item \textbf{IServer: } Là đối tượng được phía \textbf{Client} kết nối đến và điều khiển từ xa. \textit{IServer} chứa các đối tượng acceptor của thư viện ASIO, nhằm \textit{accept} các kết nối từ \textit{Client}. Để tránh các xung đột không cần thiết, chúng tôi đã thiết kế mỗi một Server chỉ tạo duy nhất một kết nối với một Client.
+	\item \textbf{IClient: } Là đối tượng được dùng để điều khiển máy từ xa hay cụ thể ở đây chính là \textit{Server}. 
+\end{itemize}
+
+\subsection{Giao tiếp giữa các thành phần: }
+
+\subsubsection{Thiết lập kết nối: }
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=\linewidth]{latex/architechture/connecting}
+	\caption{Establish connection}
+\end{figure}
+
+\subsubsection{Nhận và gởi: }
+

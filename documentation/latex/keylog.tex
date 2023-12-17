@@ -1,0 +1,60 @@
+\subsection{Keylogger}
+Server sẽ gửi lệnh \textbf{KEYLOG} cho client. Do thiết kế của các hàm có sẵn cho việc keylog ở client, server sẽ gửi 2 lệnh \textbf{HOOK} đến client để lấy các hành động giữa 2 lần. Sau đó, một lệnh \textbf{PRINT} được gửi đến client để client gửi dữ liệu về các phím nhấn đã bắt được cho server. Server nhận kết quả từ client.\\
+Các hàm cho quá trình này như sau:
+\begin{itemize}
+\item Ở server ((mail$\_$handler.py): 
+\begin{lstlisting}
+def keylog(ip_address, time=10):
+\end{lstlisting}
+Chức năng: gửi yêu cầu keylog đến client, nhận kết quả từ client gửi về, gửi mail trả lời cho người dùng.\\
+Tham số: 
+\begin{itemize}
+\item \lstinline{ip_address}: kiểu tuple(str, int) chứa địa chỉ ip và port của client gửi tới.
+\item \lstinline{time}: thời gian keylog (giây).
+\end{itemize}
+Không có giá trị trả về.\\
+Sử dụng hàm \lstinline{sleep} của thư viện time.
+\item Ở client (keylogger$\_$client.py):
+\begin{lstlisting}
+def keylog(client):
+\end{lstlisting}
+Chức năng: nhận lệnh từ server, bắt các phím nhấn rồi gửi kết quả lại cho server, ngoài ra còn có chức năng phụ để có thể khóa phím người dùng (Không được đề cập trong chương trình).\\
+Tham số: 
+\begin{itemize}
+\item \lstinline{client}: socket kết nối server với client.
+\end{itemize}
+Không có giá trị trả về.\\
+Thư viện sử dụng: threading, keyboard, pynput.keyboard.\\
+Ngoài ra, ở client còn có các hàm để bổ trợ cho hàm \lstinline{keylog} trong việc bắt phím nhấn cũng như gửi kết quả lại cho server.
+
+\begin{lstlisting}
+def keylogger(key):
+\end{lstlisting}
+Chức năng: Dựa vào \lstinline{global} flag (nhận giá trị 0, 1, 2, 4), thực hiện xử lý \lstinline{key} lấy được từ \lstinline{Listener} trong hàm \lstinline{listen()} như sau:\\
++ Thay thế \lstinline{space} thành ký tự khoảng trắng\\
++ Thay thế phím ' thành chuỗi phù hợp \\
++ Lọc bỏ toàn bộ ký tự ' dư thừa \\
++ Nối vào câu \\
+Tham số: 
+\begin{itemize}
+\item \lstinline{key}: Phím được bắt từ quá trình Listener
+\end{itemize}
+Không có giá trị trả về.\\
+
+\begin{lstlisting}
+def _print(client):
+\end{lstlisting}
+Chức năng: Gửi câu đang được ghi về server\\
+Tham số: 
+\begin{itemize}
+\item \lstinline{client}: socket kết nối server với client..
+\end{itemize}
+Không có giá trị trả về.
+
+\begin{lstlisting}
+def listen():
+\end{lstlisting}
+Chức năng: Tạo thread mới để ghi bàn phím (sử dụng hàm keylogger để xử lý)\\
+Không có giá trị trả về.\\
+
+\end{itemize}
