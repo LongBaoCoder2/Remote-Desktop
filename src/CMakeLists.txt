@@ -15,76 +15,14 @@ set(wxWidgets_USE_STATIC 1)
 
 find_package(wxWidgets REQUIRED)
 
-set(asio_PACKAGE_DIR ../thirdparty/asio)
-
-set(SOURCE_DIR "")
-
-# set(SRCS main.cpp)
-# file(GLOB SOURCE_FILES 
-#     main.cpp
-#     "${SOURCE_DIR}/*.cpp"
-#     "${SOURCE_DIR}/*.h"
-# )
-file(GLOB_RECURSE SOURCE_FILES 
-    main.cpp 
-    models/*.cpp
-    networks/*.cpp
-    utils/FileNameGenerator/*.cpp
-    windows/MainWindow/MenuWindow/ListUserPanel.cpp
-    windows/MainWindow/CaptureWindow/ClientWindow/KeylogWindow.cpp
-    windows/Application.cpp 
-    windows/BasicTextWindow/*.cpp
-    windows/components/NavigationBar/*.cpp
-    windows/LoginWindow/LoginFrame.cpp 
-    windows/MainWindow/*.cpp
-    windows/MainWindow/CaptureWindow/ClientWindow/*.cpp
-    windows/MainWindow/CaptureWindow/ServerWindow/*.cpp
-    windows/MainWindow/CaptureWindow/*.hpp
-    windows/MainWindow/HomeWindow/*.cpp
-    windows/MainWindow/ManageWindow/*.cpp
-    windows/MainWindow/MenuWindow/*.cpp
-    windows/MainWindow/SettingsWindow/*.cpp
-    windows/event/*.cpp
-    windows/MainWindow/InforNetwork.cpp
-)
-
-file(GLOB_RECURSE HEADER_FILES 
-    models/*.hpp
-    windows/Application.h 
-    windows/LoginWindow/LoginFrame.h 
-    windows/CaptureWindow/*.h
-    windows/MainWindow/*.hpp
-    networks/*.h
-    windows/*.hpp
-    utils/FileNameGenerator/*.hpp
-    windows/BasicTextWindow/*.hpp
-    windows/MainWindow/ClientWindow/*.hpp
-    windows/MainWindow/ServerWindow/*.hpp
-    windows/LoginWindow/NavigationEvent.hpp
-    windows/MainWindow/MenuWindow/*.hpp
-    networks/client/*.h
-    networks/server/*.h
-    utils/*.hpp
-    windows/event/*.hpp
-    windows/MainWindow/InforNetwork.hpp
-)
-
-add_definitions(-D_WIN32_WINNT=0x0601)
-
-# set(OpenCV_DIR C:/ProgramData/opencv/build)
-
-# find_package(OpenCV REQUIRED)
-# include_directories(${OpenCV_INCLUDE_DIRS})
+set(SRCS main.cpp)
 
 include(${wxWidgets_USE_FILE})
 include_directories(../thirdparty/asio)
 
-link_directories(${LINK_WEBP})
-
-
 if(APPLE)
     # create bundle on apple compiles
-    add_executable(main MACOSX_BUNDLE ${SOURCE_FILES})
+    add_executable(main MACOSX_BUNDLE ${SRCS})
 
     # Set a custom plist file for the app bundle - needed for Mac OS Retina display
     set_target_properties(main PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/Info.plist)
