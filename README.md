@@ -3,7 +3,7 @@
 </div>
 
 ## 👋🏻 Getting Started
-We are from fit@hcmus, and this is our final project for Computer Networking course (CSC10008).
+We are from fit@hcmus, and this is our final project for Computer Networking course (CSC10008). \\
 Our application is designed with the aim of connecting individuals by enabling users to remotely control one computer from another, incorporating features such as image transmission, data transfer, remote monitor control, establishing and managing multiple connections, ...
 
 Please be aware that this project is currently under active development, and feedback is welcome for any [issues][issues-link] encountered.
