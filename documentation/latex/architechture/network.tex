@@ -5,6 +5,7 @@
 	\centering
 	\includegraphics[width=\linewidth]{latex/architechture/architechture_diagram.png}
 	\caption{Networking Architechture Diagram}
+	\label{fig:network}
 \end{figure}
 
 Trên đây là mô hình cơ bản của kiến trúc network của chúng tôi và luồng di chuyển của message. Lưu ý: ở đây với mũi tên vẽ liền đại diện cho luồng di chuyển message \textit{ra ngoài}, còn mũi tên nét đứt đại diện cho message được gởi \textit{vào}.
@@ -53,4 +54,8 @@ Một vài điểm khác biệt giữa Client và Server ở đây:
 \end{figure}
 
 \subsubsection{Nhận và gởi: }
-
+Sơ đồ \ref{fig:network} cũng đã mô tả quá trình giao tiếp giữa các thành phần trong mạng với nhau. 
+\begin{itemize}
+	\item Ở quá trình \textbf{gởi}: Sau khi message được tạo bởi \textit{Client} hoặc \textit{Server}, message sẽ được kiểm tra đưa vào đúng \textit{Session} cần gởi. Message khi vào \textit{Session} sẽ được đưa vào \textit{OutcommingQueue} để chờ các gói message phía trước nó được gởi. Khi đến lượt, message sẽ được gởi thông qua hai giai đoạn: \textit{WriteHeader()} gởi Header và \textit{WriteBody()} gởi Body bằng \textit{Socket}. Việc này sẽ làm giảm sức ép lên băng thông và vẫn đảm bảo nhận đủ dữ liệu khi mà kích thước của Header là cố định còn kích thước Body đã được lưu trữ ở Header.
+	\item Ở quá trình \textbf{Nhận}: Khi nhận, \textit{socket} của \textit{Session} bên nhận sẽ là nơi xử lý đầu tiên, lặp lại đúng như thứ tự gởi ở bên gởi. \textit{ReadHeader()} và \textit{ReadBody()}. Khi quá trình nhận hoàn thành, message mới sẽ được tạo và sẽ được đẩy vào \textit{IncommingQueue} để \textit{Client} hoặc \textit{Server} để xử lý.
+\end{itemize}
