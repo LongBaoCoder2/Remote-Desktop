@@ -49,6 +49,8 @@ void ClientWindow::ConnectToHost(std::string& host)
         wxBitmap("assets/keylog.png", wxBITMAP_TYPE_PNG),
         "End current session", wxITEM_NORMAL);
 
+    toolbar->EnableTool(CONFIG_APP::ID_TOOL_KEYLOG, false);
+
     toolbar->AddTool(CONFIG_APP::ID_TOOL_HOOK, "Hook",
         wxBitmap("assets/hook.png", wxBITMAP_TYPE_PNG),
         "Receive special keys", wxITEM_NORMAL);
@@ -446,9 +448,11 @@ void ClientWindow::OnUnhookClick(wxCommandEvent& event) {
 
 void ClientWindow::OnClose(wxCloseEvent& event) {
     net::IClient<RemoteMessage>::Disconnect();
-    clientTextWindow->Destroy();
-    this->Destroy();
-    // event.Skip();
+    if (clientTextWindow->IsBeingDeleted() == false) {
+        clientTextWindow->Destroy();
+    }
+    // this->Destroy();
+    event.Skip();
 }
 
 ClientWindow::~ClientWindow() {

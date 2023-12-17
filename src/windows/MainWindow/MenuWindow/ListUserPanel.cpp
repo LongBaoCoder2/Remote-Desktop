@@ -33,7 +33,7 @@ ListUserPanel::ListUserPanel(wxWindow* parent,
     auto AddUserButton = new Button(AddUserButtonPanel, wxID_ANY, "Add new user", wxDefaultPosition, wxSize(120, 40));
     AddUserButton->Bind(wxEVT_LEFT_DOWN, &ListUserPanel::OnAddUser, this);
 
-    auto ConnectionButton = new Button(AddUserButtonPanel, wxID_ANY, "Connection to user", wxDefaultPosition, wxSize(140, 40));
+    auto ConnectionButton = new Button(AddUserButtonPanel, wxID_ANY, "Connect to user", wxDefaultPosition, wxSize(140, 40));
     ConnectionButton->Bind(wxEVT_LEFT_DOWN, &ListUserPanel::OnOpenConnect, this);
 
 
