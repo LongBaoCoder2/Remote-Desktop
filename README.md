@@ -39,7 +39,7 @@ unzip -q Remote-Control.zip -d Remote-Control
 
 ## 🛳 Build from source code
 
-> [!IMPORTANT] Prerequisite
+> [!IMPORTANT]
 > We utilize `CMake` for building, testing, and packaging automatically. Therefore, the initial step involves installing this tool. Ensure that your language version is C++17.
 
 
