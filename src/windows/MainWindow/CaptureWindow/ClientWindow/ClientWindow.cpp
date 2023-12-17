@@ -348,8 +348,9 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
 }
 
 void ClientWindow::OnKeyDown(wxKeyEvent& event) {
-    if(static_cast<uint32_t>(event.GetRawKeyCode()) == 91)
+    if (checkValidKey(static_cast<uint32_t>(event.GetRawKeyCode())) == false) {
         return;
+    }
     // Tạo message bàn phím
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyPress;
@@ -361,8 +362,9 @@ void ClientWindow::OnKeyDown(wxKeyEvent& event) {
 }
 
 void ClientWindow::OnKeyUp(wxKeyEvent& event) {
-    if(static_cast<uint32_t>(event.GetRawKeyCode()) == 91)
+    if (checkValidKey(static_cast<uint32_t>(event.GetRawKeyCode())) == false) {
         return;
+    }
     // Tạo message bàn phím
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyRelease;
@@ -373,13 +375,25 @@ void ClientWindow::OnKeyUp(wxKeyEvent& event) {
     // event.Skip();
 }
 
+bool ClientWindow::checkValidKey(uint32_t keyCode) {
+    if(keyCode == 91)
+        return false;
+    if(keyCode == 92)
+        return false;
+    if(keyCode == 18)
+        return false;
+    if(keyCode == 28)
+        return false;
+    return true;
+}
+
 LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode >= 0 && allowHook) {
         KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
         DWORD vkCode = kbdStruct->vkCode;
 
+        net::message<RemoteMessage> m;
         if (vkCode == VK_LWIN || vkCode == VK_RWIN) {
-            net::message<RemoteMessage> m;
             if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
                 m.header.id = RemoteMessage::KeyPress;
             }
@@ -387,6 +401,25 @@ LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
                 m.header.id = RemoteMessage::KeyRelease;
             }
             m << 91;
+            instance->Send(m);
+            return 1;
+        }
+        else if (vkCode == VK_LMENU || vkCode == VK_RMENU) { // Alt trái
+            if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+                m.header.id = RemoteMessage::KeyPress;
+            } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+                m.header.id = RemoteMessage::KeyRelease;
+            }
+            m << 18;
+            instance->Send(m);
+            return 1;
+        } else if (vkCode == VK_ESCAPE) {
+            if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+                m.header.id = RemoteMessage::KeyPress;
+            } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+                m.header.id = RemoteMessage::KeyRelease;
+            }
+            m << 28;
             instance->Send(m);
             return 1;
         }

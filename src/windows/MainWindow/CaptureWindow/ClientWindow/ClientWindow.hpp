@@ -63,6 +63,7 @@ private:
     void OnClose(wxCloseEvent& event);
     void SendMetadata();
 
+    bool checkValidKey(uint32_t keyCode);
     void RemoveKeyboardHook();
     void SetKeyboardHook();
     static LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);

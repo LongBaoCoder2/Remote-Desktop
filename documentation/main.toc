@@ -22,7 +22,9 @@
 \contentsline {subsubsection}{\numberline {2.4.3}Kết nối đến Server (nút Connect/Connect to user)}{12}{subsubsection.2.4.3}%
 \contentsline {subsubsection}{\numberline {2.4.4}Ngắt kết nối với Server (nút Disconnect)}{14}{subsubsection.2.4.4}%
 \contentsline {subsubsection}{\numberline {2.4.5}Chụp màn hình Server (nút Save Capture)}{15}{subsubsection.2.4.5}%
-\contentsline {subsection}{\numberline {2.5}Màn hình Manager}{15}{subsection.2.5}%
-\contentsline {subsection}{\numberline {2.6}Cửa sổ Setting}{15}{subsection.2.6}%
-\contentsline {section}{\numberline {3}Demo}{15}{section.3}%
-\contentsline {section}{Lời cảm ơn}{16}{section*.1}%
+\contentsline {subsubsection}{\numberline {2.4.6}Gửi tín hiệu điều khiển cho Server}{15}{subsubsection.2.4.6}%
+\contentsline {subsubsection}{\numberline {2.4.7}Gửi các tín hiệu phím đặc biệt đến cho Server (nút Hook/Unhook)}{15}{subsubsection.2.4.7}%
+\contentsline {subsection}{\numberline {2.5}Màn hình Manager}{16}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Cửa sổ Setting}{16}{subsection.2.6}%
+\contentsline {section}{\numberline {3}Demo}{17}{section.3}%
+\contentsline {section}{Lời cảm ơn}{18}{section*.1}%
