@@ -1,9 +1,8 @@
 <div align='center'>
-# Remote Desktop Control
----
+<h1>Remote Desktop Control</h1>
 </div>
 
-👋🏻 Getting Started
+##👋🏻 Getting Started
 We are from fit@hcmus, and this is our final project for Computer Networking course (CSC10008).
 Our application is designed with the aim of connecting individuals by enabling users to remotely control one computer from another, incorporating features such as image transmission, data transfer, remote monitor control, establishing and managing multiple connections, ...
 
