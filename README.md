@@ -11,14 +11,12 @@ Please be aware that this project is currently under active development, and fee
 <details>
 <summary><kbd>Table of contents</kbd></summary>
 
-#### TOC
+#### 
 
-- [👋🏻 Getting Started](#-getting-started--join-our-community)
 - [✨ Features](#-features)
 - [⚡️ Try our app](#️-performance)
 - [🛳 Build from source code ](#-contributed)
 - [🤝 Contributing](#-contributing)
-- [🩷 Sponsor](#-sponsor)
 - [🔗 About us](#-about-us)
 
 ####
