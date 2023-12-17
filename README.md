@@ -43,7 +43,13 @@ unzip -q Remote-Control.zip -d Remote-Control
 > We utilize `CMake` for building, testing, and packaging automatically. Therefore, the initial step involves installing this tool. Ensure that your language version is C++17.
 
 
-Everything has been configured and automated. Your task is to use the following script to download the necessary packages and build the project: 
+Clone the repository: 
+```
+git clone https://github.com/LongBaoCoder2/HCMUS-Project-Remote-Desktop
+cd HCMUS-Project-Remote-Desktop
+```
+
+Everything has been configured and automated. So your task is to use the following script to download the necessary packages and build the project: 
 ```
 cmake -S. -Bbuild
 cmake --build build
