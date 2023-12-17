@@ -290,13 +290,13 @@ void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
     event.Skip();
 }
 
-// void ClientWindow::OnMouseMove(wxMouseEvent& event) {
-//     net::message<RemoteMessage> m;
-//     m.header.id = RemoteMessage::MouseMove;
-//     m << event.GetX() << event.GetY();
-//     Send(m);
-//     event.Skip();
-// }
+void ClientWindow::OnMouseMove(wxMouseEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::MouseMove;
+    m << event.GetX() << event.GetY();
+    Send(m);
+    event.Skip();
+}
 
 // void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
 //     net::message<RemoteMessage> m;

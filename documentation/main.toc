@@ -26,5 +26,14 @@
 \contentsline {subsubsection}{\numberline {2.4.7}Gửi các tín hiệu phím đặc biệt đến cho Server (nút Hook/Unhook)}{15}{subsubsection.2.4.7}%
 \contentsline {subsection}{\numberline {2.5}Màn hình Manager}{16}{subsection.2.5}%
 \contentsline {subsection}{\numberline {2.6}Cửa sổ Setting}{16}{subsection.2.6}%
-\contentsline {section}{\numberline {3}Demo}{17}{section.3}%
-\contentsline {section}{Lời cảm ơn}{18}{section*.1}%
+\contentsline {section}{\numberline {3}Kiến trúc ứng dụng: }{17}{section.3}%
+\contentsline {section}{\numberline {4}Kiến trúc Network: }{17}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Message: }{18}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}ThreadSafe Queue: }{18}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Session: }{18}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}IClient và IServer: }{18}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Giao tiếp giữa các thành phần: }{19}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Thiết lập kết nối: }{19}{subsubsection.4.5.1}%
+\contentsline {subsubsection}{\numberline {4.5.2}Nhận và gởi: }{19}{subsubsection.4.5.2}%
+\contentsline {section}{\numberline {5}Demo}{20}{section.5}%
+\contentsline {section}{Lời cảm ơn}{21}{section*.1}%
