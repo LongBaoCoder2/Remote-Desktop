@@ -46,4 +46,4 @@ cmake -S. -Bbuild
 cmake --build build
 ```
 
-This will create a directory named _build_ and create all build artifacts there. The main executable can be found in the `build/subprojects/Build/wx_cmake_template_core` folder.
+This will create a directory named _build_ and create all build artifacts there. The main executable can be found in the `build/subprojects/Build/Remote_desktop` folder.
