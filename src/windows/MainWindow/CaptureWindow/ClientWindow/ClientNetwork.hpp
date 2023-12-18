@@ -13,6 +13,7 @@ enum class RemoteMessage : uint32_t
     SERVER_UPDATE,
     SERVER_DISCONNECT,
     CLIENT_ACCEPT,
+    CLIENT_DISCONNECT,
     MouseClick,
     MouseUnClick,
     KeyPress,

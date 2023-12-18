@@ -248,6 +248,7 @@ void ServerWindow::OnMessage(
         Input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
         Input.mi.dx = fx;
         Input.mi.dy = fy;
+        // SetCursorPos(fx, fy);
         SendInput(1, &Input, sizeof(INPUT));
         break;
     }
@@ -320,7 +321,16 @@ void ServerWindow::OnMessage(
     case RemoteMessage::CaptureRequest: {
         takeScreenshot();
         sendScreenshot(RemoteMessage::CaptureSend);
+        break;
     }
+
+    case RemoteMessage::CLIENT_DISCONNECT: {
+        textCtrl->AppendText(
+            wxString::Format(wxT("The client has disconnected!\n")));
+        OnClientDisconnect(client);
+        break;
+    }
+    
     }
 }
 

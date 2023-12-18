@@ -1,0 +1,38 @@
+\section{Tổ chức chương trình và hàm chức năng: }
+
+\subsection{Các class và function: }
+Trong mục này, chúng tôi sẽ trình bày về các lớp và các hàm chức năng chính trong đồ án. Phần quan trọng nhất ở ứng dụng Remote Desktop đó chính là thành phần Network. Như đã nói ở trên, thành phần Network đã được cài đặt qua nhiều lớp trừu tượng. Điều này cho phép chúng tôi linh động hơn trong cài đặt cũng như phát triển nhiều tính năng cho ứng dụng hơn. \\
+
+Chúng tôi tách biệt \textit{Client} và \textit{Server} thành hai class đa kế thừa. Cả hai đều kế thừa từ một class có sẵn đó là \textit{wxFrame} nhằm mục địch tạo giao diện người dùng và là đối tượng nhận và xử lý các sự kiện từ người dùng và các sự kiện từ Network. Ngoài ra, mỗi lớp \textit{Client} và \textit{Server} đều kế thừa từ các interface của nó, tương ứng với \textit{IClient} và \textit{IServer} như đã trình bày ở phần \ref{sec:network-archi}. Cả hai đối tượng được khởi tạo khi quá trình kết nối bắt đầu. Với \textit{Client}, một window sẽ được tạo và cho phép người dùng có thể điều khiển máy từ xa, còn với \textit{Server} đó là một window Logger với chức năng theo dõi quá trình điều khiển. Khi quá trình kết nối kết thúc, hai đối tượng sẽ được giải phóng.
+
+Sau đây, chúng ta hãy cùng xem các hàm và các chức năng chính trong ứng dụng:
+\subsubsection{Client: }
+Khi khởi tạo, \textit{Client} sẽ khởi tạo các hàm \textit{control} cần thiết cho giao diện.
+
+Các hàm chức năng chính của \textit{Client}: 
+\begin{itemize}
+	\item \lstinline{void ConnectToHost(std::string& host)}: Hàm thực hiện việc kết nối đến \textit{Server}, khởi tạo đối tượng \textit{wxTimer} - đối tượng này cho phép chúng ta thực hiện \textbf{thao tác} nào đó sau mỗi khoảng thời gian cụ thể. 
+	\item \lstinline{void OnUpdateWindow(wxTimerEvent& event)}: Hàm \textbf{thao tác} của đối tượng wxTimer trên. Giống như một vòng lặp, Timer sẽ liên tục xử lý các message được gởi đến từ \textit{Server} và tùy thuộc vào loại message(header) gởi đến mà hàm sẽ thực hiện một thao tác cụ thể nào đó như đã miêu tả ở phần Thiết kế protocol. Khi quá trình điều khiển bắt đầu, tức là \textit{Server} sẽ liên tục gởi message header đó là \textit{SERVER\_UPDATE}, \textit{Client} sẽ đọc dữ liệu ảnh từ message và truyền vào đối tượng biến \textit{screenshot} để render lên màn hình. Tuy nhiên, trong quá trình gởi, bức ảnh đã được nén bằng đối tượng \textit{wxMemoryInputStream} và thay đổi kích thước sao cho phù hợp với kích thước window \textit{Client}. Tuy nhiên, với chức năng Capture màn hình, chúng tôi thiết kế thao tác để sao cho có thể giữ nguyên độ phân giải của màn hình \textit{Server}.
+	\item \lstinline{void UpdatePanel()} Sau khi nhận được ảnh từ \textit{Server}. Hàm này có chức năng "vẽ" đối tượng \textit{screenshot} lên màn hình. 
+	\item Các hàm nhận sự kiện về chuột máy tính từ Client:
+		\begin{itemize}
+			\item[] \lstinline{void OnMouseMove(wxMouseEvent& event)}: nhận sự kiện khi di chuyển chuột trên cửa sổ Client.
+			\item[] \lstinline{void OnMouseClick(wxMouseEvent& event)}: nhận sự kiện khi click chuột trên cửa sổ Client. Bao gồm các sự kiện: chuột trái, chuột phải, chuột giữa, và AuxClick.
+			\item[] \lstinline{void OnMouseUnClick(wxMouseEvent& event)}: nhận sự kiện khi thả click chuột trên cửa sổ Client.
+			\item[] \lstinline{void OnMouseDoubleClick(wxMouseEvent& event)}: nhận sự kiện khi nháy đúp chuột trên cửa sổ Client.
+			\item[] \lstinline{void OnMouseWheel(wxMouseEvent& event)}: nhận sự kiện khi cuộn chuột trên cửa sổ Client.
+		\end{itemize}
+	\item Các hàm nhận sự kiện về bàn phím từ Client:
+	\begin{itemize}
+		\item[] \lstinline{void OnKeyDown(wxMouseEvent& event)}: nhận sự kiện khi ấn phím.
+		\item[] \lstinline{void OnKeyUp(wxMouseEvent& event)}: nhận sự kiện khi thả phím.
+	\end{itemize}
+	\item Các hàm bổ trợ khác:
+		\begin{itemize}
+			\item[] \lstinline{void OnDisconnectClick(wxCommandEvent& event)}: Hàm xử lý phím ngắt kết nối.
+			\item[] \lstinline{LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)}: Callback được tái định nghĩa. Hàm có chức năng xử lý sự kiện bàn phím đặc biệt bằng cách chặn việc lan truyền sự kiện xuống hệ điều hành và chỉ gởi sự kiện cho Server. Ví dụ: phím Window,...
+		\end{itemize}
+ \end{itemize}
+ 
+ 
+

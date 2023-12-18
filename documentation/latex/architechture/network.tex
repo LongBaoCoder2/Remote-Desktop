@@ -1,4 +1,5 @@
-\section{Kiến trúc Network: }
+\subsection{Kiến trúc Network: }
+\label{sec:network-archi}
 Ở phần này chúng tôi sẽ giới thiệu các thành phần cơ bản của Network. \\
 
 \begin{figure}[H]
@@ -10,7 +11,7 @@
 
 Trên đây là mô hình cơ bản của kiến trúc network của chúng tôi và luồng di chuyển của message. Lưu ý: ở đây với mũi tên vẽ liền đại diện cho luồng di chuyển message \textit{ra ngoài}, còn mũi tên nét đứt đại diện cho message được gởi \textit{vào}.
 
-\subsection{Message: }
+\subsubsection{Message: }
 \textbf{Message} là dữ liệu cơ bản được truyền đi nhằm thực hiện giao tiếp giữa hai ứng dụng với nhau.
 
 Kiểu dữ liệu được thiết kế gồm hai phần
@@ -33,7 +34,7 @@ Kiểu dữ liệu này bản chất là một hàng đợi hai đầu, nhưng �
 
 \underline{Lưu ý}: ThreadSafe Queue được sử dụng cho mọi hàng đợi được tạo ra trong phần Network, vì thế để thuận tiện, kể từ bây giờ chúng tôi sẽ gọi là \textit{Hàng đợi} (\textit{Queue}) và ngầm hiểu đó là đối tượng \textit{ThreadSafe Queue}.
 
-\subsection{Session: }
+\subsubsection{Session: }
 \textbf{Session} là thành phần chính của kiến trúc mạng của chúng tôi. Thành phần này được thiết kế như là nơi thực hiện việc giao tiếp trực tiếp với đối tượng bên ngoài thông qua socket. Mỗi session sẽ chỉ tạo với mỗi kết nối được thiết lập giữa \textit{Client} và \textit{Server} và được dùng để giao tiếp giữa chính hai đối tượng đó. Điều này giúp việc quãn lý bộ nhớ và các trạng thái một cách dễ dàng và tự động, giảm độ phức tạp trong việc xử lý gởi nhận trong quá trình giao tiếp.
 
 Session chứa các đối tượng chính như là: 
@@ -43,7 +44,7 @@ Session chứa các đối tượng chính như là:
 	\item \textbf{OutcommingQueue} - Hàng đợi message cho dữ liệu gởi đi. Khác với \textit{IncommingQueue}, \textit{OutcommingQueue} chỉ được tham chiếu bởi \textit{Session}. Trong khi kết nối được thiết lập, \textit{Session} sẽ luôn kiểm tra \textit{OutcommingQueue} còn dữ liệu không, nếu có sẽ gởi tất cả những dữ liệu bên trong và đợi cho đến khi có message mới được thêm vào.
 \end{itemize}
 
-\subsection{IClient và IServer: }
+\subsubsection{IClient và IServer: }
 \textit{IClient} và \textit{IServer} là hai abstract class tạo ra để quãn lý, phân phối và xử lý các event và message.  \\
 Trong \textit{IClient} và \textit{IServer} đều được thiết kế các hàm để kết nối, chấp nhận kết nối, gởi và nhận các message từ \textit{Session} và quãn lý các \textit{Session} này. \textit{Client} và \textit{Server} chứa một hàng đợi gọi là \textit{IncommingQueue} như hình trên đã thể hiện. Chúng có nhiệm vụ nhận các message từ \textit{Session} và phân phối và xử lý dựa trên HeadID của message mà phân phối cho các handler phù hợp. \\
 Trong cách implementation của mình, chúng tôi chỉ cho các class này tạo ra 2 \textit{Session} mỗi kết nối, một cho việc truyền dữ liệu ảnh từ \textit{Server} sang \textit{Client}, một dành cho việc truyền các event điều khiển từ \textit{Client} sang \textit{Server}. Việc này giúp dữ liệu ở \textit{Session} không bị tràn khi mà kích thước dữ liệu ảnh sẽ khá lớn. 
@@ -55,18 +56,57 @@ Một vài điểm khác biệt giữa Client và Server ở đây:
 	\item \textbf{IClient: } Là đối tượng được dùng để điều khiển máy từ xa hay cụ thể ở đây chính là \textit{Server}. 
 \end{itemize}
 
-\subsection{Giao tiếp giữa các thành phần: }
+\subsubsection{Giao tiếp giữa các thành phần: }
 
-\subsubsection{Thiết lập kết nối: }
+\textbf{a. Thiết lập kết nối:}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{latex/architechture/connecting}
 	\caption{Establish connection}
 \end{figure}
 
-\subsubsection{Nhận và gởi: }
+\textbf{b. Nhận và gởi: }
 Sơ đồ \ref{fig:network} cũng đã mô tả quá trình giao tiếp giữa các thành phần trong mạng với nhau. 
 \begin{itemize}
 	\item Ở quá trình \textbf{gởi}: Sau khi message được tạo bởi \textit{Client} hoặc \textit{Server}, message sẽ được kiểm tra đưa vào đúng \textit{Session} cần gởi. Message khi vào \textit{Session} sẽ được đưa vào \textit{OutcommingQueue} để chờ các gói message phía trước nó được gởi. Khi đến lượt, message sẽ được gởi thông qua hai giai đoạn: \textit{WriteHeader()} gởi Header và \textit{WriteBody()} gởi Body bằng \textit{Socket}. Việc này sẽ làm giảm sức ép lên băng thông và vẫn đảm bảo nhận đủ dữ liệu khi mà kích thước của Header là cố định còn kích thước Body đã được lưu trữ ở Header.
 	\item Ở quá trình \textbf{Nhận}: Khi nhận, \textit{socket} của \textit{Session} bên nhận sẽ là nơi xử lý đầu tiên, lặp lại đúng như thứ tự gởi ở bên gởi. \textit{ReadHeader()} và \textit{ReadBody()}. Khi quá trình nhận hoàn thành, message mới sẽ được tạo và sẽ được đẩy vào \textit{IncommingQueue} để \textit{Client} hoặc \textit{Server} để xử lý.
 \end{itemize}
+
+\subsection{Thiết kế protocol: }
+
+% Cường làm phần này nhá
+Cường làm phần này nhá
+
+
+\subsection{Kiến trúc ứng dụng: }
+
+Ngoài kiến trúc Network đã xây dựng, chúng tôi còn xây dựng thêm các thành phần khác cho ứng dụng nhầm hỗ trợ thêm nhiều tính năng khác:
+
+\subsubsection{Model: }
+\textit{Model} là nơi định nghĩa các đối tượng user và các thuộc tính, thao tác trên đối tượng đó. Ở đây, chúng tôi định nghĩa hai loại \textit{Model} đó là: \textit{Admin} và \textit{User}. \\
+Mỗi loại \textit{Model} sẽ quy định cách thức hoạt động cho cả ứng dụng sau này khi mà \textit{Admin} có chức năng điều khiển, còn \textit{User} là người dùng được điều khiển bởi \textit{Admin}. \\
+Chúng tôi đã thiết kế một vài công cụ cho \textit{Model} nhằm chức năng \textbf{đăng nhập}, \textbf{xác thực người dùng}, \textit{phân quyền người dùng}, và \textit{quãn lý các User} cho \textit{Admin},...
+
+
+\subsubsection{User Interface: }
+Thiết kế giao diện căn bản cho người dùng bằng cách phân chia thành nhiều window khác nhau như: \textbf{LoginWindow}, \textbf{MainWindow}, \textbf{CaptureWindow},...
+
+\subsection{Nhận xét: }
+
+\textbf{Ưu điểm: }
+\begin{itemize}
+	\item \textbf{Phân chia rõ ràng và độc lập}: Kiến trúc được phân chia thành các thành phần như Message, ThreadSafe Queue, Session, IClient và IServer, Giao tiếp giữa các thành phần, giúp chúng hoạt động một cách độc lập và giảm sự phụ thuộc lẫn nhau. Điều này tạo điều kiện thuận lợi cho việc phát triển, giảm thời gian kiểm tra lỗi và sửa lỗi.
+	\item \textbf{Quản lý bộ nhớ và trạng thái tự động}: Session được thiết kế để quản lý bộ nhớ và trạng thái một cách tự động, giúp giảm độ phức tạp trong việc xử lý gửi nhận trong quá trình giao tiếp.
+	\item \textbf{Hàng đợi ThreadSafe:} Sử dụng ThreadSafe Queue cho mọi hàng đợi tạo ra trong phần Network, giúp đảm bảo an toàn khi truy cập từ nhiều luồng thực thi khác nhau.
+	\item \textbf{Quá trình phát triển: } Giúp việc phát triển dễ dàng và nhanh chóng hơn, giảm thời giam kiểm lỗi và sửa lỗi. Việc giảm thiểu sự phụ thuộc giữa các thành phần giúp dễ dàng mở rộng ứng dụng và thêm nhiều tính năng hơn khi quá trình sửa chữa và thay thế trên ít file hơn.
+\end{itemize}
+
+\textbf{Khuyết điểm: }
+\begin{itemize}
+	\item \textbf{Hạn chế do giới hạn kết nối}: Hiện tại, chúng tôi chỉ thiết kế duy nhất hai \textit{Session} cho mỗi Client và Server. Điều này có thể khiến cho vài tính năng khó có thể được hiện thực hóa hơn. 
+	\item \textbf{Giới hạn về tốc độ}: Việc sử dụng Session chung với giao thức TCP có thể làm chậm hơn quá trình gởi nhận ảnh khi yêu cầu của người dùng là real-time. Chúng tôi đã từng xem xét đến việc sử dụng UDP cho ứng dụng. Tuy nhiên, ứng dụng được sử dụng cho người dùng trong mạng LAN nên tốc độ truyền ảnh đã nằm ở mức chấp nhận được. Ngoài ra, chúng tôi nhận thấy rằng việc truyền dữ liệu đáng tin cậy mang nhiều ưu điểm hơn trong ứng dụng Remote Desktop như bảo mật, kiểm soát luồng, đảm bảo hiệu ứng xử lý hình ảnh,...
+	\item \textbf{Quá trình phát triển: } Việc phân chia thành nhiều thành phần làm cho giai đoạn đầu sẽ khá phức tạp và nặng nề. Cả với những ai muốn phát triển và đóng góp cho đồ án cũng sẽ khó tiếp cận hơn. Nhưng về sau, việc phát triển sẽ dễ dàng hơn trước nhiều.
+\end{itemize}
+
+
+

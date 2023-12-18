@@ -131,7 +131,7 @@ void ClientWindow::ConnectToHost(std::string& host)
     CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
 
     // Binding other mouse events
-    // CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this); 
+    CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this); 
     // CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
     // CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
     CapturePanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
@@ -475,6 +475,10 @@ void ClientWindow::OnUnhookClick(wxCommandEvent& event) {
 }
 
 void ClientWindow::OnClose(wxCloseEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::CLIENT_DISCONNECT;
+    Send(m);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     net::IClient<RemoteMessage>::Disconnect();
     if (clientTextWindow->IsBeingDeleted() == false) {
         clientTextWindow->Destroy();
