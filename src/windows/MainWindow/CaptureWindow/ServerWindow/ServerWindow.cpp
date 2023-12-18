@@ -248,8 +248,8 @@ void ServerWindow::OnMessage(
         Input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
         Input.mi.dx = fx;
         Input.mi.dy = fy;
-        SetCursorPos(fx, fy);
-        // SendInput(1, &Input, sizeof(INPUT));
+        // SetCursorPos(fx, fy);
+        SendInput(1, &Input, sizeof(INPUT));
         break;
     }
 
