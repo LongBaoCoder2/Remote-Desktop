@@ -443,6 +443,9 @@ void ClientWindow::OnDisconnectClick(wxCommandEvent& event) {
 
     if (result == wxID_YES) {
         // net::IClient<RemoteMessage>::Disconnect();
+        net::message<RemoteMessage> m;
+        m.header.id = RemoteMessage::CLIENT_DISCONNECT;
+        Send(m);
         Close();
         // Người dùng chọn Đồng ý
         // Thực hiện hành động khi đồng ý đóng kết nối

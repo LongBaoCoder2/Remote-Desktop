@@ -320,7 +320,16 @@ void ServerWindow::OnMessage(
     case RemoteMessage::CaptureRequest: {
         takeScreenshot();
         sendScreenshot(RemoteMessage::CaptureSend);
+        break;
     }
+
+    case RemoteMessage::CLIENT_DISCONNECT: {
+        textCtrl->AppendText(
+            wxString::Format(wxT("The client has disconnected!\n")));
+        OnClientDisconnect(client);
+        break;
+    }
+    
     }
 }
 
