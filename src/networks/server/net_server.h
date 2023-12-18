@@ -175,6 +175,7 @@ namespace net
       m_qMessagesIn.wait();
 
     size_t nCountMessage = 0;
+    // 
     while (nCountMessage++ < nMaxMessages && !m_qMessagesIn.empty())
     {
       auto msg = m_qMessagesIn.pop_front();
