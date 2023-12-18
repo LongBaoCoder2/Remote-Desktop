@@ -15,11 +15,23 @@ Trên đây là mô hình cơ bản của kiến trúc network của chúng tôi
 \label{sec:message}
 \textbf{Message} là dữ liệu cơ bản được truyền đi nhằm thực hiện giao tiếp giữa hai ứng dụng với nhau.
 
-% Cuong viet o cho nay nhe
-Cường làm phần này nhá
-\subsubsection{ThreadSafe Queue: }
-% Cuong viet o cho nay nhe
-Cường làm phần này nhá
+Kiểu dữ liệu được thiết kế gồm hai phần
+\begin{itemize}
+	\item \textbf{Header} chứa những thông tin cơ bản của message, ở đây là \underline{kích cỡ message} và \underline{loại message}, chi tiết về \underline{các loại message} sẽ được trình bày tại phần \textbf{Kiến Trúc Protocol}
+	\item \textbf{Body} chứa \underline{toàn bộ dữ liệu của message}
+\end{itemize}
+
+Việc thiết kế thêm phần Header sẽ giúp cho việc giao tiếp giữa hai ứng dụng trở nên dễ dàng phân loại và quản lý hơn.
+
+\subsection{ThreadSafe Queue: }
+
+Là một kiểu dữ liệu quan trọng trong cấu trúc ứng dụng, được thiết kế để giải quyết tính tuần tự của các sự kiện, kết nối, message....  đảm bảo an toàn khi truy cập dữ liệu, không xảy ra mâu thuẫn, thiếu sót và tối ưu hóa việc sử dụng tài nguyên trong quá trình xử lý đa luồng của máy tính.
+
+Kiểu dữ liệu này bản chất là một hàng đợi hai đầu, nhưng được tích hợp thêm khoá \textit{(Mutex)} và cơ chế \textit{Wait}, cụ thể như sau :
+\begin{itemize}
+	\item \textbf{Mutex} : Ở mỗi thao tác có sự tác động tới dữ liệu trong \textit{Queue}, chúng đều sẽ khoá \textit{Mutex} chung lại, đảm bảo rằng chỉ sau khi xử lý xong công việc mới được tiếp tục đi tới thao tác tác động tới dữ liệu khác, điều này đảm bảo tính nhất quán của dữ liệu trong \textit{Queue}, tránh mâu thuẫn và xung đột khi nhiều luồng cùng truy cập. Điều này rất quan trọng để đảm bảo an toàn khi xử lý đa luồng.
+	\item \textbf{Cơ chế Wait} : nhằm tiết kiệm tài nguyên của máy tính, \textit{Queue} sẽ được đưa vào trạng thái chờ đợi \textit{(không sử dụng tài nguyên)} nếu nó rỗng, và chỉ trở lại hoạt động khi một phần tử mới được thêm vào.
+\end{itemize}
 
 \underline{Lưu ý}: ThreadSafe Queue được sử dụng cho mọi hàng đợi được tạo ra trong phần Network, vì thế để thuận tiện, kể từ bây giờ chúng tôi sẽ gọi là \textit{Hàng đợi} (\textit{Queue}) và ngầm hiểu đó là đối tượng \textit{ThreadSafe Queue}.
 
