@@ -12,6 +12,7 @@
 Trên đây là mô hình cơ bản của kiến trúc network của chúng tôi và luồng di chuyển của message. Lưu ý: ở đây với mũi tên vẽ liền đại diện cho luồng di chuyển message \textit{ra ngoài}, còn mũi tên nét đứt đại diện cho message được gởi \textit{vào}.
 
 \subsubsection{Message: }
+\label{sec:message}
 \textbf{Message} là dữ liệu cơ bản được truyền đi nhằm thực hiện giao tiếp giữa hai ứng dụng với nhau.
 
 Kiểu dữ liệu được thiết kế gồm hai phần
@@ -63,6 +64,7 @@ Một vài điểm khác biệt giữa Client và Server ở đây:
 	\centering
 	\includegraphics[width=\linewidth]{latex/architechture/connecting}
 	\caption{Establish connection}
+	\label{fig:handshake}
 \end{figure}
 
 \textbf{b. Nhận và gởi: }

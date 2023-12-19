@@ -146,7 +146,8 @@ void ServerWindow::OnClientDisconnect(
 
 void ServerWindow::OnMessage(
     std::shared_ptr<net::session<RemoteMessage>> client,
-    net::message<RemoteMessage>& msg) {
+    net::message<RemoteMessage>& msg)
+{
     switch (msg.header.id) {
 
     case RemoteMessage::MouseClick: {
@@ -330,7 +331,7 @@ void ServerWindow::OnMessage(
         OnClientDisconnect(client);
         break;
     }
-    
+
     }
 }
 
