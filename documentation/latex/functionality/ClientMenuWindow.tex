@@ -7,7 +7,7 @@ Dưới đây là nội dung hiển thị của màn hình Menu tương ứng v�
 	\label{fig:ClientMenuWindow}
 \end{figure}
 \subsubsection{Thêm một người dùng mới vào danh sách các kết nối (nút Add new user)}
-Khi ta sử dụng chức năng \textbf{Add new user}, hộp thoại \textbf{Add new user} xuất hiện với 2 trường thông tin cần nhập đó là ``User id'' và ``User IP Address''. Trường ``User id'' yêu cầu ta nhập tên nhận dạng, trường này có kiểu dữ liệu là \verb|std::string|, mục đích của việc điền thông tin này là để tạo lưu lại tên cụ thể trên danh sách các User nằm ở bên dưới để cho ta dễ nhận biết tên User ta muốn kết nối. Ở trường ``User IP Address'', ta nhập địa chỉ IP của máy cần được kết nối (Hình \ref{fig:AddNewUserBox}). 
+Khi ta sử dụng chức năng \textbf{Add new user}, hộp thoại \textbf{Add new user} xuất hiện với 2 trường thông tin cần nhập đó là ``User Id'' và ``User IP Address''. Trường ``User Id'' yêu cầu ta nhập tên nhận dạng, trường này có kiểu dữ liệu là \verb|std::string|, mục đích của việc điền thông tin này là để lưu lại tên cụ thể trên danh sách các User nằm ở bên dưới để cho ta dễ nhận biết tên User ta muốn kết nối. Ở trường ``User IP Address'', ta nhập địa chỉ IP của máy cần được kết nối (Hình \ref{fig:AddNewUserBox}). 
 
 \begin{figure}[H]
 	\centering{\includegraphics[scale=0.5]{AddNewUserBox}}
@@ -69,11 +69,11 @@ Một số lưu ý khi kết nối:
 \end{figure}
 
 \subsubsection{Chụp màn hình Server (nút Save Capture)}\label{subsubsec:saveCapture}
-Để sử dụng chức năng này, trước hết người dùng phía Client cần nhấn nút ``Save Capture''. Sau khi ấn xong, hình ảnh sẽ được lưu vào thư mục ``CURRENTFOLDER\slash Screenshots" với ``CURRENTFOLDER'' là thư mục đang đứng để gọi ứng dụng Remote Desktop Control (Hình \ref{fig:ScreenshotsDirectory}). Hình ảnh được lưu với cú pháp \newline \noindent \verb|dd-mm-yyyy hh-mm-ss screenshot.png|. 
+Để sử dụng chức năng này, trước hết người dùng phía Client cần nhấn nút ``Save Capture''. Sau khi ấn xong, hình ảnh sẽ được lưu vào thư mục ``CURRENT\_FOLDER\slash Screenshots" với ``CURRENT\_FOLDER'' là thư mục đang đứng để gọi ứng dụng Remote Desktop Control (Hình \ref{fig:ScreenshotsDirectory}). Hình ảnh được lưu với cú pháp \newline \noindent \verb|dd-mm-yyyy hh-mm-ss screenshot.png|. 
 
 \begin{figure}[H]
 	\centering{\includegraphics[scale=0.6]{ScreenshotsDirectory}}
-	\caption{Thông báo ở máy Client sau khi Server đóng}
+	\caption{Các ảnh chụp màn hình đã được lưu trong thư mục Screenshots}
 	\label{fig:ScreenshotsDirectory}
 \end{figure}
 
