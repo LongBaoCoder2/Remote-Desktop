@@ -131,7 +131,7 @@ void ClientWindow::ConnectToHost(std::string& host)
     CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
 
     // Binding other mouse events
-    CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this); 
+    // CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this); 
     // CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
     // CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
     CapturePanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
@@ -158,15 +158,11 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 {
     if (IsConnected())
     {
-        // size_t sizeOfQueue = m_connectionEvent->getMessageQueueIn().count();
-        // clientTextWindow->DisplayMessage(wxString::Format(wxT("Queue size: %zu"), sizeOfQueue));
         while (!Incoming().empty())
         {
             auto msg = Incoming().pop_front().msg;
             switch (msg.header.id) {
             case RemoteMessage::SERVER_ACCEPT: {
-                // isWaitingForConnection = false;
-                // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
                 std::string IP_Addr = GetIPAddress();
                 std::string Mac_Addr = GetMACAddress();
                 std::string OS_ver = GetCurrentWindowName();
@@ -175,7 +171,6 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 break;
             }
             case RemoteMessage::SERVER_DENY:
-                // Disconnect();
                 wxMessageBox(wxT("Disconnected from the server."),
                     wxT("Disconnected"),
                     wxICON_INFORMATION | wxOK);
@@ -186,10 +181,6 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 break;
 
             case RemoteMessage::SERVER_UPDATE: {
-                // isWaitingForConnection = false;
-
-                // OnReceiveImage(msg);
-
                 // Tạo một memory stream từ dữ liệu nhận được
                 wxMemoryInputStream memStream(msg.body.data(),
                     msg.body.size());
@@ -259,14 +250,6 @@ void ClientWindow::UpdatePanel() {
 void ClientWindow::ClearPanel() {
     wxClientDC clientDC(CapturePanel);
     clientDC.Clear();
-}
-
-void ClientWindow::OnReceiveImage(net::message<RemoteMessage>& msg) {
-    unsigned char* bitmapData =
-        reinterpret_cast<unsigned char*>(msg.body.data());
-
-    wxImage image(1280, 960, bitmapData, true);
-    screenshot = wxBitmap(image);
 }
 
 // Khi timer đếm giây chạy
@@ -475,10 +458,6 @@ void ClientWindow::OnUnhookClick(wxCommandEvent& event) {
 }
 
 void ClientWindow::OnClose(wxCloseEvent& event) {
-    net::message<RemoteMessage> m;
-    m.header.id = RemoteMessage::CLIENT_DISCONNECT;
-    Send(m);
-    std::this_thread::sleep_for(std::chrono::milliseconds(10));
     net::IClient<RemoteMessage>::Disconnect();
     if (clientTextWindow->IsBeingDeleted() == false) {
         clientTextWindow->Destroy();
