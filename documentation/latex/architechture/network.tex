@@ -74,11 +74,7 @@ Sơ đồ \ref{fig:network} cũng đã mô tả quá trình giao tiếp giữa c
 	\item Ở quá trình \textbf{Nhận}: Khi nhận, \textit{socket} của \textit{Session} bên nhận sẽ là nơi xử lý đầu tiên, lặp lại đúng như thứ tự gởi ở bên gởi. \textit{ReadHeader()} và \textit{ReadBody()}. Khi quá trình nhận hoàn thành, message mới sẽ được tạo và sẽ được đẩy vào \textit{IncommingQueue} để \textit{Client} hoặc \textit{Server} để xử lý.
 \end{itemize}
 
-\subsection{Thiết kế protocol: }
-
-% Cường làm phần này nhá
-Cường làm phần này nhá
-
+\input{latex/architechture/protocol}
 
 \subsection{Kiến trúc ứng dụng: }
 
@@ -87,7 +83,7 @@ Ngoài kiến trúc Network đã xây dựng, chúng tôi còn xây dựng thêm
 \subsubsection{Model: }
 \textit{Model} là nơi định nghĩa các đối tượng user và các thuộc tính, thao tác trên đối tượng đó. Ở đây, chúng tôi định nghĩa hai loại \textit{Model} đó là: \textit{Admin} và \textit{User}. \\
 Mỗi loại \textit{Model} sẽ quy định cách thức hoạt động cho cả ứng dụng sau này khi mà \textit{Admin} có chức năng điều khiển, còn \textit{User} là người dùng được điều khiển bởi \textit{Admin}. \\
-Chúng tôi đã thiết kế một vài công cụ cho \textit{Model} nhằm chức năng \textbf{đăng nhập}, \textbf{xác thực người dùng}, \textit{phân quyền người dùng}, và \textit{quãn lý các User} cho \textit{Admin},...
+Chúng tôi đã thiết kế một vài công cụ cho \textit{Model} nhằm chức năng đăng nhập, xác thực người dùng, phân quyền người dùng, và quãn lý các User cho \textit{Admin},...
 
 
 \subsubsection{User Interface: }
