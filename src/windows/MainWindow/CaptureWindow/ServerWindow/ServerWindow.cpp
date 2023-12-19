@@ -358,7 +358,7 @@ void ServerWindow::closeServer() {
         net::message<RemoteMessage> msg;
         msg.header.id = RemoteMessage::SERVER_DISCONNECT;
         MessageAllClients(msg);
-        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         m_qMessagesIn.stopWait(); // Đặt biến kiểm soát thành false để thoát khỏi vòng lặp
         m_updateMess.join(); // Đợi cho luồng kết thúc
         net::IServer<RemoteMessage>::Stop();
