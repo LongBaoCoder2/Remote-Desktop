@@ -39,3 +39,16 @@ Thư mục này chứa các thành phần khác nhau của giao diện ứng d�
 \begin{itemize}
 	\item 
 \end{itemize}	
+
+
+\subsubsection{Thư mục network: }
+Thư mục này là nơi chúng tôi cài đặt class và hàm cho việc giao tiếp truyền thông qua mạng. Như đã đề cập trước đó, chúng tôi xây dụng gồm các thành phần: \textit{ThreadSafe Queue}, \textit{Message}, \textit{Session}, \textit{IClient}, \textit{IServer}. Và sau đây là cách chúng tôi tổ chức: 
+\begin{itemize}
+	\item \textbf{net\_tsqueue.h}: \verb|tsqueue| được cài đặt ở file này. File đã cài đặt tất cả các phương phức cần thiết của \textit{ThreadSafeQueue}.
+	 \item \textbf{net\_session.h}: \verb|session| được xây dựng với chức năng phụ trách và quãn lý kết nối giữa hai đối tượng.
+	 \item \textbf{net\_message.h}: ở đây, chúng tôi cài đặt hai loại đối tượng message. Một là \verb|message| gốc có header và body như đã trình bày. Ngoài ra, để giúp dễ dàng hơn trong việc quãn lý các kết nối và biết được message thuộc về \verb|message| nào, chúng tôi đã cài đặt thêm \verb|struct owned_message| chứa \verb|message| và một con trỏ đến \verb|session| mà \verb|message| sẽ gởi, hoặc được nhận. 
+	 \item \textbf{net\_server.h}: Sẽ được đặt trong folder \textbf{server}, nơi khai báo và cài đặt abstract class \verb|IServer|.
+	 \item \textbf{net\_client.h}: Sẽ được đặt trong folder \textbf{client}, nơi khai báo và cài đặt abstract class \verb|IClient|. 
+	 \item \textbf{net\_common.h}: File include các thư viện cần thiết cho framework.
+	 \item \textbf{net.h}: Convenience header. Nơi sẽ include tất cả các file phần network. 
+\end{itemize}
