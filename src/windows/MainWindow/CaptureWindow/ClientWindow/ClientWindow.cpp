@@ -1,7 +1,5 @@
 #include "ClientWindow.hpp"
-#include "../../../constant.hpp"
-#include "../../InforNetwork.hpp"
-#include "../../../../utils/FileNameGenerator/FileNameGenerator.hpp"
+
 
 
 wxDEFINE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
@@ -131,7 +129,7 @@ void ClientWindow::ConnectToHost(std::string& host)
     CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
 
     // Binding other mouse events
-    // CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this); 
+    CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this);
     // CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
     // CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
     CapturePanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
@@ -354,13 +352,13 @@ void ClientWindow::OnKeyUp(wxKeyEvent& event) {
 }
 
 bool ClientWindow::checkValidKey(uint32_t keyCode) {
-    if(keyCode == 91)
+    if (keyCode == 91)
         return false;
-    if(keyCode == 92)
+    if (keyCode == 92)
         return false;
-    if(keyCode == 18)
+    if (keyCode == 18)
         return false;
-    if(keyCode == 28)
+    if (keyCode == 28)
         return false;
     return true;
 }
@@ -385,16 +383,19 @@ LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
         else if (vkCode == VK_LMENU || vkCode == VK_RMENU) { // Alt trái
             if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
                 m.header.id = RemoteMessage::KeyPress;
-            } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+            }
+            else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
                 m.header.id = RemoteMessage::KeyRelease;
             }
             m << 18;
             instance->Send(m);
             return 1;
-        } else if (vkCode == VK_ESCAPE) {
+        }
+        else if (vkCode == VK_ESCAPE) {
             if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
                 m.header.id = RemoteMessage::KeyPress;
-            } else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+            }
+            else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
                 m.header.id = RemoteMessage::KeyRelease;
             }
             m << 28;

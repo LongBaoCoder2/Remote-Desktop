@@ -1,0 +1,41 @@
+\subsection{Cấu trúc thư mục mã nguồn của ứng dụng}
+Cấu trúc thư mục và tổ chức tập tin trong mã nguồn của ứng dụng là một phần quan trọng, đóng vai trò quyết định trong việc hiểu cách mà mã nguồn được tổ chức và triển khai. Ở mục này, chúng tôi sẽ trình bày một cái nhìn tổng quan về việc các tệp tin và thư mục của chương trình được sắp xếp như thế nào, giúp người đọc có thể hình dung được cấu trúc của đồ án.
+Trong ứng dụng của chúng tôi, các tập tin mã nguồn được viết trong 4 thư mục chính: \verb|models|, \verb|network|, \verb|utils| và \verb|windows|. Cách tổ chức mã nguồn và chức năng tương ứng với từng thư mục sẽ được mô tả kỹ hơn ở các mục dưới đây.
+
+\subsubsection{Thư mục utils}
+Thư mục \verb|utils| chứa các file mã nguồn phục vụ chức năng hỗ trợ và tiện ích sử dụng cho ứng dụng chính:
+\begin{itemize}
+	\item \textbf{FileNameGenerator}: Đây là thư mục chứa mã nguồn C++ định nghĩa các hàm liên quan đến việc tạo tên file.
+	\begin{itemize}
+		\item \lstinline{wxString CreateScreenshotFileName()}: Hàm được thiết kế để tạo tên file cho ảnh chụp màn hình. Sử dụng thư viện \lstinline{wxDateTime} để lấy thông tin về thời gian hiện tại và tạo chuỗi đại diện cho ngày và giờ. Sau đó, sử dụng các thông tin này để tạo tên file cho ảnh chụp màn hình với định dạng cụ thể. Cú pháp của tên file ảnh chụp màn hình đã được mô tả trong mục \ref{subsubsec:saveCapture}
+	\end{itemize}
+	\item \textbf{NetworkInfo}: Chứa mã nguồn liên quan đến việc thu thập thông tin mạng trong môi trường Windows, bao gồm lấy địa chỉ IP, MAC, tên cửa sổ hiện tại và tên của cửa sổ đang hoạt động.
+\end{itemize}
+
+\subsubsection{Thư mục models}
+Thư mục \verb|models| chứa các thành phần quan trọng liên quan đến việc định nghĩa các đối tượng \textbf{User} và thuộc tính, thao tác trên các đối tượng đó. \verb|models| đóng vai trò trong việc quản lý các  mô hình dữ liệu và các đối tượng người dùng trong ứng dụng của bạn. Nó không chỉ chứa các định nghĩa cho \textbf{Admin} và \textbf{User}, mà còn cung cấp cơ sở hạ tầng để xử lý, quản lý, và tương tác với thông tin người dùng.
+\begin{itemize}
+	\item Giao diện \textbf{IModel}
+	\begin{itemize}
+		\item \textbf{IModel.cpp} và \textbf{IModel.hpp}: Định nghĩa một giao diện chung cho các đối tượng người dùng. Bao gồm các phương thức cơ bản để xử lý thông tin về ID và địa chỉ IP.
+	\end{itemize}
+	\item Đối tượng \textbf{Admin} và \textbf{User}
+	\begin{itemize}
+		\item \textbf{Admin.cpp} và \textbf{Admin.hpp}:  Chức năng: Định nghĩa các tính năng cụ thể của người quản trị. Cho phép quản lý danh sách người dùng và thực hiện các thao tác như thêm, xóa người dùng.
+		\item \textbf{User.cpp} và \textbf{User.hpp}: Định nghĩa và triển khai các tính năng của người dùng trong hệ thống. Được xác định bởi giao diện IModel và cung cấp các phương thức cụ thể.
+	\end{itemize}
+	\item Công cụ hỗ Trợ quản lý người dùng
+	\begin{itemize}
+		\item \textbf{ModelFactory.hpp}: 
+		\begin{itemize}
+			\item Chức năng chính: Trong đây định nghĩa các class sử dụng mẫu thiết kế Factory để tạo các đối tượng người dùng (Admin và User) dựa trên giao diện IModel. Cho phép mở rộng dễ dàng cho việc thêm các đối tượng khác.
+			\item Ngoài ra, class \verb|CheckValidation| có Cung cấp các công cụ để kiểm tra và xác thực thông tin đăng nhập và quyền truy cập người dùng. Thực hiện kiểm tra tính hợp lệ của thông tin đăng nhập theo các tiêu chí cụ thể. 
+		\end{itemize} 
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{Thư mục windows}
+Thư mục này chứa các thành phần khác nhau của giao diện ứng dụng Remote Desktop. Trong thư mục \verb|windows| có phân chia các thư mục con theo từng vai trò phù hợp ứng với các phần khác nhau của giao diện người dùng. Dưới đây là mô tả cho từng thư mục:
+\begin{itemize}
+	\item 
+\end{itemize}	

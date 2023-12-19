@@ -1,4 +1,4 @@
-#include "InforNetwork.hpp"
+#include "NetworkInfo.hpp"
 
 std::string GetIPAddress() {
     WSADATA wsaData;

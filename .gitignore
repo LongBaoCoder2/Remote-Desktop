@@ -12,9 +12,5 @@ _deps
 *.log
 build
 assets/Screenshots
-documentation/main.aux
-documentation/main.lof
-documentation/main.out
 documentation/main.synctex.gz
-documentation/main.tex
-documentation/main.toc
+Screenshots

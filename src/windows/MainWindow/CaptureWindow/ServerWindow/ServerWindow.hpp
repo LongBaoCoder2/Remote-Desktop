@@ -6,6 +6,8 @@
 #include <wx/mstream.h>
 #include <atomic>
 
+#include "../../../../utils/NetworkInfo/NetworkInfo.hpp"
+
 wxDECLARE_EVENT(wxEVT_SERVER_CONNECTED, wxCommandEvent);
 wxDECLARE_EVENT(wxEVT_SERVER_DISCONNECTED, wxCommandEvent);
 
@@ -27,7 +29,7 @@ private:
     void sendScreenshot(RemoteMessage messageType);
     void OnClose(wxCloseEvent& event);
     void closeServer();
-    
+
 
 private:
     wxStaticText* text;

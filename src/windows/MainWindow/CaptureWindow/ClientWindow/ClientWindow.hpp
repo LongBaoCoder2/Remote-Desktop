@@ -5,6 +5,10 @@
 #include <wx/mstream.h>
 #include <wx/overlay.h>
 
+#include "../../../constant.hpp"
+#include "../../../../utils/NetworkInfo/NetworkInfo.hpp"
+#include "../../../../utils/FileNameGenerator/FileNameGenerator.hpp"
+
 wxDECLARE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
 wxDECLARE_EVENT(wxEVT_CLIENT_DISCONNECTED, wxCommandEvent);
 #define DEV
