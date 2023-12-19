@@ -1,6 +1,6 @@
 #include "ClientWindow.hpp"
 #include "../../../constant.hpp"
-#include "../../InforNetwork.hpp"
+#include "../../../../utils/NetworkInfo/NetworkInfo.hpp"
 #include "../../../../utils/FileNameGenerator/FileNameGenerator.hpp"
 
 

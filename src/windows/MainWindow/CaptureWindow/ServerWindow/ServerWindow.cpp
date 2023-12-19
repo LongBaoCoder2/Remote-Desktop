@@ -1,5 +1,5 @@
 #include "ServerWindow.hpp"
-#include "../../InforNetwork.hpp"
+#include "../../../../utils/NetworkInfo/NetworkInfo.hpp"
 
 wxDEFINE_EVENT(wxEVT_SERVER_CONNECTED, wxCommandEvent);
 wxDEFINE_EVENT(wxEVT_SERVER_DISCONNECTED, wxCommandEvent);
