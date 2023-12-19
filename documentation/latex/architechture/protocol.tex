@@ -1,4 +1,4 @@
-\subsection{Thiết kế Protocol: }
+\subsection{Thiết kế Protocol: }\label{subsec:Protocol}
 
 Tại phần này, chúng tôi sẽ trình bày chi tiết giao thức mà Client và Server dùng để giao tiếp với nhau. 
 
@@ -7,7 +7,7 @@ Tại phần này, chúng tôi sẽ trình bày chi tiết giao thức mà Clien
 \begin{itemize}
 	\item \textbf{Kết nối: } Sau khi \textbf{Client} được khởi tạo và yêu cầu kết nối với \textbf{Server} đang \textit{Listening}, nếu yêu cầu được chấp nhận, \textbf{Server} sẽ phản hồi bằng cách gửi một \textit{message} có kiểu header là \textbf{SERVER\_ACCEPT}. \textbf{Client} nhận được phản hồi này và tiến hành xử lý các bước khởi tạo, hoàn tất việc thiết lập kết nối giữa hai bên.
 	\item \textbf{Cập nhật: } Trong quá trình kết nối, cả hai đều liên tục trao đổi thông tin. Về phía \textbf{Server}, nó sẽ gửi các thông tin cập nhật đến màn hình Remote của \textbf{Client}, mỗi thông tin này đều được gửi dưới các \textit{message} có kiểu header là \textbf{SERVER\_UPDATE}. Về phía \textbf{Client}, có nhiều loại \textit{message} khác nhau được sử dụng để cập nhật thông tin cho \textbf{Server}. Chúng sẽ được mô tả chi tiết trong các phần tiếp theo của \textbf{Kiến trúc Protocol}.
-	\item \textbf{Ngắt kết nối: }Khi \textbf{Server} chủ động ngắt kết nối, nó sẽ gửi thông báo cho \textbf{Client} qua \textit{message} có kiểu header là \textbf{SERVER\_DISCONNECT}, nội dung rỗng. Tương tự, nếu \textbf{Client} chủ động ngắt kết nối, nó cũng sẽ gửi thông báo cho \textbf{Server} qua \textit{message} có kiểu header là \textbf{CLIENT\_DISCONNECT}.
+	\item \textbf{Ngắt kết nối}Khi \textbf{Server} chủ động ngắt kết nối, nó sẽ gửi thông báo cho \textbf{Client} qua \textit{message} có kiểu header là \textbf{SERVER\_DISCONNECT}, nội dung rỗng. Tương tự, nếu \textbf{Client} chủ động ngắt kết nối, nó cũng sẽ gửi thông báo cho \textbf{Server} qua \textit{message} có kiểu header là \textbf{CLIENT\_DISCONNECT}.
 \end{itemize}
 	
 \subsubsection{MetaData}
@@ -34,7 +34,7 @@ Nội dung được trình bày sau đây là các loại \textit{message} chứ
 	\item \textbf{KeyRelease}: Dùng để gửi sự kiện phím được nhả. Tương tự, chứa mã của phím.
 \end{itemize}
 
-\subsection{Capture màn hình}
+\subsubsection{Capture màn hình}
 
 Để phục vụ cho chức năng \textit{Chụp màn hình Server}, hai loại \textit{message header} \textbf{CaptureRequest} và \textbf{CaptureSend} được sử dụng.
 

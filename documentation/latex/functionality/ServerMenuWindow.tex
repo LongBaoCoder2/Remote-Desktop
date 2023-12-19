@@ -1,6 +1,6 @@
 \subsection{Màn hình Menu của Server}
 \subsubsection{Mô tả}
-Dưới đây là nội dung hiển thị của màn hình Menu tương ứng với vai trò \textbf{User} (\textbf{Server}). Vì \textbf{Server} chỉ có vai trò gửi nhận và thực hiện các yêu cầu mà \textbf{Client} gửi đến, do đó ở màn hình Menu ứng dụng chỉ hỗ trợ 1 chức năng đó là khởi động \textbf{Server} để chờ kết nối đến từ \textbf{Client} (nút \textbf{Start Listening}. (Hình \ref{fig:ServerMenuWindow})
+Dưới đây là nội dung hiển thị của màn hình Menu tương ứng với vai trò \textbf{User} (\textbf{Server}). Vì \textbf{Server} chỉ có vai trò gửi nhận và thực hiện các yêu cầu mà \textbf{Client} gửi đến, do đó ở màn hình Menu ứng dụng chỉ hỗ trợ 1 chức năng đó là khởi động \textbf{Server} để chờ kết nối đến từ \textbf{Client} (nút \textbf{Start Listening}). (Hình \ref{fig:ServerMenuWindow})
 \begin{figure}[H]
 	\centering{\includegraphics[scale=0.4]{ServerMenuWindow}}
 	\caption{Màn hình Menu ứng với vai trò User thông thường (Server)}
@@ -32,7 +32,7 @@ Nếu có \textbf{Client} kết nối đến \textbf{Server}, khi đó cửa s�
 	\label{fig:ServerClosingDialog}
 \end{figure}
 
-Nếu ta chọn \textbf{No}, Server vẫn tiếp tục hoạt động bình thường còn nếu ta chọn \textbf{Yes}, Server sẽ gửi thông báo đến Client về việc ngắt kết nối và yêu cầu Client ngắt toàn bộ các kết nối đã thiết lập với Server, sau đó Server với tắt hẳn. Sau khi Server gửi yêu cầu ngắt kết nối đến Client thành công, cửa sổ Client sẽ ngắt các kết nối mà nó đã thiết lập với Server và một thông báo sẽ hiện ra ở bên máy của Client như sau (Hình \ref{fig:DisconnectedFromServer}):
+Nếu ta chọn \textbf{No}, Server vẫn tiếp tục hoạt động bình thường còn nếu ta chọn \textbf{Yes}, Server sẽ gửi thông báo đến Client về việc ngắt kết nối và yêu cầu Client ngắt toàn bộ các kết nối đã thiết lập với Server, sau đó Server mới tắt hẳn. Sau khi Server gửi yêu cầu ngắt kết nối đến Client thành công, cửa sổ Client sẽ ngắt các kết nối mà nó đã thiết lập với Server và một thông báo sẽ hiện ra ở bên máy của Client như sau (Hình \ref{fig:DisconnectedFromServer}):
 
 \begin{figure}[H]
 	\centering{\includegraphics[scale=1]{DisconnectedFromServer}}

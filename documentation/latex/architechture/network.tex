@@ -15,15 +15,16 @@ Trên đây là mô hình cơ bản của kiến trúc network của chúng tôi
 \label{sec:message}
 \textbf{Message} là dữ liệu cơ bản được truyền đi nhằm thực hiện giao tiếp giữa hai ứng dụng với nhau.
 
-Kiểu dữ liệu được thiết kế gồm hai phần
+Kiểu dữ liệu được thiết kế gồm hai phần:
 \begin{itemize}
-	\item \textbf{Header} chứa những thông tin cơ bản của message, ở đây là \underline{kích cỡ message} và \underline{loại message}, chi tiết về \underline{các loại message} sẽ được trình bày tại phần \textbf{Kiến Trúc Protocol}
-	\item \textbf{Body} chứa \underline{toàn bộ dữ liệu của message}
+	\item \textbf{Header} chứa những thông tin cơ bản của message, ở đây là \underline{kích cỡ message} và \underline{loại message}, chi tiết về \underline{các loại message} sẽ được trình bày tại phần 
+	\textbf{\hyperref[subsec:Protocol]{Thiết kế Protocol}}.
+	\item \textbf{Body} chứa \underline{toàn bộ dữ liệu của message}.
 \end{itemize}
 
 Việc thiết kế thêm phần Header sẽ giúp cho việc giao tiếp giữa hai ứng dụng trở nên dễ dàng phân loại và quản lý hơn.
 
-\subsection{ThreadSafe Queue: }
+\subsubsection{ThreadSafe Queue: }
 
 Là một kiểu dữ liệu quan trọng trong cấu trúc ứng dụng, được thiết kế để giải quyết tính tuần tự của các sự kiện, kết nối, message....  đảm bảo an toàn khi truy cập dữ liệu, không xảy ra mâu thuẫn, thiếu sót và tối ưu hóa việc sử dụng tài nguyên trong quá trình xử lý đa luồng của máy tính.
 
@@ -41,13 +42,13 @@ Kiểu dữ liệu này bản chất là một hàng đợi hai đầu, nhưng �
 Session chứa các đối tượng chính như là: 
 \begin{itemize}
 	\item \textbf{Socket} - Endpoint cho kết nối. Trong kiến trúc mạng của chúng tôi, chỉ session mới chứa socket để thực hiện giao tiếp.
-	\item \textbf{IncommingQueue} - Hàng đợi message cho dữ liệu được nhận vào, được thiết kế là một đối tượng std::shared\_ptr và được tham chiếu bởi cả \textit{Session} và đối tượng chứa nó (\textit{Client} hoặc \textit{Server}). Khi \textit{Session} nhận được message từ bên ngoài, đối tượng này sẽ kiểm tra tính hợp lệ của message (theo phong cách đã được định nghĩa), sau đó sẽ được đưa vào xử lý bởi \textit{Client} và \textit{server}. Điều này giúp làm tránh các xung đột và những bất cập trong việc quãn lý khi một server có thể xử lý nhiều \textit{Session}. Khi đó, các đối tượng như \textit{Server} hay \textit{Client} có thể dễ dàng xử lý trong một hàng đợi duy nhất và gởi đi message mới cho đúng \textit{Session}.
-	\item \textbf{OutcommingQueue} - Hàng đợi message cho dữ liệu gởi đi. Khác với \textit{IncommingQueue}, \textit{OutcommingQueue} chỉ được tham chiếu bởi \textit{Session}. Trong khi kết nối được thiết lập, \textit{Session} sẽ luôn kiểm tra \textit{OutcommingQueue} còn dữ liệu không, nếu có sẽ gởi tất cả những dữ liệu bên trong và đợi cho đến khi có message mới được thêm vào.
+	\item \textbf{IncomingQueue} - Hàng đợi message cho dữ liệu được nhận vào, được thiết kế là một đối tượng std::shared\_ptr và được tham chiếu bởi cả \textit{Session} và đối tượng chứa nó (\textit{Client} hoặc \textit{Server}). Khi \textit{Session} nhận được message từ bên ngoài, đối tượng này sẽ kiểm tra tính hợp lệ của message (theo phong cách đã được định nghĩa), sau đó sẽ được đưa vào xử lý bởi \textit{Client} và \textit{server}. Điều này giúp làm tránh các xung đột và những bất cập trong việc quãn lý khi một server có thể xử lý nhiều \textit{Session}. Khi đó, các đối tượng như \textit{Server} hay \textit{Client} có thể dễ dàng xử lý trong một hàng đợi duy nhất và gởi đi message mới cho đúng \textit{Session}.
+	\item \textbf{OutcomingQueue} - Hàng đợi message cho dữ liệu gởi đi. Khác với \textit{IncomingQueue}, \textit{OutcomingQueue} chỉ được tham chiếu bởi \textit{Session}. Trong khi kết nối được thiết lập, \textit{Session} sẽ luôn kiểm tra \textit{OutcomingQueue} còn dữ liệu không, nếu có sẽ gởi tất cả những dữ liệu bên trong và đợi cho đến khi có message mới được thêm vào.
 \end{itemize}
 
 \subsubsection{IClient và IServer: }
 \textit{IClient} và \textit{IServer} là hai abstract class tạo ra để quãn lý, phân phối và xử lý các event và message.  \\
-Trong \textit{IClient} và \textit{IServer} đều được thiết kế các hàm để kết nối, chấp nhận kết nối, gởi và nhận các message từ \textit{Session} và quãn lý các \textit{Session} này. \textit{Client} và \textit{Server} chứa một hàng đợi gọi là \textit{IncommingQueue} như hình trên đã thể hiện. Chúng có nhiệm vụ nhận các message từ \textit{Session} và phân phối và xử lý dựa trên HeadID của message mà phân phối cho các handler phù hợp. \\
+Trong \textit{IClient} và \textit{IServer} đều được thiết kế các hàm để kết nối, chấp nhận kết nối, gởi và nhận các message từ \textit{Session} và quãn lý các \textit{Session} này. \textit{Client} và \textit{Server} chứa một hàng đợi gọi là \textit{IncomingQueue} như hình trên đã thể hiện. Chúng có nhiệm vụ nhận các message từ \textit{Session} và phân phối và xử lý dựa trên HeadID của message mà phân phối cho các handler phù hợp. \\
 Trong cách implementation của mình, chúng tôi chỉ cho các class này tạo ra 2 \textit{Session} mỗi kết nối, một cho việc truyền dữ liệu ảnh từ \textit{Server} sang \textit{Client}, một dành cho việc truyền các event điều khiển từ \textit{Client} sang \textit{Server}. Việc này giúp dữ liệu ở \textit{Session} không bị tràn khi mà kích thước dữ liệu ảnh sẽ khá lớn. 
 
 
@@ -57,29 +58,22 @@ Một vài điểm khác biệt giữa Client và Server ở đây:
 	\item \textbf{IClient: } Là đối tượng được dùng để điều khiển máy từ xa hay cụ thể ở đây chính là \textit{Server}. 
 \end{itemize}
 
-\subsubsection{Giao tiếp giữa các thành phần: }
+\subsection{Giao tiếp giữa các thành phần: }
 
 \textbf{a. Thiết lập kết nối:}
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=\linewidth]{latex/architechture/connecting}
-	\caption{Khởi tạo kết nối}
+	\caption{Establish connection}
 	\label{fig:handshake}
 \end{figure}
 
-\textbf{b. Nhận và gởi: }\\ 
+\textbf{b. Nhận và gởi: }
+Sơ đồ \ref{fig:network} cũng đã mô tả quá trình giao tiếp giữa các thành phần trong mạng với nhau. 
 \begin{itemize}
-	\item Ở quá trình \textbf{gởi}: Sau khi message được tạo bởi \textit{Client} hoặc \textit{Server}, message sẽ được kiểm tra đưa vào đúng \textit{Session} cần gởi. Message khi vào \textit{Session} sẽ được đưa vào \textit{OutcommingQueue} để chờ các gói message phía trước nó được gởi. Khi đến lượt, message sẽ được gởi thông qua hai giai đoạn: \textit{WriteHeader()} gởi Header và \textit{WriteBody()} gởi Body bằng \textit{Socket}. Việc này sẽ làm giảm sức ép lên băng thông và vẫn đảm bảo nhận đủ dữ liệu khi mà kích thước của Header là cố định còn kích thước Body đã được lưu trữ ở Header.
-	\item Ở quá trình \textbf{nhận}: Khi nhận, \textit{socket} của \textit{Session} bên nhận sẽ là nơi xử lý đầu tiên, lặp lại đúng như thứ tự gởi ở bên gởi. \textit{ReadHeader()} và \textit{ReadBody()}. Khi quá trình nhận hoàn thành, message mới sẽ được tạo và sẽ được đẩy vào \textit{IncommingQueue} để \textit{Client} hoặc \textit{Server} để xử lý.
+	\item Ở quá trình \textbf{gởi}: Sau khi message được tạo bởi \textit{Client} hoặc \textit{Server}, message sẽ được kiểm tra đưa vào đúng \textit{Session} cần gởi. Message khi vào \textit{Session} sẽ được đưa vào \textit{OutcomingQueue} để chờ các gói message phía trước nó được gởi. Khi đến lượt, message sẽ được gởi thông qua hai giai đoạn: \textit{WriteHeader()} gởi Header và \textit{WriteBody()} gởi Body bằng \textit{Socket}. Việc này sẽ làm giảm sức ép lên băng thông và vẫn đảm bảo nhận đủ dữ liệu khi mà kích thước của Header là cố định còn kích thước Body đã được lưu trữ ở Header.
+	\item Ở quá trình \textbf{Nhận}: Khi nhận, \textit{socket} của \textit{Session} bên nhận sẽ là nơi xử lý đầu tiên, lặp lại đúng như thứ tự gởi ở bên gởi. \textit{ReadHeader()} và \textit{ReadBody()}. Khi quá trình nhận hoàn thành, message mới sẽ được tạo và sẽ được đẩy vào \textit{IncomingQueue} để \textit{Client} hoặc \textit{Server} để xử lý.
 \end{itemize}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\linewidth]{latex/architechture/communication}
-	\caption{Giao tiếp giữa các thành phần}
-	\label{fig:communication}
-\end{figure}
-
 
 \input{latex/architechture/protocol}
 
