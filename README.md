@@ -11,7 +11,7 @@ The application is written in C++17. We utilize the Networking Technical Specifi
 <br/>
 
 > [!NOTE]
-> Please be aware that this project is currently under active development, and feedback is welcome for any [issues](https://github.com/LongBaoCoder2/HCMUS-Project-Remote-Desktop/issues) encountered.
+> Please be aware that this project is currently under active development, and feedback is welcome for any [issues](https://github.com/LongBaoCoder2/Remote-Desktop/issues) encountered.
 
 <details>
 <summary><kbd>Table of contents</kbd></summary>
@@ -45,7 +45,7 @@ unzip -q Remote-Control.zip -d Remote-Control
 
 Clone the repository: 
 ```
-git clone https://github.com/LongBaoCoder2/HCMUS-Project-Remote-Desktop
+git clone github.com/LongBaoCoder2/Remote-Desktop
 cd HCMUS-Project-Remote-Desktop
 ```
 
