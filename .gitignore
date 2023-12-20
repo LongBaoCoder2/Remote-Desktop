@@ -12,3 +12,5 @@ _deps
 *.log
 build
 assets/Screenshots
+documentation/main.synctex.gz
+Screenshots

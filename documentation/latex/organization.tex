@@ -1,0 +1,109 @@
+\section{Tổ chức chương trình và hàm chức năng: }
+
+\input{latex/file_organization}
+
+\subsection{Các class và function: }
+Trong mục này, chúng tôi sẽ trình bày về các lớp và các hàm chức năng chính trong đồ án. Phần quan trọng nhất ở ứng dụng Remote Desktop đó chính là thành phần Network. Như đã nói ở trên, thành phần Network đã được cài đặt qua nhiều lớp trừu tượng. Điều này cho phép chúng tôi linh động hơn trong cài đặt cũng như phát triển nhiều tính năng cho ứng dụng hơn. \\
+
+Sau đây, chúng ta hãy cùng xem các hàm và các chức năng chính trong ứng dụng:
+\subsubsection{Session: }
+Như đã đề cập, Session sẽ chứa một socket cho việc xử lý kết nối, và một hàng đợi message (ThreadSafeQueue) để xử lý các giao tiếp bất đồng bộ giữa hai kết nối. 
+Các hàm chính của \textit{session}:
+\begin{itemize}
+	\item Các hàm kết nối:
+	\begin{itemize}
+		\item[] \lstinline{void ConnectToClient(uint32_t uid = 0)} Hàm cho thao tác kết nối từ Server tới Client và cập nhật id của Client.
+		\item[] \lstinline{void ConnectToServer(const asio::ip::tcp::resolver::results_type& endpoints)} Hàm cho thao tác kết nối từ Client tới Server dựa trên tham số endpoint của Server.
+		\item[] \lstinline{bool IsConnected()} Hàm kiểm tra trạng thái kết nối giữa Server và Client. 
+		\item[] \lstinline{void Disconnect()} Hàm ngắt kết nối giữa Server và Client, giải phóng bộ nhớ . 
+	\end{itemize}
+	
+	\item Như đã giải thích trước đó, chúng tôi chia việc gởi và nhận message làm 2 giai đoạn đó là gởi và nhận header, sau đó là phần body. Chúng tôi sử dụng kỹ thuật bất đồng bộ để cài đặt cho các hàm gởi và nhận ấy. Điều đó cho phép chương trình không blocking khi gởi và nhận trong quá trình kết nối:
+	\begin{itemize}
+		\item[] \lstinline{void WriteHeader()} Hàm bất động độ xử lý việc gởi header. Sau khi gởi, kiểm tra nếu có dữ liệu body thì tiếp tục gởi phần body.
+		\item[] \lstinline{void WriteBody()} Hàm bất động độ xử lý việc gởi phần body. Session sẽ luôn kiểm tra xem OutCommingQueue có trống hay không. Nếu không, sau khi gởi xong một message, Session sẽ tiếp tục gởi cho đến khi hết message.
+		\item[] \lstinline{void ReadHeader()} Hàm bất động độ xử lý việc nhận và đọc header. 
+		\item[] \lstinline{void ReadBody()} Hàm bất động độ xử lý việc nhận và đọc header. Hàm này được gọi sau khi hàm ReadHeader() được gọi và kiểm tra thấy có dữ liệu body. Sau khi đọc xong một message, message sẽ được đẩy vào trong InCommingQueue để Client hoặc Server xử lý.
+		\item[] \lstinline{void Send(const message<T>& msg)}: Hàm này sẽ đưa message \textit{msg} cần gởi vào OutCommingQueue để gởi đi và gọi hàm WriteHeader để gởi nếu chưa được gọi. 
+	\end{itemize}
+\end{itemize}
+
+
+
+\subsubsection{IClient và IServer: }
+\textit{IClient} và \textit{IServer} là các abstract class về Network của Client và Server. Ở cả hai, chúng tôi đã cài đặt các thuộc tính và các phương thức cơ bản phục vụ cho việc kết nối và quản lý các giao tiếp cho việc gởi và truyền hình ảnh, sự kiện.  
+\begin{itemize}
+	\item \textbf{IClient: } 
+	\begin{itemize}
+		\item[] \lstinline{bool ConnectToServer(const std::string& host)}: Hàm bất đồng bộ cho xử lý kết nối đến Server dựa trên tham số địa chỉ IP host. Hàm này sẽ khởi tạo hai Session image và event và kết nối đến Server như hình \ref{fig:handshake} đã giới thiệu. Ở đây, chúng tôi cố định hai giá trị port đó là 8282, 8285. Tuy nhiên, việc mở nhiều port sẽ làm gia tăng nguy cơ về bảo mật, nên chúng tôi chỉ khuyến khích việc sử dụng ở mức độ mạng LAN.
+		\item[] \lstinline{void Disconnect()}: Hàm thực hiện việc ngắt kết nối và giải phóng bộ nhớ.
+		\item[] \lstinline{bool IsConnected()}: Hàm kiểm tra trạng thái kết nối.
+		\item[] \lstinline{void Send(const message<T>& msg)}: Hàm gởi gói tin msg. Hàm này sẽ gọi hàm \lstinline{Send(msg)} của class Session ở trên. Trong trường hợp này, Client sẽ gởi các sự kiện về chuột và bàn phím cho Server.
+	\end{itemize}
+\end{itemize}
+
+\begin{itemize}
+	\item \textbf{IServer: } 
+	\begin{itemize}
+		\item[] \lstinline{void WaitForClientConnection()}: Hàm bất đồng bộ cho việc lắng nghe(listen) và chấp nhận(accept) các kết nối từ Client. Khi kết nối được thiết lập, tại Server sẽ khởi tạo hai Session image và event.
+		\item[] \lstinline{bool Start()}: Hàm sẽ khởi tạo các biến và các luồng cần thiết, sau đó sẽ gọi hàm \lstinline{WaitForClientConnection()} để bắt đầu lắng nghe kết nối.
+		\item[] \lstinline{bool IsConnected()}: Hàm kiểm tra trạng thái kết nối.
+		\item[] \lstinline{void Send(const message<T>& msg)}: Hàm gởi gói tin msg. Hàm này sẽ gọi hàm Send(msg) của class Session ở trên. Trong trường hợp này, Client sẽ gởi các sự kiện về chuột và bàn phím cho Server.
+		\item[] \lstinline{void Stop()}: Hàm dừng việc lắng nghe và giải phóng bộ nhớ.
+		\item[] \lstinline{void MessageAllClients(const message<T>& msg, std::shared_ptr<session<T>> pIgnoreClient = nullptr)}: Hàm gởi message cho tất cả kết nối đến các Client, trừ các pIgnoreClient. Tuy nhiên, hiện tại, chúng tôi sẽ chỉ gởi image ở một Session từ Server gởi đến Client, để tránh các xung đột không cần thiết ở Server.
+		\item[] \lstinline{void MessageClient(std::shared_ptr<session<T>> client, const message<T>& msg)}: Khác với \lstinline{MessageAllClients}, hàm sẽ chỉ gởi đến một kết nối được cụ thể.
+		\item[] \lstinline{void Update(size_t nMaxMessages = -1, bool bWait = false)}: Hàm được thiết kế sẽ luôn chạy trong quá trình kết nối. Hàm sẽ kiểm tra InCommingQueue có message hay không, nếu có thì sẽ phân phối và xử lý message này cách gọi hàm \lstinline{OnMessage} sẽ được giới thiệu sau.
+		
+		\item[] \textit{Ngoài ra}, chúng ta còn có một vài hàm ảo khác như: \lstinline{OnClientConnect}, \\ \lstinline{OnClientDisconnect}, \lstinline{OnMessage}. Các hàm này nhằm mục đích xử lý các chức năng như xác thực người dùng (Authentication), quãn lý các kết nối, và phân phối message (Message Parser). Tùy thuộc vào kiểu Server mà các hàm này sẽ được Override khác nhau. Ta sẽ cùng bàn về các hàm này ở phần \ref{sec:server}.
+		
+	\end{itemize}
+\end{itemize}
+
+Chúng tôi tách biệt \textit{Client} và \textit{Server} thành hai class đa kế thừa. Cả hai đều kế thừa từ một class có sẵn đó là \textit{wxFrame} nhằm mục địch tạo giao diện người dùng và là đối tượng nhận và xử lý các sự kiện từ người dùng và các sự kiện từ Network. Ngoài ra, mỗi lớp \textit{Client} và \textit{Server} đều kế thừa từ các interface của nó, tương ứng với \textit{IClient} và \textit{IServer} như đã trình bày ở phần \ref{sec:network-archi}. Cả hai đối tượng được khởi tạo khi quá trình kết nối bắt đầu. Với \textit{Client}, một window sẽ được tạo và cho phép người dùng có thể điều khiển máy từ xa, còn với \textit{Server} đó là một window Logger với chức năng theo dõi quá trình điều khiển. Khi quá trình kết nối kết thúc, hai đối tượng sẽ được giải phóng.
+
+\subsubsection{Client: }
+Khi khởi tạo, \textbf{Client} sẽ khởi tạo các hàm \textbf{control} cần thiết cho giao diện.
+
+Các hàm chức năng chính của \textbf{Client}: 
+\begin{itemize}
+	\item \lstinline{void ConnectToHost(std::string& host)}: Hàm thực hiện việc kết nối đến \textbf{Server}, khởi tạo đối tượng \textbf{wxTimer} - đối tượng này cho phép chúng ta thực hiện \textit{thao tác} nào đó sau mỗi khoảng thời gian cụ thể. 
+	\item \lstinline{void OnUpdateWindow(wxTimerEvent& event)}: Hàm \textit{thao tác} của đối tượng \textbf{wxTimer} trên. Giống như một vòng lặp, Timer sẽ liên tục xử lý các message được gởi đến từ \textbf{Server} và tùy thuộc vào loại message(header) gởi đến mà hàm sẽ thực hiện một thao tác cụ thể nào đó như đã miêu tả ở phần Thiết kế protocol. Khi quá trình điều khiển bắt đầu, tức là \textbf{Server} sẽ liên tục gởi message header đó là \verb|SERVER_UPDATE|, \textbf{Client} sẽ đọc dữ liệu ảnh từ message và truyền vào đối tượng biến \textit{screenshot} để render lên màn hình. Tuy nhiên, trong quá trình gởi, bức ảnh đã được nén bằng đối tượng \textbf{wxMemoryInputStream} và thay đổi kích thước sao cho phù hợp với kích thước window \textbf{Client}. Tuy nhiên, với chức năng Capture màn hình, chúng tôi thiết kế thao tác để sao cho có thể giữ nguyên độ phân giải của màn hình \textbf{Server}.
+	\item \lstinline{void UpdatePanel()} Sau khi nhận được ảnh từ \textbf{Server}. Hàm này có chức năng "vẽ" đối tượng \textit{screenshot} lên màn hình. 
+	\item Các hàm nhận sự kiện về chuột máy tính từ Client:
+		\begin{itemize}
+			\item[] \lstinline{void OnMouseMove(wxMouseEvent& event)}: nhận sự kiện khi di chuyển chuột trên cửa sổ Client.
+			\item[] \lstinline{void OnMouseClick(wxMouseEvent& event)}: nhận sự kiện khi click chuột trên cửa sổ Client. Bao gồm các sự kiện: chuột trái, chuột phải, chuột giữa, và AuxClick.
+			\item[] \lstinline{void OnMouseUnClick(wxMouseEvent& event)}: nhận sự kiện khi thả click chuột trên cửa sổ Client.
+			\item[] \lstinline{void OnMouseDoubleClick(wxMouseEvent& event)}: nhận sự kiện khi nháy đúp chuột trên cửa sổ Client.
+			\item[] \lstinline{void OnMouseWheel(wxMouseEvent& event)}: nhận sự kiện khi cuộn chuột trên cửa sổ Client.
+		\end{itemize}
+	\item Các hàm nhận sự kiện về bàn phím từ Client:
+	\begin{itemize}
+		\item[] \lstinline{void OnKeyDown(wxMouseEvent& event)}: nhận sự kiện khi ấn phím.
+		\item[] \lstinline{void OnKeyUp(wxMouseEvent& event)}: nhận sự kiện khi thả phím.
+	\end{itemize}
+	\item Các hàm bổ trợ khác:
+		\begin{itemize}
+			\item[] \lstinline{void OnDisconnectClick(wxCommandEvent& event)}: Hàm xử lý phím ngắt kết nối.
+			\item[] \lstinline{LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)}: Callback được tái định nghĩa. Hàm có chức năng xử lý sự kiện bàn phím đặc biệt bằng cách chặn việc lan truyền sự kiện xuống hệ điều hành và chỉ gởi sự kiện cho Server. Ví dụ: phím Window,...
+		\end{itemize}
+ \end{itemize}
+ 
+ 
+\subsubsection{Server: }
+\label{sec:server}
+Các hàm quan trọng của class Server: 
+\begin{itemize}
+	\item \lstinline{void takeScreenshot(int imgWidth, int imgHeight)}: Hàm có chức năng capture màn hình của máy Server với kích thước imgWidth, imgHeight. Mặc định các giá trị tham số này sẽ mang giá trị kích thước của toàn bộ màn hình.
+	\item \lstinline{void sendScreenshot(RemoteMessage messageType)}: Hàm có chức năng gởi dữ liệu ảnh vừa được capture ở hàm \lstinline{takeScreenshot}, RemoteMessage là một định nghĩa cho các kiểu message như đã để cập ở phần 3.1.1. Tùy vào chức năng của Client: render màn hình Server một cách liên tục hay nhận ảnh capture và lưu vào bộ nhớ, thì kiểu RemoteMessage sẽ khác nhau.
+	\item \lstinline{void OnCaptureWindow(wxTimerEvent& timer)}: Tương tự như đối tượng \textit{wxTimer} của Client. Sau mỗi thời gian được cụ thể, hàm này sẽ được gọi. Bên trong hàm này, \lstinline{takeScreenshot} và \lstinline{sendScreenshot} sẽ được gọi. Tuy nhiên, ở đây tham số takeScreenshot sẽ được truyền vào sao cho phù hợp với màn hình cửa sổ Client.
+	\item \lstinline{void ServerWindow::OnClientValidated(std::shared_ptr<net::session<RemoteMessage>> client)}: Hàm thực hiện việc trao đổi các metadata giữa Client và Server như địa chỉ IP, địa chỉ MAC, \ldots
+	\item Các hàm \lstinline{void OnClose(wxCloseEvent& event)} và \lstinline{void closeServer()} sẽ xử lý sự kiện tắt cửa sổ Server, giải phóng các bộ nhớ cần thiết.
+	\item \textit{Các hàm ảo được kế thừa từ IServer: }
+	\begin{itemize}
+		\item[] \lstinline{bool OnClientConnect(std::shared_ptr<net::session<RemoteMessage>> client)}: Hàm giao tiếp ban đầu trước khi thực sự bắt đầu được điều khiển bởi Client. Điều này đảm bảo sự kết nối được đồng bộ và giúp xác thực người dùng kết nối này đến từ một nơi không an toàn. Khi trao đổi metadata hoàn tất, đối tượng \textit{wxTimer} sẽ được bật và Server sẽ bắt đầu capture màn hình và gởi.
+		\item[] \lstinline{void OnClientDisconnect(std::shared_ptr<net::session<RemoteMessage>> client)}: Hàm này được gọi khi có lỗi kết nối diễn ra, ví dụ như hàm IsConnected() trả về false thì đang trong quá trình kết nối,... Hàm này được thiết kế để xử lý các trường hợp ấy, khi này ta ngắt kết nối lặp tức và giải phóng bộ nhớ.
+		\item[] \lstinline{void OnMessage(std::shared_ptr<net::session<RemoteMessage>> client,}\\ \lstinline{ net::message<RemoteMessage>& msg)}: Trong quá trình kết nối, Client sẽ gởi các event điều khiển đến cho Server, và đây là nơi phân phối và xử lý các message ấy(Message Parser). Từ việc đọc header, Server sẽ xử lý dựa trên từng kiểu event khác nhau, đọc dữ liệu phần body và sau đó thực hiện event điều khiển bằng cách gọi Window API,... Ví dụ: Khi hàm đọc được header \lstinline{RemoteMessage::MouseClick}, hàm sẽ đọc sự kiện loại nào (MOUSE\_LEFT, MOUSE\_RIGHT, MOUSE\_MIDDLE), và tọa độ vị trí chuột để gọi API \lstinline{SendInput(1, &Input, sizeof(INPUT))}.
+	\end{itemize}
+\end{itemize}
+

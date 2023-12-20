@@ -1,0 +1,79 @@
+Folder PATH listing for volume DATA
+Volume serial number is E88B-70BA
+D:\HCMUS\NAM_2\HK1\MANG_MAY_TINH\HCMUS-PROJECT-REMOTE-DESKTOP\SRC\WINDOWS
+¦   ._MainWindow
+¦   Application.cpp
+¦   Application.h
+¦   constant.hpp
+¦   
++---BasicTextWindow
+¦       BasicTextFrame.cpp
+¦       BasicTextFrame.hpp
+¦       
++---components
+¦   ¦   .gitignore
+¦   ¦   Button.hpp
+¦   ¦   
+¦   +---NavigationBar
+¦           NavigationBar.cpp
+¦           NavigationBar.hpp
+¦           NavigationButtons.cpp
+¦           NavigationButtons.hpp
+¦           WindowID.hpp
+¦           
++---event
+¦       ConnectEvent.cpp
+¦       ConnectEvent.hpp
+¦       LockEvent.cpp
+¦       LockEvent.hpp
+¦       
++---LoginWindow
+¦       LoginFrame.cpp
+¦       LoginFrame.h
+¦       
++---MainWindow
+    ¦   .gitignore
+    ¦   MainFrame.cpp
+    ¦   MainFrame.hpp
+    ¦   
+    +---CaptureWindow
+    ¦   ¦   ConnectEvent.hpp
+    ¦   ¦   
+    ¦   +---ClientWindow
+    ¦   ¦       ClientNetwork.hpp
+    ¦   ¦       ClientTextWindow.cpp
+    ¦   ¦       ClientTextWindow.hpp
+    ¦   ¦       ClientWindow.cpp
+    ¦   ¦       ClientWindow.hpp
+    ¦   ¦       KeylogWindow.cpp
+    ¦   ¦       KeylogWindow.hpp
+    ¦   ¦       
+    ¦   +---ServerWindow
+    ¦           ServerNetwork.hpp
+    ¦           ServerTextWindow.cpp
+    ¦           ServerTextWindow.hpp
+    ¦           ServerWindow.cpp
+    ¦           ServerWindow.hpp
+    ¦           
+    +---HomeWindow
+    ¦       HomeWindow.cpp
+    ¦       HomeWindow.hpp
+    ¦       
+    +---ManageWindow
+    ¦       ManageWindow.cpp
+    ¦       ManageWindow.hpp
+    ¦       
+    +---MenuWindow
+    ¦       ListUserPanel.cpp
+    ¦       ListUserPanel.hpp
+    ¦       MenuWindow.cpp
+    ¦       MenuWindow.hpp
+    ¦       UserAddDialog.cpp
+    ¦       UserAddDialog.hpp
+    ¦       UserPanel.cpp
+    ¦       UserPanel.hpp
+    ¦       
+    +---SettingsWindow
+            SettingsFrame.cpp
+            SettingsFrame.hpp
+            

@@ -45,7 +45,7 @@ file(GLOB_RECURSE SOURCE_FILES
     windows/MainWindow/MenuWindow/*.cpp
     windows/MainWindow/SettingsWindow/*.cpp
     windows/event/*.cpp
-    windows/MainWindow/InforNetwork.cpp
+    utils/NetworkInfo/*.cpp
 )
 
 file(GLOB_RECURSE HEADER_FILES 
@@ -66,7 +66,7 @@ file(GLOB_RECURSE HEADER_FILES
     networks/server/*.h
     utils/*.hpp
     windows/event/*.hpp
-    windows/MainWindow/InforNetwork.hpp
+    utils/NetworkInfo/*.hpp
 )
 
 add_definitions(-D_WIN32_WINNT=0x0601)
@@ -96,5 +96,3 @@ else()
 endif()
 
 target_link_libraries(main PRIVATE ${wxWidgets_LIBRARIES})
-
-

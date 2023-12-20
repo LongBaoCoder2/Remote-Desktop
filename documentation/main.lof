@@ -1,6 +1,19 @@
-\contentsline {figure}{\numberline {1}{\ignorespaces Màn hình đăng nhập của User}}{6}{figure.1}%
-\contentsline {figure}{\numberline {2}{\ignorespaces Màn hình đăng nhập của Admin}}{6}{figure.2}%
-\contentsline {figure}{\numberline {3}{\ignorespaces Màn hình chính của ứng dụng}}{7}{figure.3}%
-\contentsline {figure}{\numberline {4}{\ignorespaces Màn hình chính của ứng dụng}}{8}{figure.4}%
-\contentsline {figure}{\numberline {5}{\ignorespaces Tổ chức thư mục ở server}}{9}{figure.5}%
-\contentsline {figure}{\numberline {6}{\ignorespaces Tổ chức thư mục ở client}}{9}{figure.6}%
+\contentsline {figure}{\numberline {1}{\ignorespaces Màn hình đăng nhập của User}}{5}{figure.1}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Màn hình đăng nhập của Admin}}{5}{figure.2}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Màn hình chính của ứng dụng}}{6}{figure.3}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Màn hình Menu ứng với vai trò User thông thường (Server)}}{7}{figure.4}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Cửa sổ Server Window lúc đầu}}{7}{figure.5}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Cửa sổ Server Window khi có kết nối đến từ Client}}{8}{figure.6}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Hộp thoại đóng/tắt Server}}{9}{figure.7}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Thông báo ở máy Client sau khi Server đóng}}{9}{figure.8}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Màn hình chính của ứng dụng}}{10}{figure.9}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Hộp thoại Add new user}}{10}{figure.10}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Danh sách các user sau khi nhập}}{11}{figure.11}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Hộp thoại Connect to user}}{12}{figure.12}%
+\contentsline {figure}{\numberline {13}{\ignorespaces Cửa sổ Client Window khi kết nối không thành công}}{12}{figure.13}%
+\contentsline {figure}{\numberline {14}{\ignorespaces Cửa sổ Client Window khi đã thiết lập được kết nối đến một Server}}{13}{figure.14}%
+\contentsline {figure}{\numberline {15}{\ignorespaces Hộp thoại xác nhận ngắt kết nối ở phía Client}}{14}{figure.15}%
+\contentsline {figure}{\numberline {16}{\ignorespaces Các ảnh chụp màn hình đã được lưu trong thư mục Screenshots}}{14}{figure.16}%
+\contentsline {figure}{\numberline {17}{\ignorespaces Phím Hook và Unhook trên thanh Toolbar của Client Window}}{15}{figure.17}%
+\contentsline {figure}{\numberline {18}{\ignorespaces Networking Architechture Diagram}}{16}{figure.18}%
+\contentsline {figure}{\numberline {19}{\ignorespaces Establish connection}}{19}{figure.19}%

@@ -1,5 +1,5 @@
 #include "ServerWindow.hpp"
-#include "../../InforNetwork.hpp"
+#include "../../../../utils/NetworkInfo/NetworkInfo.hpp"
 
 wxDEFINE_EVENT(wxEVT_SERVER_CONNECTED, wxCommandEvent);
 wxDEFINE_EVENT(wxEVT_SERVER_DISCONNECTED, wxCommandEvent);
@@ -146,7 +146,8 @@ void ServerWindow::OnClientDisconnect(
 
 void ServerWindow::OnMessage(
     std::shared_ptr<net::session<RemoteMessage>> client,
-    net::message<RemoteMessage>& msg) {
+    net::message<RemoteMessage>& msg)
+{
     switch (msg.header.id) {
 
     case RemoteMessage::MouseClick: {
@@ -248,6 +249,7 @@ void ServerWindow::OnMessage(
         Input.mi.dwFlags = MOUSEEVENTF_MOVE | MOUSEEVENTF_ABSOLUTE;
         Input.mi.dx = fx;
         Input.mi.dy = fy;
+        // SetCursorPos(fx, fy);
         SendInput(1, &Input, sizeof(INPUT));
         break;
     }
@@ -312,7 +314,7 @@ void ServerWindow::OnMessage(
         std::string Mac_Addr = GetMACAddress();
         std::string OS_ver = GetCurrentWindowName();
         msg >> OS_ver >> Mac_Addr >> IP_Addr;
-        textCtrl->AppendText(wxString::Format(wxT("Client IP : %s \n Client Mac : %s \n Client Window Name : %s"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
+        textCtrl->AppendText(wxString::Format(wxT("Client IP : %s \n Client Mac : %s \n Client Window Name : %s\n"), wxString(IP_Addr), wxString(Mac_Addr), wxString(OS_ver)));
         // textCtrl->AppendText(wxString::Format(wxT("%d\n"), x));
         break;
     }
@@ -320,7 +322,16 @@ void ServerWindow::OnMessage(
     case RemoteMessage::CaptureRequest: {
         takeScreenshot();
         sendScreenshot(RemoteMessage::CaptureSend);
+        break;
     }
+
+    case RemoteMessage::CLIENT_DISCONNECT: {
+        textCtrl->AppendText(
+            wxString::Format(wxT("The client has disconnected!\n")));
+        OnClientDisconnect(client);
+        break;
+    }
+
     }
 }
 
@@ -348,7 +359,7 @@ void ServerWindow::closeServer() {
         net::message<RemoteMessage> msg;
         msg.header.id = RemoteMessage::SERVER_DISCONNECT;
         MessageAllClients(msg);
-        // std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
         m_qMessagesIn.stopWait(); // Đặt biến kiểm soát thành false để thoát khỏi vòng lặp
         m_updateMess.join(); // Đợi cho luồng kết thúc
         net::IServer<RemoteMessage>::Stop();

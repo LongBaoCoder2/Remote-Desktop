@@ -5,6 +5,10 @@
 #include <wx/mstream.h>
 #include <wx/overlay.h>
 
+#include "../../../constant.hpp"
+#include "../../../../utils/NetworkInfo/NetworkInfo.hpp"
+#include "../../../../utils/FileNameGenerator/FileNameGenerator.hpp"
+
 wxDECLARE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
 wxDECLARE_EVENT(wxEVT_CLIENT_DISCONNECTED, wxCommandEvent);
 #define DEV
@@ -51,7 +55,7 @@ private:
     void OnKeyDown(wxKeyEvent& event);
     void OnKeyUp(wxKeyEvent& event);
     void OnMouseDoubleClick(wxMouseEvent& event);
-    // void OnMouseMove(wxMouseEvent& event);
+    void OnMouseMove(wxMouseEvent& event);
     // void OnMouseLeave(wxMouseEvent& event);
     // void OnMouseEnter(wxMouseEvent& event);
     void OnMouseWheel(wxMouseEvent& event);
@@ -63,6 +67,7 @@ private:
     void OnClose(wxCloseEvent& event);
     void SendMetadata();
 
+    bool checkValidKey(uint32_t keyCode);
     void RemoveKeyboardHook();
     void SetKeyboardHook();
     static LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);

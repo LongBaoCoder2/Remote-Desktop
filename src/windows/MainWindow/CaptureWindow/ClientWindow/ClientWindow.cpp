@@ -1,7 +1,5 @@
 #include "ClientWindow.hpp"
-#include "../../../constant.hpp"
-#include "../../InforNetwork.hpp"
-#include "../../../../utils/FileNameGenerator/FileNameGenerator.hpp"
+
 
 
 wxDEFINE_EVENT(wxEVT_CLIENT_CONNECTED, wxCommandEvent);
@@ -48,6 +46,8 @@ void ClientWindow::ConnectToHost(std::string& host)
     toolbar->AddTool(CONFIG_APP::ID_TOOL_KEYLOG, "Key logger",
         wxBitmap("assets/keylog.png", wxBITMAP_TYPE_PNG),
         "End current session", wxITEM_NORMAL);
+
+    toolbar->EnableTool(CONFIG_APP::ID_TOOL_KEYLOG, false);
 
     toolbar->AddTool(CONFIG_APP::ID_TOOL_HOOK, "Hook",
         wxBitmap("assets/hook.png", wxBITMAP_TYPE_PNG),
@@ -129,7 +129,7 @@ void ClientWindow::ConnectToHost(std::string& host)
     CapturePanel->Bind(wxEVT_AUX2_DCLICK, &ClientWindow::OnMouseDoubleClick, this);
 
     // Binding other mouse events
-    // CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this); 
+    CapturePanel->Bind(wxEVT_MOTION, &ClientWindow::OnMouseMove, this);
     // CapturePanel->Bind(wxEVT_ENTER_WINDOW, &ClientWindow::OnMouseEnter, this);
     // CapturePanel->Bind(wxEVT_LEAVE_WINDOW, &ClientWindow::OnMouseLeave, this);
     CapturePanel->Bind(wxEVT_MOUSEWHEEL, &ClientWindow::OnMouseWheel, this);
@@ -156,15 +156,11 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 {
     if (IsConnected())
     {
-        // size_t sizeOfQueue = m_connectionEvent->getMessageQueueIn().count();
-        // clientTextWindow->DisplayMessage(wxString::Format(wxT("Queue size: %zu"), sizeOfQueue));
         while (!Incoming().empty())
         {
             auto msg = Incoming().pop_front().msg;
             switch (msg.header.id) {
             case RemoteMessage::SERVER_ACCEPT: {
-                isWaitingForConnection = false;
-                // wxMessageBox(wxT("Connection successful."), wxT("Connected"), wxICON_INFORMATION | wxOK);
                 std::string IP_Addr = GetIPAddress();
                 std::string Mac_Addr = GetMACAddress();
                 std::string OS_ver = GetCurrentWindowName();
@@ -173,7 +169,6 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 break;
             }
             case RemoteMessage::SERVER_DENY:
-                // Disconnect();
                 wxMessageBox(wxT("Disconnected from the server."),
                     wxT("Disconnected"),
                     wxICON_INFORMATION | wxOK);
@@ -184,10 +179,6 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
                 break;
 
             case RemoteMessage::SERVER_UPDATE: {
-                isWaitingForConnection = false;
-
-                // OnReceiveImage(msg);
-
                 // Tạo một memory stream từ dữ liệu nhận được
                 wxMemoryInputStream memStream(msg.body.data(),
                     msg.body.size());
@@ -239,11 +230,6 @@ void ClientWindow::OnUpdateWindow(wxTimerEvent& event)
 
     // textCtrl->AppendText("Chua thay connection!\n");
 
-    if (isWaitingForConnection) {
-        // ClearPanel();
-        return;
-    }
-
     UpdatePanel();
     event.Skip();
 }
@@ -264,14 +250,6 @@ void ClientWindow::ClearPanel() {
     clientDC.Clear();
 }
 
-void ClientWindow::OnReceiveImage(net::message<RemoteMessage>& msg) {
-    unsigned char* bitmapData =
-        reinterpret_cast<unsigned char*>(msg.body.data());
-
-    wxImage image(1280, 960, bitmapData, true);
-    screenshot = wxBitmap(image);
-}
-
 // Khi timer đếm giây chạy
 void ClientWindow::OnSecondTimer(wxTimerEvent& event) {
     // In thông tin thống kê và đặt biến đếm về 0
@@ -288,13 +266,13 @@ void ClientWindow::OnMouseDoubleClick(wxMouseEvent& event) {
     event.Skip();
 }
 
-// void ClientWindow::OnMouseMove(wxMouseEvent& event) {
-//     net::message<RemoteMessage> m;
-//     m.header.id = RemoteMessage::MouseMove;
-//     m << event.GetX() << event.GetY();
-//     Send(m);
-//     event.Skip();
-// }
+void ClientWindow::OnMouseMove(wxMouseEvent& event) {
+    net::message<RemoteMessage> m;
+    m.header.id = RemoteMessage::MouseMove;
+    m << event.GetX() << event.GetY();
+    Send(m);
+    event.Skip();
+}
 
 // void ClientWindow::OnMouseLeave(wxMouseEvent& event) {
 //     net::message<RemoteMessage> m;
@@ -346,8 +324,9 @@ void ClientWindow::OnMouseUnClick(wxMouseEvent& event) {
 }
 
 void ClientWindow::OnKeyDown(wxKeyEvent& event) {
-    if(static_cast<uint32_t>(event.GetRawKeyCode()) == 91)
+    if (checkValidKey(static_cast<uint32_t>(event.GetRawKeyCode())) == false) {
         return;
+    }
     // Tạo message bàn phím
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyPress;
@@ -359,8 +338,9 @@ void ClientWindow::OnKeyDown(wxKeyEvent& event) {
 }
 
 void ClientWindow::OnKeyUp(wxKeyEvent& event) {
-    if(static_cast<uint32_t>(event.GetRawKeyCode()) == 91)
+    if (checkValidKey(static_cast<uint32_t>(event.GetRawKeyCode())) == false) {
         return;
+    }
     // Tạo message bàn phím
     net::message<RemoteMessage> m;
     m.header.id = RemoteMessage::KeyRelease;
@@ -371,13 +351,25 @@ void ClientWindow::OnKeyUp(wxKeyEvent& event) {
     // event.Skip();
 }
 
+bool ClientWindow::checkValidKey(uint32_t keyCode) {
+    if (keyCode == 91)
+        return false;
+    if (keyCode == 92)
+        return false;
+    if (keyCode == 18)
+        return false;
+    if (keyCode == 28)
+        return false;
+    return true;
+}
+
 LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam) {
     if (nCode >= 0 && allowHook) {
         KBDLLHOOKSTRUCT* kbdStruct = reinterpret_cast<KBDLLHOOKSTRUCT*>(lParam);
         DWORD vkCode = kbdStruct->vkCode;
 
+        net::message<RemoteMessage> m;
         if (vkCode == VK_LWIN || vkCode == VK_RWIN) {
-            net::message<RemoteMessage> m;
             if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
                 m.header.id = RemoteMessage::KeyPress;
             }
@@ -385,6 +377,28 @@ LRESULT CALLBACK ClientWindow::KeyboardProc(int nCode, WPARAM wParam, LPARAM lPa
                 m.header.id = RemoteMessage::KeyRelease;
             }
             m << 91;
+            instance->Send(m);
+            return 1;
+        }
+        else if (vkCode == VK_LMENU || vkCode == VK_RMENU) { // Alt trái
+            if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+                m.header.id = RemoteMessage::KeyPress;
+            }
+            else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+                m.header.id = RemoteMessage::KeyRelease;
+            }
+            m << 18;
+            instance->Send(m);
+            return 1;
+        }
+        else if (vkCode == VK_ESCAPE) {
+            if (wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) {
+                m.header.id = RemoteMessage::KeyPress;
+            }
+            else if (wParam == WM_KEYUP || wParam == WM_SYSKEYUP) {
+                m.header.id = RemoteMessage::KeyRelease;
+            }
+            m << 28;
             instance->Send(m);
             return 1;
         }
@@ -446,9 +460,11 @@ void ClientWindow::OnUnhookClick(wxCommandEvent& event) {
 
 void ClientWindow::OnClose(wxCloseEvent& event) {
     net::IClient<RemoteMessage>::Disconnect();
-    clientTextWindow->Destroy();
-    this->Destroy();
-    // event.Skip();
+    if (clientTextWindow->IsBeingDeleted() == false) {
+        clientTextWindow->Destroy();
+    }
+    // this->Destroy();
+    event.Skip();
 }
 
 ClientWindow::~ClientWindow() {

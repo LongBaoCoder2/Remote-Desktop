@@ -1,0 +1,38 @@
+\subsubsection{Thư mục windows}
+Thư mục này chứa các thành phần khác nhau của giao diện ứng dụng Remote Desktop. Trong thư mục \verb|windows| có phân chia các thư mục con theo từng vai trò phù hợp ứng với các phần khác nhau của giao diện người dùng. Dưới đây là mô tả cho từng thư mục:
+\begin{itemize}
+	\item \textbf{BasicTextWindow}: cung cấp lớp \textbf{BasicTextFrame} để tạo cửa sổ hiển thị văn bản cơ bản với tính năng hiển thị thông điệp được cung cấp trong một giao diện người dùng đơn giản. Lớp này sẽ được kế thừa cho \textbf{Client} và \textbf{Server} để tạo thành cửa sổ Logger lưu lại các thông tin về các kết nối.
+	\item \textbf{components}: chứa các thành phần giao diện người dùng (UI components) quan trọng trong ứng dụng. Trong đó chứa các thư mục và tập tin mã nguồn nhỏ hơn:
+	\begin{itemize}
+		\item \textbf{NavigationBar}: Thư mục con này chứa mã nguồn liên quan đến các thanh điều hướng, một thành phần giao diện dùng để điều hướng hoặc chứa các nút điều hướng trong ứng dụng. Các tệp tin trong thư mục này bao gồm:
+		\begin{itemize}
+			\item NavigationBar.cpp và NavigationBar.hpp: Định nghĩa lớp NavigationBar để hiển thị và quản lý thanh điều hướng trong ứng dụng.
+			\item NavigationButtons.cpp và NavigationButtons.hpp: Các mã nguồn quản lý các nút điều hướng cụ thể trong thanh NavigationBar.
+			\item WindowID.hpp: Chứa \textbf{enum} định nghĩa các ID của cửa sổ trong ứng dụng.
+		\end{itemize}
+		\item \textbf{Button.hpp}: File này định nghĩa lớp Button, một thành phần UI để tạo nút tương tác trong ứng dụng. Lớp này cung cấp các chức năng cần thiết để tạo và quản lý nút với khả năng phản hồi tương ứng khi người dùng tương tác.
+	\end{itemize}
+	\item \textbf{event}: chứa các tệp tin và mã nguồn liên quan đến việc quản lý các sự kiện (events) trong ứng dụng. Trong đó:
+	\begin{itemize}
+		\item \textbf{ConnectEvent.hpp} và \textbf{ConnectEvent.cpp}: Đây là các tệp tin chứa mã nguồn cho các sự kiện liên quan đến việc kết nối và thêm người dùng mới vào ứng dụng.
+	\end{itemize}
+	\item \textbf{LoginWindow}: chứa các tệp và mã nguồn liên quan đến cửa sổ đăng nhập trong ứng dụng.
+	\begin{itemize}
+		\item \textbf{LoginFrame.cpp}: Chứa mã nguồn cụ thể của cửa sổ đăng nhập, bao gồm việc xử lý sự kiện, giao diện người dùng và các chức năng liên quan đến việc xác thực và quản lý đăng nhập.
+		\item \textbf{LoginFrame.h}: Chứa khai báo lớp và các hằng số, phương thức của lớp cửa sổ đăng nhập.
+	\end{itemize} 
+	\item \textbf{MainWindow}: Đây là thư mục chứa mã nguồn cho giao diện cửa sổ chính của ứng dụng Remote Desktop Control. Thư mục này được chia thành nhiều thư mục con, mỗi thư mục con chứa mã nguồn xây dựng nên các cửa sổ giao diện của MainWindow, gồm:
+	\begin{itemize}
+		\item \textbf{MainFrame.cpp} và \textbf{MainFrame.hpp}: Đây là các tệp mã nguồn và tiêu đề tương ứng của cửa sổ chính (MainWindow) trong ứng dụng. Chúng định nghĩa và triển khai chức năng của cửa sổ chính.
+		\item \textbf{HomeWindow}: Thư mục này chứa mã nguồn liên quan đến màn hình hiển thị HomeWindow trong ứng dụng.
+		\item \textbf{MenuWindow}: Thư mục này chứa mã nguồn liên quan đến màn hình hiển thị MenuWindow trong ứng dụng, cụ thể như sau:
+		\begin{itemize}
+			\item \textbf{ListUserPanel.cpp} và \textbf{ListUserPanel.hpp}: Các tệp mã nguồn và tiêu đề cho phần giao diện hiển thị danh sách người dùng trong cửa sổ MenuWindow.
+			\item \textbf{MenuWindow.cpp} và \textbf{MenuWindow.hpp}: Các tệp mã nguồn và tiêu đề chính của cửa sổ MenuWindow, chứa các phương thức và logic để quản lý và hiển thị menu chính của ứng dụng.
+			\item \textbf{UserAddDialog.cpp} và \textbf{UserAddDialog.hpp}: Các tệp mã nguồn và tiêu đề cho cửa sổ hoặc hộp thoại (dialog) thêm người dùng vào ứng dụng.
+			\item \textbf{UserPanel.cpp} và \textbf{UserPanel.hpp}: Chứa mã nguồn và tiêu đề liên quan đến phần giao diện của mỗi người dùng hiển thị trong MenuWindow.
+		\end{itemize}
+		\item \textbf{ManageWindow}: Thư mục này chứa mã nguồn liên quan đến cửa sổ ManageWindow, đây là cửa sổ nhóm dự định phát triển trong tương lai, dùng để quản lý các phiên kết nối, xác thực người dùng và hiển thị giao diện cho chức năng quản lý.	
+		\item \textbf{SettingsWindow}: Chứa cách triển khai cửa sổ Settings, bao gồm các tệp mã nguồn để hiển thị và quản lý cài đặt của ứng dụng.
+	\end{itemize}
+\end{itemize}	
